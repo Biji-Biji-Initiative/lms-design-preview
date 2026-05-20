@@ -2432,6 +2432,7 @@ a:hover { text-decoration: underline; }
 .lms-footer.common-footer {
   display: flex; flex-direction: column; gap: 2.5rem;
   padding-block: 2.5rem;
+  margin-top: 3rem;
   color: #FFF; background-color: #1a1623;
   font-family: var(--font-display);
 }
@@ -4741,6 +4742,11 @@ body.is-logged-out .is-learner-only { display: none; }
         </article>
 
       </div>
+
+
+    </section>
+  </main>
+
     <!-- ── Mereka Footer (Figma 5239-31330) ── -->
     <div class="lms-footer common-footer">
       <div class="footer-main">
@@ -4871,10 +4877,6 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
       </div>
     </div>
-
-    </section>
-  </main>
-
 
 </section>
 
@@ -14470,7 +14472,7 @@ window.handleCheckout = function() {
     document.querySelectorAll('section.screen').forEach(function (screen) {
       if (screen.querySelector(':scope > .lms-footer')) return;
       // Skip auth/landing/cert/unit screens that intentionally have no footer.
-      const skip = ['screen-landing', 'screen-login', 'screen-register',
+      const skip = ['screen-login', 'screen-register',
                     'screen-unit', 'screen-checkout', 'screen-enrollment-success',
                     'screen-certificate', 'screen-studio'];
       if (skip.includes(screen.id)) return;

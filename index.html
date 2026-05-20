@@ -13713,7 +13713,11 @@ window.handleCheckout = function() {
 (function () {
   const canonical = document.querySelector('.screen .lms-footer.common-footer');
   if (!canonical) return;
+  const skip = ['screen-login', 'screen-register',
+                'screen-unit', 'screen-checkout', 'screen-enrollment-success',
+                'screen-certificate', 'screen-studio'];
   document.querySelectorAll('.screen').forEach(function (screen) {
+    if (skip.includes(screen.id)) return;
     if (screen.querySelector('.lms-footer.common-footer')) return;
     screen.appendChild(canonical.cloneNode(true));
   });

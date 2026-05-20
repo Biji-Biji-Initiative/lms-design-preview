@@ -5223,7 +5223,7 @@ body.is-logged-out .is-learner-only { display: none; }
           <button class="btn btn-primary" id="progSearchBtn" type="button">Search</button>
         </div>
         <div class="disc__stats">
-          <div class="disc__stat"><strong>10</strong><span>Programs</span></div>
+          <div class="disc__stat"><strong>12</strong><span>Programs</span></div>
           <div class="disc__stat"><strong>5–8</strong><span>Courses each</span></div>
           <div class="disc__stat"><strong>45</strong><span>Industry mentors</span></div>
           <div class="disc__stat"><strong>4</strong><span>Languages · EN · ID · VI · ZH</span></div>
@@ -9372,6 +9372,34 @@ const PROGRAMS_DB = {
       { title: 'AI for Daily Workflows', meta: '5 modules · 5h · Required', status: null },
       { title: 'Building No-Code AI Tools', meta: '5 modules · 5h · Required', status: null }
     ]
+  },
+  'sof-free-intro': {
+    state: 'browse', org: 'Skill Our Future', single: true,
+    track: 'SOF-FREE-01', title: 'Introduction to Digital Skills',
+    desc: 'A free introductory course covering digital literacy essentials — email, cloud tools, online safety, and basic productivity apps. Perfect for getting started.',
+    courses: 1, hours: '~3h', learners: '2,860',
+    price: 'Free',
+    rule: '<strong>Single-course program</strong> — complete the course to earn the certificate.',
+    cert: { title: 'Introduction to Digital Skills · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
+    instructor: { initials: 'SH', name: 'Siti Hawa', extra: 'Digital literacy advocate' },
+    includes: ['1 free expert-led course (~3h)', 'Hands-on exercises with real tools', 'Digital skills self-assessment', 'Course completion certificate', 'Lifetime access to materials'],
+    steps: [
+      { title: 'Introduction to Digital Skills', meta: '6 modules · ~3h · Required', status: null }
+    ]
+  },
+  'mereka-free-ai': {
+    state: 'browse', org: 'Mereka Academy', single: true,
+    track: 'MEREKA-FREE-01', title: 'AI for Everyone — Getting Started',
+    desc: 'A free taster course on practical AI — what it is, how ChatGPT works, and five ways to use it at work today. No coding, no jargon, just the useful bits.',
+    courses: 1, hours: '~2h', learners: '4,120',
+    price: 'Free',
+    rule: '<strong>Single-course program</strong> — complete the course to earn the certificate.',
+    cert: { title: 'AI for Everyone · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
+    instructor: { initials: 'DN', name: 'Daniel Ng', extra: 'AI educator' },
+    includes: ['1 free expert-led course (~2h)', 'Try-it-now prompt exercises', 'AI use-case cheat sheet', 'Course completion certificate', 'Lifetime access to materials'],
+    steps: [
+      { title: 'AI for Everyone — Getting Started', meta: '4 modules · ~2h · Required', status: null }
+    ]
   }
 };
 
@@ -9389,7 +9417,9 @@ const PROGRAM_META = {
   'sof-speak':  { section: 'sof', order: 7, status: 'published', isPrivate: false, enrolled: 186, avgProgress: 76, courseIds: [],                             art: 'linear-gradient(120deg, #FFC043 0%, #C99000 100%)' },
   'sof-entre':  { section: 'sof', order: 8, status: 'draft',     isPrivate: false, enrolled: 0,   avgProgress: 0,  courseIds: ['e110'],                       art: 'linear-gradient(120deg, #D44333 0%, #8B2418 100%)' },
   'mereka-fow': { section: 'mereka', order: 1, status: 'published', isPrivate: false, enrolled: 820, avgProgress: 71, courseIds: ['strategy', 'f101', 'b100'], art: 'linear-gradient(120deg, #AB3B78 0%, #237072 60%, #295CAD 100%)' },
-  'mereka-ai':  { section: 'mereka', order: 2, status: 'draft',     isPrivate: false, enrolled: 0,   avgProgress: 0,  courseIds: ['a101'],                       art: 'linear-gradient(120deg, #1A1623 0%, #AB3B78 100%)' }
+  'mereka-ai':  { section: 'mereka', order: 2, status: 'draft',     isPrivate: false, enrolled: 0,   avgProgress: 0,  courseIds: ['a101'],                       art: 'linear-gradient(120deg, #1A1623 0%, #AB3B78 100%)' },
+  'sof-free-intro': { section: 'sof', order: 0, status: 'published', isPrivate: false, enrolled: 1840, avgProgress: 62, courseIds: [],  art: 'linear-gradient(120deg, #3AA76D 0%, #237072 100%)' },
+  'mereka-free-ai': { section: 'mereka', order: 0, status: 'published', isPrivate: false, enrolled: 2680, avgProgress: 55, courseIds: [], art: 'linear-gradient(120deg, #295CAD 0%, #7246C4 100%)' }
 };
 const PROGRAM_SECTION_LABEL = { sof: 'Mereka Academy', mereka: 'Mereka Academy' };
 

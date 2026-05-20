@@ -5510,7 +5510,7 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="prog-hero__inner">
         <div>
           <span class="prog-hero__type"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program · Skill Our Future · SOF-PM-01</span>
-          <div style="margin: 6px 0 4px;">
+          <div style="margin: 6px 0 4px; display:none;" id="progHeroVisibility">
             <span class="visibility-chip is-private" title="Invitation-only program"><span class="material-symbols-outlined">lock</span> Private · invite only</span>
             <span class="visibility-chip" title="Hidden from the public catalog"><span class="material-symbols-outlined">visibility_off</span> Hidden in catalog</span>
           </div>
@@ -5646,7 +5646,7 @@ body.is-logged-out .is-learner-only { display: none; }
           <span class="part-of-chips__label">Part of:</span>
         </div>
         <span class="chip chip--tag is-strategy pgn__chip" id="courseHeroTag" style="margin-bottom:10px;">Strategy</span>
-        <div style="margin-bottom:8px;" id="courseHeroVisibility">
+        <div style="margin-bottom:8px; display:none;" id="courseHeroVisibility">
           <span class="visibility-chip is-private" title="Invitation-only course"><span class="material-symbols-outlined">lock</span> Private · invite only</span>
         </div>
         <h1 id="courseHeroTitle">Strategic thinking for modern leaders</h1>
@@ -9729,6 +9729,10 @@ function gotoProgram(progId) {
   const typeLabel = p.single ? 'Single course' : 'Program';
   typeEl.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> ' +
     typeLabel + ' · ' + p.org + ' · ' + p.track;
+
+  // Show/hide private visibility chips based on program data
+  var progVisEl = document.getElementById('progHeroVisibility');
+  if (progVisEl) progVisEl.style.display = (PROGRAM_META[progId] && PROGRAM_META[progId].isPrivate) ? '' : 'none';
 
   // Status card
   const card = document.getElementById('progStatusCard');

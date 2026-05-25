@@ -4226,7 +4226,7 @@ body.is-logged-out .is-learner-only { display: none; }
             <span class="material-symbols-outlined">route</span>
           </div>
           <h3>Structured learning pathways</h3>
-          <p>Learning Paths sequence courses into career tracks — from foundations to mastery. Complete a pathway, earn a program credential.</p>
+          <p>Learning Paths sequence courses into career tracks — from foundations to mastery. Complete a pathway, earn a learning path credential.</p>
         </div>
         <div class="landing__value-card">
           <div class="landing__value-icon" style="background:linear-gradient(135deg,#295CAD,#1A3F7A);">
@@ -9776,9 +9776,9 @@ function gotoProgram(progId) {
   const card = document.getElementById('progStatusCard');
   if (p.state === 'browse') {
     const ctaLabel = p.single ? 'Enroll · ' + p.price : 'Enroll · ' + p.price;
-    card.innerHTML = '<h3>' + (p.single ? 'Enroll in this course' : 'Enroll in this program') + '</h3>' +
+    card.innerHTML = '<h3>' + (p.single ? 'Enroll in this course' : 'Enroll in this learning path') + '</h3>' +
       '<div style="font-size:24px; font-family:var(--font-display); font-weight:700; color:var(--off-black); margin: 4px 0 6px;">' + p.price + '</div>' +
-      '<p class="prog-status-card__rule">' + (p.single ? 'One focused course with a verified completion certificate.' : 'Save <strong>15%</strong> vs buying each course separately. Includes the program certificate.') + '</p>' +
+      '<p class="prog-status-card__rule">' + (p.single ? 'One focused course with a verified completion certificate.' : 'Save <strong>15%</strong> vs buying each course separately. Includes the learning path certificate.') + '</p>' +
       '<div class="prog-status-card__cta">' +
         (function() {
           var pp = (p.price || '').trim().toLowerCase();
@@ -9803,7 +9803,7 @@ function gotoProgram(progId) {
       '<div class="progress"><div class="progress-bar" style="width:' + p.progress.pct + '%;"></div></div>' +
       '<p class="prog-status-card__rule">' + p.progress.rule + '</p>' +
       '<div class="prog-status-card__cta">' +
-        '<button class="btn btn-primary btn-sm" style="flex:1;" onclick="goto(\'course\')"><span class="material-symbols-outlined" style="font-size:16px;">play_arrow</span> ' + (p.single ? 'Continue course' : 'Continue program') + '</button>' +
+        '<button class="btn btn-primary btn-sm" style="flex:1;" onclick="goto(\'course\')"><span class="material-symbols-outlined" style="font-size:16px;">play_arrow</span> ' + (p.single ? 'Continue course' : 'Continue learning path') + '</button>' +
       '</div>';
   }
 
@@ -10549,8 +10549,8 @@ function applyCourseDetail(id) {
   if (aboutProgs && aboutLine) {
     if (progIds.length) {
       aboutLine.textContent = progIds.length === 1
-        ? 'This course counts toward 1 program:'
-        : 'This course counts toward ' + progIds.length + ' programs you can join:';
+        ? 'This course counts toward 1 learning path:'
+        : 'This course counts toward ' + progIds.length + ' learning paths you can join:';
       aboutLine.style.display = '';
       aboutProgs.innerHTML = progIds.map(pid => {
         const p = window.PROGRAMS_DB[pid];
@@ -12910,7 +12910,7 @@ window.handleCheckout = function() {
             '<button class="icon-btn pgn__icon-button" aria-label="Close" data-close="1"><span class="material-symbols-outlined">close</span></button>' +
           '</div>' +
           '<div class="studio-modal__body">' +
-            '<p style="font-size:13px; color:var(--medium-grey); margin:0 0 12px;" id="cppSub">Tick every program that should include this course.</p>' +
+            '<p style="font-size:13px; color:var(--medium-grey); margin:0 0 12px;" id="cppSub">Tick every learning path that should include this course.</p>' +
             '<input type="text" class="form-control" id="cppSearch" placeholder="Filter programs…" style="margin-bottom:12px;" />' +
             '<div id="cppList" style="display:flex; flex-direction:column; gap:6px; max-height:340px; overflow:auto;"></div>' +
           '</div>' +
@@ -12927,7 +12927,7 @@ window.handleCheckout = function() {
     const sub    = modal.querySelector('#cppSub');
     const search = modal.querySelector('#cppSearch');
     const list   = modal.querySelector('#cppList');
-    sub.textContent = 'Tick every program that should include "' + c.title + '".';
+    sub.textContent = 'Tick every learning path that should include "' + c.title + '".';
     search.value = '';
 
     function programsFor(courseId) {
@@ -12996,7 +12996,7 @@ window.handleCheckout = function() {
       modal.classList.remove('is-open');
       if (typeof window.renderStudioProgsList === 'function') window.renderStudioProgsList();
       if (typeof window.renderProgramsCatalog === 'function') window.renderProgramsCatalog();
-      showToast('"' + c.title + '" assigned to ' + selected.length + ' program' + (selected.length === 1 ? '' : 's'), 'success');
+      showToast('"' + c.title + '" assigned to ' + selected.length + ' learning path' + (selected.length === 1 ? '' : 's'), 'success');
     };
     modal.classList.add('is-open');
   }
@@ -13107,7 +13107,7 @@ window.handleCheckout = function() {
         '<div class="studio-modal__backdrop" data-close="1"></div>' +
         '<div class="studio-modal__panel" role="dialog" aria-labelledby="peTitle">' +
           '<div class="studio-modal__head">' +
-            '<h3 id="peTitle">Edit program basics</h3>' +
+            '<h3 id="peTitle">Edit learning path basics</h3>' +
             '<button class="icon-btn pgn__icon-button" aria-label="Close" data-close="1"><span class="material-symbols-outlined">close</span></button>' +
           '</div>' +
           '<div class="studio-modal__body">' +
@@ -13144,11 +13144,11 @@ window.handleCheckout = function() {
             '</div>' +
             '<div class="ue-section" style="margin-top:18px; background: var(--surface);">' +
               '<div class="ue-section__head">' +
-                '<h5>Courses in this program <span style="opacity:0.7; font-weight:500; text-transform:none; letter-spacing:0; font-size:11px;" id="peCoursesCount">0 selected</span></h5>' +
+                '<h5>Courses in this learning path <span style="opacity:0.7; font-weight:500; text-transform:none; letter-spacing:0; font-size:11px;" id="peCoursesCount">0 selected</span></h5>' +
                 '<input type="text" class="form-control" id="peCoursePicker_search" placeholder="Filter courses…" style="max-width:240px; padding:8px 12px;" />' +
               '</div>' +
               '<div id="peCoursePickerList" style="display:flex; flex-direction:column; gap:6px; max-height:240px; overflow:auto; padding:4px 0;"></div>' +
-              '<p class="form-hint" style="margin:8px 2px 0;">Tick the courses learners must complete to earn the learning path certificate. Saving updates the Courses catalog, the course "Part of program" chip, and the program detail page.</p>' +
+              '<p class="form-hint" style="margin:8px 2px 0;">Tick the courses learners must complete to earn the learning path certificate. Saving updates the Courses catalog, the course "Part of learning path" chip, and the learning path detail page.</p>' +
             '</div>' +
           '</div>' +
           '<div class="studio-modal__foot">' +
@@ -13164,7 +13164,7 @@ window.handleCheckout = function() {
     }
     modal.dataset.editingId = id;
     modal.dataset.isNew = isNew ? '1' : '';
-    modal.querySelector('#peTitle').textContent = isNew ? 'New program' : 'Edit program basics';
+    modal.querySelector('#peTitle').textContent = isNew ? 'New learning path' : 'Edit learning path basics';
     modal.querySelector('#peTitleInput').value = p.title || '';
     modal.querySelector('#peCode').value = p.track || '';
     modal.querySelector('#peSection').value = m.section || 'sof';
@@ -13689,7 +13689,7 @@ window.handleCheckout = function() {
     // Children label/count
     const children = childrenAt();
     let childrenLabel;
-    if (lv.level === 'course-list' && anTab === 'programs') childrenLabel = 'Courses in this program';
+    if (lv.level === 'course-list' && anTab === 'programs') childrenLabel = 'Courses in this learning path';
     else if (lv.level === 'item-list') childrenLabel = 'Items in this course';
     else childrenLabel = 'Children';
     $('anSubtabChildrenLabel').textContent = childrenLabel;

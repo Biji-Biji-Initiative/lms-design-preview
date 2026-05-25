@@ -213,43 +213,40 @@ a:hover { text-decoration: underline; }
 .lms-header__spacer { flex: 1; }
 .lms-header__actions { display: flex; gap: 12px; align-items: center; }
 
-/* Admin link button — outlined style matching Open edX admin button */
+/* Admin link button — neutral outlined style matching Studio button */
 .lms-admin-link {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 14px; border-radius: var(--r-pill);
   font-family: var(--font-display); font-weight: 600; font-size: 13px;
-  color: var(--pgn-color-info); border: 1.5px solid var(--pgn-color-info);
+  color: var(--pgn-color-gray-700); border: 1.5px solid var(--pgn-color-gray-300);
   background: transparent; cursor: pointer; text-decoration: none;
-  white-space: nowrap; transition: background 0.15s, color 0.15s;
+  white-space: nowrap; transition: background 0.15s, border-color 0.15s;
 }
-.lms-admin-link:hover { background: rgba(0,109,170,0.06); }
+.lms-admin-link:hover { background: var(--surface); border-color: var(--pgn-color-gray-500); }
 .lms-admin-link .material-symbols-outlined { font-size: 16px; }
 
-/* "View as" masquerade bar — superadmin only */
-.lms-view-as-bar {
-  position: fixed; top: 72px; left: 0; right: 0; z-index: 49;
-  display: flex; align-items: center; gap: 12px;
-  background: #F8F0E5; border-bottom: 1px solid #E8D5BC;
-  padding: 8px 40px; font-family: var(--font-body);
-  font-size: 14px; color: var(--off-black);
+/* "View as" — compact inline widget in the header actions area */
+.lms-view-as {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-body); font-size: 12px; color: var(--medium-grey);
+  white-space: nowrap;
 }
-.lms-view-as-bar .material-symbols-outlined { font-size: 20px; color: var(--medium-grey); }
-.lms-view-as-bar label { font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-.lms-view-as-bar input {
-  flex: 1; max-width: 360px; padding: 6px 14px;
+.lms-view-as .material-symbols-outlined { font-size: 16px; }
+.lms-view-as input {
+  width: 140px; padding: 4px 10px;
   border: 1.5px solid var(--border); border-radius: 999px;
-  font-family: var(--font-body); font-size: 14px;
+  font-family: var(--font-body); font-size: 12px;
   outline: none; transition: border-color 0.15s;
 }
-.lms-view-as-bar input:focus { border-color: var(--pgn-color-info); }
-.lms-view-as-bar input::placeholder { color: var(--pgn-color-gray-400); }
-.lms-view-as-bar .btn-view-as {
-  padding: 6px 18px; border-radius: 999px; border: none;
-  background: var(--pgn-color-info); color: #fff;
-  font-family: var(--font-display); font-weight: 600; font-size: 13px;
+.lms-view-as input:focus { border-color: var(--pgn-color-info); width: 200px; }
+.lms-view-as input::placeholder { color: var(--pgn-color-gray-400); }
+.lms-view-as .btn-view-as {
+  padding: 4px 10px; border-radius: 999px; border: none;
+  background: var(--pgn-color-gray-700); color: #fff;
+  font-family: var(--font-display); font-weight: 600; font-size: 11px;
   cursor: pointer; transition: opacity 0.15s;
 }
-.lms-view-as-bar .btn-view-as:hover { opacity: 0.85; }
+.lms-view-as .btn-view-as:hover { opacity: 0.85; }
 
 /* Mobile menu trigger (hidden on desktop) */
 .lms-menu-trigger {
@@ -1181,12 +1178,12 @@ a:hover { text-decoration: underline; }
 }
 .disc__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
 .course-card { display: flex; flex-direction: column; }
 .course-card__img {
-  height: 160px;
+  height: 140px;
   background: var(--brand-gradient);
   background-size: cover; background-position: center;
   display: flex; align-items: center; justify-content: center;
@@ -3266,10 +3263,9 @@ a:hover { text-decoration: underline; }
 }
 
 @media (max-width: 600px) {
-  .lms-admin-link { font-size: 0; padding: 6px 8px; gap: 0; } /* hide text, icon only */
+  .lms-admin-link { font-size: 0; padding: 6px 8px; gap: 0; } /* icon only on mobile */
   .lms-admin-link .material-symbols-outlined { font-size: 16px; }
-  .lms-view-as-bar { padding: 8px 16px; flex-wrap: wrap; gap: 8px; }
-  .lms-view-as-bar input { max-width: none; }
+  .lms-view-as { display: none; }                              /* hide view-as on mobile */
 }
 @media (max-width: 380px) {
   .lms-header__actions { gap: 4px; }
@@ -4145,7 +4141,7 @@ body.is-logged-out .lms-header__actions .lms-admin-link {
   display: none !important;
 }
 body.is-logged-out .lms-header__actions .lms-auth-cta { display: inline-flex; }
-body.is-logged-out .lms-view-as-bar { display: none !important; }
+body.is-logged-out .lms-view-as { display: none !important; }
 /* Hide the Dashboard nav link when logged out — only Discover and
    Programs remain accessible without auth. */
 body.is-logged-out .lms-nav a[onclick*="goto('dashboard')"] { display: none; }
@@ -4602,6 +4598,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -5062,6 +5059,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -5384,6 +5382,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -5696,6 +5695,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
       <a href="#" onclick="goto('profile'); return false;" class="avatar pgn__avatar" role="button" aria-label="Profile" style="text-decoration:none;">FF</a>
     </div>
   </header>
@@ -5820,6 +5820,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -6386,6 +6387,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -6831,6 +6833,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -6894,6 +6897,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -7049,6 +7053,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
       <a href="#" onclick="goto('profile'); return false;" class="avatar pgn__avatar" role="button" aria-label="Profile" style="text-decoration:none;">FF</a>
@@ -7127,6 +7132,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
       <a href="#" onclick="goto('profile'); return false;" class="avatar pgn__avatar" role="button" aria-label="Profile" style="text-decoration:none;">FF</a>
@@ -7194,6 +7200,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="lms-header__actions">
       <button class="btn btn-tertiary btn-sm" onclick="goto('studio')"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span> Studio</button>
             <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+            <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn is-active pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -7599,12 +7606,16 @@ body.is-logged-out .is-learner-only { display: none; }
     <a class="lms-logo" href="#" onclick="goto('dashboard'); return false;" aria-label="Mereka"><img src="/logo-horizontal-black-Mereka.svg" alt="Mereka" style="height:26px; width:auto; display:block;" /></a>
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
+      <a href="#" onclick="goto('discover'); return false;">Courses</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
       <a class="is-active" href="#" aria-current="page">Studio</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
       <span class="studio__status" id="studioStatus"><span class="dot"></span> Unsaved changes · auto-saved 8s ago</span>
       <button class="btn btn-tertiary btn-sm" onclick="goto('course')"><span class="material-symbols-outlined" style="font-size:16px;">visibility</span> Preview as learner</button>
+      <a class="lms-admin-link" href="#" onclick="return false;" title="Django Admin"><span class="material-symbols-outlined">admin_panel_settings</span> Admin</a>
+      <span class="lms-view-as"><span class="material-symbols-outlined">supervisor_account</span><input type="text" placeholder="View as user…" autocomplete="off" /><button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Go</button></span>
 
       <button class="icon-btn pgn__icon-button" onclick="goto('settings')" aria-label="Settings"><span class="material-symbols-outlined">settings</span></button>
       <button class="icon-btn js-notif-toggle pgn__icon-button" aria-label="Notifications"><span class="material-symbols-outlined">notifications</span><span class="badge">3</span></button>
@@ -9404,12 +9415,11 @@ function goto(name) {
     if (window.__certMode) delete window.__certMode;
   }
 
-  // Hide "View as" bar on non-app screens (landing, login, logout)
-  var viewAsBar = document.getElementById('viewAsBar');
-  if (viewAsBar) {
-    var hideOn = ['landing', 'login', 'logout'];
-    viewAsBar.style.display = hideOn.indexOf(name) !== -1 ? 'none' : '';
-  }
+  // Hide "View as" widget on non-app screens (landing, login, logout)
+  var hideViewAs = ['landing', 'login', 'logout'].indexOf(name) !== -1;
+  document.querySelectorAll('.lms-view-as').forEach(function(el) {
+    el.style.display = hideViewAs ? 'none' : '';
+  });
 }
 buttons.forEach(b => b.addEventListener('click', () => {
   goto(b.dataset.screen);
@@ -14643,13 +14653,6 @@ window.handleCheckout = function() {
 <!-- Profile popup — opens when any header avatar is clicked.
      Settings, Help, and Log Out moved into the popup so the header is
      just nav + bell + avatar (matches mereka.io). -->
-<!-- ── View As masquerade bar (superadmin only) ── -->
-<div class="lms-view-as-bar" id="viewAsBar">
-  <label for="viewAsInput"><span class="material-symbols-outlined">supervisor_account</span> View as:</label>
-  <input type="text" id="viewAsInput" placeholder="Username or email" autocomplete="off" />
-  <button class="btn-view-as" type="button" onclick="alert('Masquerade not available in prototype')">Submit</button>
-</div>
-
 <div class="profile-popup__backdrop" id="profilePopupBackdrop" aria-hidden="true"></div>
 <div class="profile-popup" id="profilePopup" role="menu" aria-label="Profile menu" aria-hidden="true">
   <div class="profile-popup__panel">

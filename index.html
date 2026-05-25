@@ -1189,6 +1189,16 @@ a:hover { text-decoration: underline; }
   display: flex; align-items: center; justify-content: center;
   color: var(--white); position: relative;
 }
+.course-card__lang {
+  position: absolute; bottom: 12px; right: 12px; z-index: 1;
+  display: inline-flex; gap: 4px;
+}
+.course-card__lang span {
+  background: rgba(0,0,0,0.55); color: var(--white);
+  padding: 3px 8px; border-radius: var(--r-pill);
+  font-size: 10px; font-weight: 600; font-family: var(--font-display);
+  letter-spacing: 0.3px;
+}
 .course-card__img.alt-1 { background: linear-gradient(135deg, #237072 0%, #295CAD 100%); }
 .course-card__img.alt-2 { background: linear-gradient(135deg, #AB3B78 0%, #237072 100%); }
 .course-card__img.alt-3 { background: linear-gradient(135deg, #295CAD 0%, #AB3B78 100%); }
@@ -4065,8 +4075,8 @@ a:hover { text-decoration: underline; }
 }
 .landing__course-card:hover { box-shadow: var(--shadow-card); transform: translateY(-2px); }
 .landing__course-thumb {
-  height: 160px; display: flex; align-items: center; justify-content: center;
-  font-size: 40px; color: rgba(255,255,255,0.7);
+  height: 140px; display: flex; align-items: center; justify-content: center;
+  font-size: 40px; color: rgba(255,255,255,0.7); position: relative;
 }
 .landing__course-body { padding: 20px; }
 .landing__course-body .chip { font-size: 11px; margin-bottom: 8px; display: inline-block; padding: 3px 10px; border-radius: var(--r-chip); font-weight: 600; }
@@ -4332,45 +4342,48 @@ body.is-logged-out .is-learner-only { display: none; }
         <h2>Explore popular courses</h2>
         <p>Start with what's working for thousands of learners across the region.</p>
         <div class="landing__courses-grid">
-          <div class="landing__course-card" onclick="goto('course')">
-            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#AB3B78 0%,#7A2856 100%);">
-              <span class="material-symbols-outlined">psychology</span>
+          <div class="landing__course-card" onclick="gotoCourse('a101')">
+            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#295CAD 0%,#1A3F7A 100%);">
+              <span class="material-symbols-outlined">smart_toy</span>
+              <span class="course-card__lang"><span>EN</span><span>ID</span></span>
             </div>
             <div class="landing__course-body">
-              <span class="chip" style="background:rgba(171,59,120,0.1); color:#AB3B78;">Strategy</span>
+              <span class="chip" style="background:rgba(41,92,173,0.1); color:#295CAD;">AI fluency</span>
+              <h4>AI fluency for every team</h4>
+              <p>ChatGPT, Claude, and Copilot — plus guardrails and workflows that scale.</p>
+              <div class="landing__course-meta">
+                <span class="price is-free">Free</span>
+                <span class="rating">★ 4.8 · 1,840 learners</span>
+              </div>
+            </div>
+          </div>
+          <div class="landing__course-card" onclick="gotoCourse('d201')">
+            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#237072 0%,#125253 100%);">
+              <span class="material-symbols-outlined">code</span>
+              <span class="course-card__lang"><span>EN</span></span>
+            </div>
+            <div class="landing__course-body">
+              <span class="chip" style="background:rgba(35,112,114,0.1); color:#237072;">Developer</span>
+              <h4>Developer foundations — full stack</h4>
+              <p>HTML, JS, React, Node — the production-ready baseline every dev needs.</p>
+              <div class="landing__course-meta">
+                <span class="price">RM 780</span>
+                <span class="rating">★ 4.7 · 1,640 learners</span>
+              </div>
+            </div>
+          </div>
+          <div class="landing__course-card" onclick="gotoCourse('strategy')">
+            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#AB3B78 0%,#7A2856 100%);">
+              <span class="material-symbols-outlined">psychology</span>
+              <span class="course-card__lang"><span>EN</span></span>
+            </div>
+            <div class="landing__course-body">
+              <span class="chip" style="background:rgba(171,59,120,0.1); color:#AB3B78;">Soft skills</span>
               <h4>Strategic thinking for modern leaders</h4>
               <p>Frameworks for clearer decisions — for leaders, founders, and senior operators.</p>
               <div class="landing__course-meta">
                 <span class="price">RM 540</span>
-                <span class="rating">★ 4.8 · 6,800 learners</span>
-              </div>
-            </div>
-          </div>
-          <div class="landing__course-card" onclick="goto('discover')">
-            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#237072 0%,#125253 100%);">
-              <span class="material-symbols-outlined">bar_chart</span>
-            </div>
-            <div class="landing__course-body">
-              <span class="chip" style="background:rgba(35,112,114,0.1); color:#237072;">Data</span>
-              <h4>Data analytics for operators</h4>
-              <p>SQL, Sheets mastery, and dashboards that drive decisions.</p>
-              <div class="landing__course-meta">
-                <span class="price">RM 520</span>
-                <span class="rating">★ 4.5 · 3,200 learners</span>
-              </div>
-            </div>
-          </div>
-          <div class="landing__course-card" onclick="goto('discover')">
-            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#295CAD 0%,#1A3F7A 100%);">
-              <span class="material-symbols-outlined">storefront</span>
-            </div>
-            <div class="landing__course-body">
-              <span class="chip" style="background:rgba(41,92,173,0.1); color:#295CAD;">Entrepreneurship</span>
-              <h4>Entrepreneurship essentials</h4>
-              <p>From idea validation to your first paying customer.</p>
-              <div class="landing__course-meta">
-                <span class="price">RM 420</span>
-                <span class="rating">★ 4.7 · 2,100 learners</span>
+                <span class="rating">★ 4.8 · 1,208 learners</span>
               </div>
             </div>
           </div>
@@ -10649,6 +10662,7 @@ function discoverCardHtml(c, isPrivate) {
         '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">lock</span> Course · Invite-only</span>' +
         orgChip +
         '<span class="material-symbols-outlined" style="font-size:48px;">lock</span>' +
+        '<span class="course-card__lang">' + (c.languages || ['EN']).map(function(l) { return '<span>' + escapeHtml(l) + '</span>'; }).join('') + '</span>' +
       '</div>' +
       '<div class="course-card__body">' +
         '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +
@@ -10664,6 +10678,7 @@ function discoverCardHtml(c, isPrivate) {
       '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">menu_book</span> Course</span>' +
       orgChip +
       '<span class="material-symbols-outlined" style="font-size:48px;">' + escapeHtml(c.icon || 'school') + '</span>' +
+      '<span class="course-card__lang">' + (c.languages || ['EN']).map(function(l) { return '<span>' + escapeHtml(l) + '</span>'; }).join('') + '</span>' +
     '</div>' +
     '<div class="course-card__body">' +
       '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +

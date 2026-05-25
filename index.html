@@ -3230,7 +3230,7 @@ a:hover { text-decoration: underline; }
 }
 .prog-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
 .prog-card__art {
-  height: 140px;
+  height: 160px;
   background: var(--brand-gradient);
   position:relative;
   display:flex; align-items:flex-end; padding: 14px;
@@ -3941,7 +3941,7 @@ a:hover { text-decoration: underline; }
 }
 .landing__course-card:hover { box-shadow: var(--shadow-card); transform: translateY(-2px); }
 .landing__course-thumb {
-  height: 140px; display: flex; align-items: center; justify-content: center;
+  height: 160px; display: flex; align-items: center; justify-content: center;
   font-size: 40px; color: rgba(255,255,255,0.7);
 }
 .landing__course-body { padding: 20px; }
@@ -3979,6 +3979,9 @@ a:hover { text-decoration: underline; }
 .landing__cta-banner p { font-size: 16px; opacity: 0.9; margin: 0 0 32px; max-width: 520px; margin-left: auto; margin-right: auto; }
 .landing__cta-banner .btn-primary { background: var(--white); color: var(--primary); border: 1.5px solid var(--white); }
 .landing__cta-banner .btn-primary:hover { background: var(--surface); color: var(--primary-hover); }
+
+/* Remove gap between CTA banner and footer on landing page */
+#screen-landing .lms-footer.common-footer { margin-top: 0; }
 
 /* Landing footer */
 .landing__footer {
@@ -4186,7 +4189,7 @@ body.is-logged-out .is-learner-only { display: none; }
             <span class="material-symbols-outlined">route</span>
           </div>
           <h3>Structured learning pathways</h3>
-          <p>Programs sequence courses into career tracks — from foundations to mastery. Complete a pathway, earn a program credential.</p>
+          <p>Learning Paths sequence courses into career tracks — from foundations to mastery. Complete a pathway, earn a program credential.</p>
         </div>
         <div class="landing__value-card">
           <div class="landing__value-icon" style="background:linear-gradient(135deg,#295CAD,#1A3F7A);">
@@ -4464,7 +4467,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a class="is-active" href="#" onclick="goto('dashboard'); return false;" aria-current="page">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -4540,13 +4543,13 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
         <div class="mylearning__head-actions">
           <button class="btn btn-outline-primary" onclick="goto('discover')"><span class="material-symbols-outlined" style="font-size:16px;">add</span> Find a new course</button>
-          <button class="btn btn-outline-primary" onclick="goto('programs')"><span class="material-symbols-outlined" style="font-size:16px;">add</span> Find a new program</button>
+          <button class="btn btn-outline-primary" onclick="goto('programs')"><span class="material-symbols-outlined" style="font-size:16px;">add</span> Find a new learning path</button>
         </div>
       </div>
 
       <div class="mylearning__filters" role="tablist" aria-label="Filter">
         <button class="mylearning__chip is-active" data-filter="all">All <span class="count">(7)</span></button>
-        <button class="mylearning__chip" data-filter="programs">Programs <span class="count">(2)</span></button>
+        <button class="mylearning__chip" data-filter="programs">Learning Paths <span class="count">(2)</span></button>
         <button class="mylearning__chip" data-filter="courses">Courses <span class="count">(5)</span></button>
         <button class="mylearning__chip" data-filter="progress">In progress <span class="count">(4)</span></button>
         <button class="mylearning__chip" data-filter="completed">Completed <span class="count">(3)</span></button>
@@ -4563,7 +4566,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <article class="prog-card" data-ml-type="program" data-ml-state="progress" onclick="gotoProgram('sof-pm')">
           <div class="prog-card__art" style="background: linear-gradient(120deg, #295CAD 0%, #1A3D75 100%);">
             <span class="prog-card__org" title="Published by Skill Our Future"><span class="material-symbols-outlined">corporate_fare</span>Skill Our Future</span>
-            <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+            <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
           </div>
           <div class="prog-card__body">
             <span class="prog-card__track">SOF-PM-01</span>
@@ -4589,7 +4592,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <article class="prog-card" data-ml-type="program" data-ml-state="completed" onclick="gotoProgram('mereka-fow')">
           <div class="prog-card__art" style="background: linear-gradient(120deg, #AB3B78 0%, #237072 60%, #295CAD 100%);">
             <span class="prog-card__org" title="Published by Mereka Academy"><span class="material-symbols-outlined">corporate_fare</span>Mereka Academy</span>
-            <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+            <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
           </div>
           <div class="prog-card__body">
             <span class="prog-card__track">MEREKA-FOW-01</span>
@@ -4605,7 +4608,7 @@ body.is-logged-out .is-learner-only { display: none; }
               <span style="color:var(--success);"><strong>Certificate earned</strong></span>
             </div>
             <div class="prog-card__foot">
-              <span class="prog-card__foot-meta" style="color:var(--primary); font-weight:600;">Program certificate issued</span>
+              <span class="prog-card__foot-meta" style="color:var(--primary); font-weight:600;">Learning Path certificate issued</span>
               <button class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation(); goto('certificate')">View →</button>
             </div>
           </div>
@@ -4889,7 +4892,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a class="is-active" href="#" onclick="goto('discover'); return false;" aria-current="page">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -4967,7 +4970,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="disc__private-note" id="discPrivateNote">
       <span class="material-symbols-outlined">info</span>
       <div>
-        <strong>Public catalog only.</strong> <span id="discPrivateNoteCount">2 invitation-only courses</span> are not shown here. Private courses and programs only appear for learners who've been invited or enrolled. <a href="#" onclick="goto('dashboard'); return false;">View your dashboard</a> for anything you're already enrolled in.
+        <strong>Public catalog only.</strong> <span id="discPrivateNoteCount">2 invitation-only courses</span> are not shown here. Private courses and learning paths only appear for learners who've been invited or enrolled. <a href="#" onclick="goto('dashboard'); return false;">View your dashboard</a> for anything you're already enrolled in.
       </div>
     </div>
 
@@ -5191,7 +5194,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a class="is-active" href="#" onclick="goto('programs'); return false;" aria-current="page">Programs</a>
+      <a class="is-active" href="#" onclick="goto('programs'); return false;" aria-current="page">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -5209,21 +5212,21 @@ body.is-logged-out .is-learner-only { display: none; }
          swap based on view mode (guest vs learner). -->
     <div class="disc__hero">
       <div class="disc__hero-inner">
-        <span class="eyebrow"><span class="material-symbols-outlined" style="font-size:14px;">workspace_premium</span> Programs · Multi-course pathways</span>
+        <span class="eyebrow"><span class="material-symbols-outlined" style="font-size:14px;">workspace_premium</span> Learning Paths · Multi-course pathways</span>
         <h1>Build mastery, not just modules.</h1>
-        <p>Programs bundle related courses with shared rules, prerequisites, and a single program-level certificate — designed for full-stack career changes, not solo course collecting.</p>
+        <p>Learning Paths bundle related courses with shared rules, prerequisites, and a single program-level certificate — designed for full-stack career changes, not solo course collecting.</p>
         <div class="disc__hero-cta">
           <button class="btn btn-primary is-guest-only" type="button" onclick="goto('register')">Join the community</button>
           <button class="btn btn-primary is-learner-only" type="button" onclick="goto('dashboard')">My learning</button>
-          <button class="btn btn-outline-primary" type="button" onclick="(function(){var el=document.getElementById('progGrid');if(!el)return;var top=el.getBoundingClientRect().top+window.scrollY-96;try{window.scrollTo({top:top,behavior:'smooth'});setTimeout(function(){if(Math.abs(window.scrollY-top)>30)window.scrollTo(0,top);},350);}catch(e){window.scrollTo(0,top);}})();">Browse programs</button>
+          <button class="btn btn-outline-primary" type="button" onclick="(function(){var el=document.getElementById('progGrid');if(!el)return;var top=el.getBoundingClientRect().top+window.scrollY-96;try{window.scrollTo({top:top,behavior:'smooth'});setTimeout(function(){if(Math.abs(window.scrollY-top)>30)window.scrollTo(0,top);},350);}catch(e){window.scrollTo(0,top);}})();">Browse Learning Paths</button>
         </div>
         <div class="disc__search">
           <span class="disc__search-icon"><span class="material-symbols-outlined">search</span></span>
-          <input id="progSearchInput" placeholder="Search for a program" />
+          <input id="progSearchInput" placeholder="Search for a learning path" />
           <button class="btn btn-primary" id="progSearchBtn" type="button">Search</button>
         </div>
         <div class="disc__stats">
-          <div class="disc__stat"><strong>12</strong><span>Programs</span></div>
+          <div class="disc__stat"><strong>10</strong><span>Learning Paths</span></div>
           <div class="disc__stat"><strong>5–8</strong><span>Courses each</span></div>
           <div class="disc__stat"><strong>45</strong><span>Industry mentors</span></div>
           <div class="disc__stat"><strong>4</strong><span>Languages · EN · ID · VI · ZH</span></div>
@@ -5233,7 +5236,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
     <div class="disc__refine-head">
       <div>
-        <h2>Refine programs</h2>
+        <h2>Refine learning paths</h2>
         <span class="sub">Filter by organization, format, state, or sort.</span>
       </div>
     </div>
@@ -5261,7 +5264,7 @@ body.is-logged-out .is-learner-only { display: none; }
           <label class="form-label" for="progCatFormat">Format</label>
           <select class="form-control form-select prog-catalog-select" id="progCatFormat" aria-label="Format filter">
             <option value="all">All formats</option>
-            <option value="program">Programs</option>
+            <option value="program">Learning Paths</option>
             <option value="single">Single courses</option>
           </select>
         </div>
@@ -5292,7 +5295,7 @@ body.is-logged-out .is-learner-only { display: none; }
          its publishing organization as a chip — replaces
          the previous per-organization headers, so programs from different orgs
          can sit side-by-side without splitting the catalog visually. -->
-    <div class="prog-catalog-summary" id="progCatalogSummary">10 programs</div>
+    <div class="prog-catalog-summary" id="progCatalogSummary">10 learning paths</div>
     <div class="prog-grid" id="progGrid"></div>
 
     <!-- Same Paragon Pagination shape as the Courses catalog so the two
@@ -5310,7 +5313,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
       <article class="prog-card" onclick="gotoProgram('sof-pm')">
         <div class="prog-card__art" style="background: linear-gradient(120deg, #295CAD 0%, #1A3D75 100%);">
-          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
         </div>
         <div class="prog-card__body">
           <span class="prog-card__track">SOF-PM-01</span>
@@ -5330,7 +5333,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
       <article class="prog-card" onclick="gotoProgram('sof-data')">
         <div class="prog-card__art" style="background: linear-gradient(120deg, #237072 0%, #134244 100%);">
-          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
         </div>
         <div class="prog-card__body">
           <span class="prog-card__track">SOF-DATA-01</span>
@@ -5346,12 +5349,12 @@ body.is-logged-out .is-learner-only { display: none; }
 
       <article class="prog-card" onclick="gotoProgram('sof-dev')">
         <div class="prog-card__art" style="background: linear-gradient(120deg, #1A1623 0%, #4A494A 100%);">
-          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
         </div>
         <div class="prog-card__body">
           <span class="prog-card__track">SOF-DEV-01</span>
           <h3>Developer</h3>
-          <p class="prog-card__desc">HTML, CSS, JavaScript, React, and a working backend. Ship a portfolio project by the end of the program.</p>
+          <p class="prog-card__desc">HTML, CSS, JavaScript, React, and a working backend. Ship a portfolio project by the end of the learning path.</p>
           <div class="prog-card__meta">
             <span><strong>5</strong> courses</span>
             <span><strong>~48h</strong> total</span>
@@ -5362,7 +5365,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
       <article class="prog-card" onclick="gotoProgram('sof-admin')">
         <div class="prog-card__art" style="background: linear-gradient(120deg, #AB3B78 0%, #7A2856 100%);">
-          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
         </div>
         <div class="prog-card__body">
           <span class="prog-card__track">SOF-ADMIN-01</span>
@@ -5378,7 +5381,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
       <article class="prog-card" onclick="gotoProgram('sof-mkt')">
         <div class="prog-card__art" style="background: linear-gradient(120deg, #AB3B78 0%, #295CAD 100%);">
-          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
         </div>
         <div class="prog-card__body">
           <span class="prog-card__track">SOF-MKT-01</span>
@@ -5465,7 +5468,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
       <article class="prog-card" onclick="gotoProgram('mereka-ai')">
         <div class="prog-card__art" style="background: linear-gradient(120deg, #1A1623 0%, #AB3B78 100%);">
-          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program</span>
+          <span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path</span>
         </div>
         <div class="prog-card__body">
           <span class="prog-card__track">MEREKA-AI-01</span>
@@ -5492,7 +5495,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a class="is-active" href="#" onclick="goto('programs'); return false;" aria-current="page">Programs</a>
+      <a class="is-active" href="#" onclick="goto('programs'); return false;" aria-current="page">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -5503,15 +5506,15 @@ body.is-logged-out .is-learner-only { display: none; }
 
   <main class="prog-page">
     <div style="margin-bottom:14px;">
-      <button class="btn btn-tertiary btn-sm" onclick="goto('programs')"><span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> All programs</button>
+      <button class="btn btn-tertiary btn-sm" onclick="goto('programs')"><span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> All learning paths</button>
     </div>
 
     <div class="prog-hero">
       <div class="prog-hero__inner">
         <div>
-          <span class="prog-hero__type"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Program · Skill Our Future · SOF-PM-01</span>
-          <div style="margin: 6px 0 4px; display:none;" id="progHeroVisibility">
-            <span class="visibility-chip is-private" title="Invitation-only program"><span class="material-symbols-outlined">lock</span> Private · invite only</span>
+          <span class="prog-hero__type"><span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> Learning Path · Skill Our Future · SOF-PM-01</span>
+          <div style="margin: 6px 0 4px;">
+            <span class="visibility-chip is-private" title="Invitation-only learning path"><span class="material-symbols-outlined">lock</span> Private · invite only</span>
             <span class="visibility-chip" title="Hidden from the public catalog"><span class="material-symbols-outlined">visibility_off</span> Hidden in catalog</span>
           </div>
           <h1 id="progHeroTitle">Project Manager</h1>
@@ -5530,9 +5533,9 @@ body.is-logged-out .is-learner-only { display: none; }
           <h3 id="progStatusTitle">Your progress</h3>
           <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;"><span id="progStatusFraction">2 of 4 courses</span><strong id="progStatusPct">50%</strong></div>
           <div class="progress"><div class="progress-bar" id="progStatusFill" style="width:50%;"></div></div>
-          <p class="prog-status-card__rule" id="progStatusRule">Complete <strong>3 of 4 required courses</strong> to earn the program certificate. The capstone is required.</p>
+          <p class="prog-status-card__rule" id="progStatusRule">Complete <strong>3 of 4 required courses</strong> to earn the learning path certificate. The capstone is required.</p>
           <div class="prog-status-card__cta" id="progStatusCta">
-            <button class="btn btn-primary btn-sm" style="flex:1;" onclick="goto('course')"><span class="material-symbols-outlined" style="font-size:16px;">play_arrow</span> Continue program</button>
+            <button class="btn btn-primary btn-sm" style="flex:1;" onclick="goto('course')"><span class="material-symbols-outlined" style="font-size:16px;">play_arrow</span> Continue learning path</button>
           </div>
         </div>
       </div>
@@ -5541,12 +5544,12 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="prog-grid-body">
       <div>
         <section class="prog-section">
-          <h2>About this program</h2>
+          <h2>About this learning path</h2>
           <p id="progAboutText" style="line-height:1.6; color:var(--dark-grey);">Built for operators who've been promoted into a lead role and need to develop the muscle for setting direction, coaching peers, and making decisions under uncertainty. The pathway sequences four courses with shared frameworks so what you learn in one shows up applied in the next.</p>
         </section>
 
         <section class="prog-section">
-          <h2>Courses in this program</h2>
+          <h2>Courses in this learning path</h2>
           <div class="prog-rule" id="progRule" style="margin-bottom:16px;">
             <span class="material-symbols-outlined">lock_open</span>
             <div id="progRuleText"><strong>Sequential unlock</strong> — Course 2 unlocks after Course 1 is 80% complete. Capstone unlocks after Courses 1–3 are complete.</div>
@@ -5556,7 +5559,7 @@ body.is-logged-out .is-learner-only { display: none; }
         </section>
 
         <section class="prog-section">
-          <h2>Program certificate</h2>
+          <h2>Learning Path certificate</h2>
           <div class="prog-cert-card">
             <div class="prog-cert-card__icon"><span class="material-symbols-outlined" style="font-size:28px;">workspace_premium</span></div>
             <div style="flex:1;">
@@ -5575,18 +5578,18 @@ body.is-logged-out .is-learner-only { display: none; }
             <li>4 expert-led courses</li>
             <li>Shared cohort discussions</li>
             <li>1 capstone project with peer review</li>
-            <li>Program certificate (verified)</li>
+            <li>Learning Path certificate (verified)</li>
             <li>Lifetime access to materials</li>
           </ul>
         </div>
         <div class="card" style="padding:20px;">
-          <h4 style="margin-bottom:4px;">Program representative</h4>
-          <p style="font-size:12px; color:var(--medium-grey); margin:0 0 12px;">Your single point of contact for this program. Not the lead instructor — courses each have their own.</p>
+          <h4 style="margin-bottom:4px;">Learning Path representative</h4>
+          <p style="font-size:12px; color:var(--medium-grey); margin:0 0 12px;">Your single point of contact for this learning path. Not the lead instructor — courses each have their own.</p>
           <div style="display:flex; gap:12px; align-items:center;">
             <div class="avatar pgn__avatar" id="progRepAvatar" style="width:44px; height:44px; background:linear-gradient(135deg,#AB3B78,#237072); color:#fff;">NS</div>
             <div>
               <div id="progRepName" style="font-family:var(--font-display); font-weight:600; font-size:14px;">Nadia Salleh</div>
-              <div id="progRepRole" style="font-size:12px; color:var(--medium-grey);">Program Lead · Skill Our Future</div>
+              <div id="progRepRole" style="font-size:12px; color:var(--medium-grey);">Learning Path Lead · Skill Our Future</div>
             </div>
           </div>
           <div style="display:flex; gap:8px; margin-top:14px;">
@@ -5598,7 +5601,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <!-- Mentors aside — populated from PROGRAMS_DB.<id>.mentors -->
         <div class="card" style="padding:20px; margin-top:18px;">
           <h4 style="margin-bottom:4px;">Mentors</h4>
-          <p style="font-size:12px; color:var(--medium-grey); margin:0 0 12px;">Industry practitioners who teach and coach across courses in this program.</p>
+          <p style="font-size:12px; color:var(--medium-grey); margin:0 0 12px;">Industry practitioners who teach and coach across courses in this learning path.</p>
           <div class="prog-mentors" id="progMentorsList"><!-- populated by JS --></div>
         </div>
       </aside>
@@ -5615,7 +5618,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -5646,7 +5649,7 @@ body.is-logged-out .is-learner-only { display: none; }
           <span class="part-of-chips__label">Part of:</span>
         </div>
         <span class="chip chip--tag is-strategy pgn__chip" id="courseHeroTag" style="margin-bottom:10px;">Strategy</span>
-        <div style="margin-bottom:8px; display:none;" id="courseHeroVisibility">
+        <div style="margin-bottom:8px;" id="courseHeroVisibility">
           <span class="visibility-chip is-private" title="Invitation-only course"><span class="material-symbols-outlined">lock</span> Private · invite only</span>
         </div>
         <h1 id="courseHeroTitle">Strategic thinking for modern leaders</h1>
@@ -5671,7 +5674,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <section class="course__section">
           <h2>About this course</h2>
           <p id="courseAboutDesc" style="line-height:1.6; color:var(--dark-grey);">Built for operators who need to move from reactive firefighting to proactive strategy. Across 4 modules you'll pressure-test five core frameworks on live business problems — then build your own playbook you can bring to your next ops meeting or board deck.</p>
-          <p id="courseAboutProgramsLine" style="font-size:13px; color:var(--medium-grey); margin:14px 0 8px;">This course counts toward 2 programs you're enrolled in:</p>
+          <p id="courseAboutProgramsLine" style="font-size:13px; color:var(--medium-grey); margin:14px 0 8px;">This course counts toward 2 learning paths you're enrolled in:</p>
           <div id="courseAboutPrograms" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
         </section>
 
@@ -6100,7 +6103,7 @@ body.is-logged-out .is-learner-only { display: none; }
           <div class="enroll-card__included">
             <span class="material-symbols-outlined">workspace_premium</span>
             <div>
-              <strong>Included with your program</strong>
+              <strong>Included with your learning path</strong>
               You're enrolled in <a href="#" onclick="gotoProgram('sof-pm'); return false;">Project Manager</a> — this course is part of that pathway and doesn't need a separate purchase.
               <button class="btn btn-primary btn-sm" style="margin-top:10px; width:100%;" onclick="goto('unit')"><span class="material-symbols-outlined" style="font-size:16px;">play_arrow</span> Continue this course</button>
             </div>
@@ -6149,7 +6152,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -6593,7 +6596,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -6655,7 +6658,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -6809,7 +6812,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -6824,7 +6827,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="list-page__head">
       <div>
         <h1>Deadlines</h1>
-        <p>Everything that's due across your enrolled programs and courses.</p>
+        <p>Everything that's due across your enrolled learning paths and courses.</p>
       </div>
       <button class="btn btn-outline-primary" onclick="goto('dashboard')"><span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> Back to Dashboard</button>
     </div>
@@ -6886,7 +6889,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -6901,7 +6904,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="list-page__head">
       <div>
         <h1>Certificates</h1>
-        <p>Every credential you've earned across Mereka programs and courses.</p>
+        <p>Every credential you've earned across Mereka learning paths and courses.</p>
       </div>
       <button class="btn btn-outline-primary" onclick="goto('profile')"><span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> Back to Profile</button>
     </div>
@@ -6916,7 +6919,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <section class="list-page__group" data-cert-bucket="2026">
       <h2 class="list-page__group-title">2026 <span class="list-page__group-count">5</span></h2>
       <div class="cert-list">
-        <div class="cert-row card"><div class="seal"><span class="material-symbols-outlined">workspace_premium</span></div><div class="cert-row__body"><h4>Future of Work</h4><p>Program · Mereka Academy · Issued Apr 22, 2026 · MRK-2026-49102</p></div><button class="btn btn-primary btn-sm" onclick="goto('certificate')">View</button></div>
+        <div class="cert-row card"><div class="seal"><span class="material-symbols-outlined">workspace_premium</span></div><div class="cert-row__body"><h4>Future of Work</h4><p>Learning Path · Mereka Academy · Issued Apr 22, 2026 · MRK-2026-49102</p></div><button class="btn btn-primary btn-sm" onclick="goto('certificate')">View</button></div>
         <div class="cert-row card"><div class="seal"><span class="material-symbols-outlined">workspace_premium</span></div><div class="cert-row__body"><h4>Strategic thinking for modern leaders</h4><p>Course · Mereka Academy · Issued Apr 18, 2026 · MRK-2026-48291</p></div><button class="btn btn-outline-primary btn-sm" onclick="goto('certificate')">View</button></div>
         <div class="cert-row card"><div class="seal"><span class="material-symbols-outlined">workspace_premium</span></div><div class="cert-row__body"><h4>Personal branding on LinkedIn</h4><p>Course · Mereka Academy · Issued Apr 18, 2026 · MRK-2026-48289</p></div><button class="btn btn-outline-primary btn-sm" onclick="goto('certificate')">View</button></div>
         <div class="cert-row card"><div class="seal"><span class="material-symbols-outlined">workspace_premium</span></div><div class="cert-row__body"><h4>Analytics for non-analysts</h4><p>Course · Mereka Academy · Issued Mar 04, 2026 · MRK-2026-39814</p></div><button class="btn btn-outline-primary btn-sm" onclick="goto('certificate')">View</button></div>
@@ -6952,7 +6955,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -7171,7 +7174,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -7315,7 +7318,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <nav class="lms-nav">
       <a href="#" onclick="goto('dashboard'); return false;">Dashboard</a>
       <a href="#" onclick="goto('discover'); return false;">Courses</a>
-      <a href="#" onclick="goto('programs'); return false;">Programs</a>
+      <a href="#" onclick="goto('programs'); return false;">Learning Paths</a>
     </nav>
     <div class="lms-header__spacer"></div>
     <div class="lms-header__actions">
@@ -7382,7 +7385,7 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="studio__nav-label">Workspace</div>
       <ul class="studio__nav">
         <li data-studio-pane="courses"><span class="material-symbols-outlined">dashboard</span> My courses</li>
-        <li data-studio-pane="programs"><span class="material-symbols-outlined">workspace_premium</span> Programs</li>
+        <li data-studio-pane="programs"><span class="material-symbols-outlined">workspace_premium</span> Learning Paths</li>
       </ul>
       <div class="studio__nav-label">Editing this course</div>
       <ul class="studio__nav">
@@ -7482,11 +7485,11 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="studio-pane" data-studio-pane="programs" style="display:none;">
         <div class="courses-pane__head">
           <div>
-            <h3 style="font-size:20px; margin-bottom:4px;">Programs</h3>
-            <p style="font-size:13px; color:var(--medium-grey); margin:0;">Multi-course pathways with shared rules, prerequisites, and a single program certificate. <span id="progsCount">4</span> programs · <span id="progsCountPublished">2</span> published · <span id="progsCountDraft">2</span> draft.</p>
+            <h3 style="font-size:20px; margin-bottom:4px;">Learning Paths</h3>
+            <p style="font-size:13px; color:var(--medium-grey); margin:0;">Multi-course pathways with shared rules, prerequisites, and a single learning path certificate. <span id="progsCount">4</span> learning paths · <span id="progsCountPublished">2</span> published · <span id="progsCountDraft">2</span> draft.</p>
           </div>
           <div class="courses-pane__head-actions">
-            <button class="btn btn-primary btn-sm" id="progsCreateBtn"><span class="material-symbols-outlined" style="font-size:16px;">add</span> Create new program</button>
+            <button class="btn btn-primary btn-sm" id="progsCreateBtn"><span class="material-symbols-outlined" style="font-size:16px;">add</span> Create new learning path</button>
           </div>
         </div>
 
@@ -7498,7 +7501,7 @@ body.is-logged-out .is-learner-only { display: none; }
             <button class="btn btn-outline-primary btn-sm js-progs-filter" data-progs-filter="archived">Archived</button>
           </div>
           <div style="display:flex; gap:8px; align-items:center;">
-            <select class="form-control prog-catalog-select" id="progsSort" aria-label="Sort programs">
+            <select class="form-control prog-catalog-select" id="progsSort" aria-label="Sort learning paths">
               <option value="featured">Sort: Featured</option>
               <option value="title">A → Z</option>
               <option value="enrolled-desc">Most enrolled</option>
@@ -7507,7 +7510,7 @@ body.is-logged-out .is-learner-only { display: none; }
             </select>
             <div class="courses-pane__search">
               <span class="material-symbols-outlined" style="font-size:16px; color:var(--medium-grey);">search</span>
-              <input type="text" id="progsSearch" placeholder="Search programs…" />
+              <input type="text" id="progsSearch" placeholder="Search learning paths…" />
             </div>
           </div>
         </div>
@@ -7519,7 +7522,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <template id="progs-list-legacy" hidden>
 
           <div class="admin-prog-row admin-prog-row--head">
-            <div style="grid-column: 1 / -1; font-family:var(--font-display); font-weight:600; font-size:13px; color:var(--medium-grey); letter-spacing:0.4px; text-transform:uppercase;">Skill Our Future · 8 programs</div>
+            <div style="grid-column: 1 / -1; font-family:var(--font-display); font-weight:600; font-size:13px; color:var(--medium-grey); letter-spacing:0.4px; text-transform:uppercase;">Skill Our Future · 8 learning paths</div>
           </div>
 
           <div class="admin-prog-row" data-prog-status="published" data-prog-id="sof-pm">
@@ -7635,7 +7638,7 @@ body.is-logged-out .is-learner-only { display: none; }
           </div>
 
           <div class="admin-prog-row admin-prog-row--head">
-            <div style="grid-column: 1 / -1; font-family:var(--font-display); font-weight:600; font-size:13px; color:var(--medium-grey); letter-spacing:0.4px; text-transform:uppercase;">Mereka Academy · 2 programs</div>
+            <div style="grid-column: 1 / -1; font-family:var(--font-display); font-weight:600; font-size:13px; color:var(--medium-grey); letter-spacing:0.4px; text-transform:uppercase;">Mereka Academy · 2 learning paths</div>
           </div>
 
           <div class="admin-prog-row" data-prog-status="published" data-prog-id="mereka-fow">
@@ -7669,8 +7672,8 @@ body.is-logged-out .is-learner-only { display: none; }
 
         <div class="admin-empty" id="progsEmpty" style="display:none; margin-top:18px;">
           <span class="material-symbols-outlined">workspace_premium</span>
-          <h3>No programs match those filters</h3>
-          <p>Try changing the filter or clear the search to see all programs.</p>
+          <h3>No learning paths match those filters</h3>
+          <p>Try changing the filter or clear the search to see all learning paths.</p>
         </div>
       </div>
 
@@ -7679,10 +7682,10 @@ body.is-logged-out .is-learner-only { display: none; }
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:12px; flex-wrap:wrap;">
           <div>
             <div style="font-size:12px; color:var(--medium-grey); margin-bottom:4px;">
-              <a href="#" onclick="switchToPane('programs'); return false;" style="color:var(--link); text-decoration:none;">Programs</a> /
+              <a href="#" onclick="switchToPane('programs'); return false;" style="color:var(--link); text-decoration:none;">Learning Paths</a> /
               <span id="progEditorBreadcrumb">Project Manager</span>
             </div>
-            <h3 style="font-size:22px; margin:0;" id="progEditorTitle">Edit program: Project Manager</h3>
+            <h3 style="font-size:22px; margin:0;" id="progEditorTitle">Edit learning path: Project Manager</h3>
           </div>
           <div style="display:flex; gap:8px;">
             <button class="btn btn-outline-primary btn-sm" onclick="showToast('Draft saved · auto-saved 2s ago', 'success')"><span class="material-symbols-outlined" style="font-size:16px;">save</span> Save draft</button>
@@ -7702,11 +7705,11 @@ body.is-logged-out .is-learner-only { display: none; }
         <!-- Basics -->
         <div class="prog-tab-pane" data-prog-tab-pane="basics">
           <div class="editor-section">
-            <h3>Program details</h3>
-            <p class="editor-hint">Public-facing information shown on the program landing page and catalog card.</p>
+            <h3>Learning Path details</h3>
+            <p class="editor-hint">Public-facing information shown on the learning path landing page and catalog card.</p>
             <div style="display:grid; grid-template-columns:1fr 200px; gap:14px;">
               <div>
-                <label style="display:block; font-size:12px; color:var(--medium-grey); margin-bottom:4px; font-family:var(--font-display); font-weight:600;">Program title</label>
+                <label style="display:block; font-size:12px; color:var(--medium-grey); margin-bottom:4px; font-family:var(--font-display); font-weight:600;">Learning Path title</label>
                 <input type="text" value="Project Manager" style="width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-family:var(--font-body); font-size:14px;" />
               </div>
               <div>
@@ -7726,7 +7729,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
           <div class="editor-section">
             <h3>Catalog imagery</h3>
-            <p class="editor-hint">A 3:1 hero gradient or image used on the catalog card and program detail header.</p>
+            <p class="editor-hint">A 3:1 hero gradient or image used on the catalog card and learning path detail header.</p>
             <div style="display:flex; gap:14px; align-items:center;">
               <div style="width:240px; height:80px; border-radius:10px; background: linear-gradient(120deg, #295CAD 0%, #1A3D75 100%); display:flex; align-items:center; justify-content:center; color:white; font-family:var(--font-display); font-weight:600;">Indigo gradient · current</div>
               <button class="btn btn-outline-primary btn-sm"><span class="material-symbols-outlined" style="font-size:16px;">image</span> Replace artwork</button>
@@ -7735,7 +7738,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
           <div class="editor-section">
             <h3>Lead instructor</h3>
-            <p class="editor-hint">The primary instructor shown on the program landing page. Course-level instructors are configured per course.</p>
+            <p class="editor-hint">The primary instructor shown on the learning path landing page. Course-level instructors are configured per course.</p>
             <div style="display:flex; gap:12px; align-items:center;">
               <div class="avatar pgn__avatar" style="width:44px; height:44px;">NS</div>
               <div style="flex:1;">
@@ -7750,7 +7753,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <!-- Courses & sequence -->
         <div class="prog-tab-pane" data-prog-tab-pane="courses" style="display:none;">
           <div class="editor-section">
-            <h3>Courses in this program</h3>
+            <h3>Courses in this learning path</h3>
             <p class="editor-hint">Drag to reorder. The sequence determines unlock order when prerequisites are enabled.</p>
 
             <div class="course-pick-row">
@@ -7808,7 +7811,7 @@ body.is-logged-out .is-learner-only { display: none; }
               <button class="btn btn-tertiary btn-sm js-prog-course-remove" title="Remove"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
             </div>
 
-            <button class="btn btn-outline-primary btn-sm" id="progAddCourseBtn" style="margin-top:8px;"><span class="material-symbols-outlined" style="font-size:16px;">add</span> Add course to program</button>
+            <button class="btn btn-outline-primary btn-sm" id="progAddCourseBtn" style="margin-top:8px;"><span class="material-symbols-outlined" style="font-size:16px;">add</span> Add course to learning path</button>
           </div>
         </div>
 
@@ -7816,7 +7819,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <div class="prog-tab-pane" data-prog-tab-pane="rules" style="display:none;">
           <div class="editor-section">
             <h3>Unlock & sequencing rules</h3>
-            <p class="editor-hint">Control how learners move through the program.</p>
+            <p class="editor-hint">Control how learners move through the learning path.</p>
 
             <div class="rule-toggle-row">
               <div class="toggle-switch is-on" data-rule="sequential"></div>
@@ -7853,7 +7856,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
           <div class="editor-section">
             <h3>Completion threshold</h3>
-            <p class="editor-hint">What counts as "program complete" for certificate purposes.</p>
+            <p class="editor-hint">What counts as "learning path complete" for certificate purposes.</p>
             <div style="display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center;">
               <div style="font-family:var(--font-display); font-weight:600; font-size:13px;">Required courses to complete</div>
               <select style="padding:8px 12px; border:1px solid var(--border); border-radius:8px; max-width:200px;">
@@ -7881,10 +7884,10 @@ body.is-logged-out .is-learner-only { display: none; }
         <div class="prog-tab-pane" data-prog-tab-pane="pricing" style="display:none;">
           <div class="editor-section">
             <h3>Pricing</h3>
-            <p class="editor-hint">Bundle pricing for the whole program. Individual course prices still apply if courses are sold separately.</p>
+            <p class="editor-hint">Bundle pricing for the whole learning path. Individual course prices still apply if courses are sold separately.</p>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
               <div>
-                <label style="display:block; font-size:12px; color:var(--medium-grey); margin-bottom:4px; font-family:var(--font-display); font-weight:600;">Program price</label>
+                <label style="display:block; font-size:12px; color:var(--medium-grey); margin-bottom:4px; font-family:var(--font-display); font-weight:600;">Learning Path price</label>
                 <div style="display:flex; gap:8px;">
                   <select style="padding:10px 12px; border:1px solid var(--border); border-radius:8px;"><option>RM</option><option>USD</option><option>SGD</option></select>
                   <input type="text" value="2,480" style="flex:1; padding:10px 12px; border:1px solid var(--border); border-radius:8px;" />
@@ -7907,12 +7910,12 @@ body.is-logged-out .is-learner-only { display: none; }
 
           <div class="editor-section">
             <h3>Visibility</h3>
-            <p class="editor-hint">Where this program appears and who can enroll.</p>
+            <p class="editor-hint">Where this learning path appears and who can enroll.</p>
             <div class="rule-toggle-row">
               <div class="toggle-switch is-on" data-rule="public-catalog"></div>
               <div class="rule-toggle-row__body">
                 <div class="rule-toggle-row__title">Public catalog</div>
-                <div class="rule-toggle-row__desc">Listed in the public Programs catalog, indexed by search.</div>
+                <div class="rule-toggle-row__desc">Listed in the public Learning Paths catalog, indexed by search.</div>
               </div>
             </div>
             <div class="rule-toggle-row">
@@ -7926,7 +7929,7 @@ body.is-logged-out .is-learner-only { display: none; }
               <div class="toggle-switch is-on" data-rule="org-skillourfuture"></div>
               <div class="rule-toggle-row__body">
                 <div class="rule-toggle-row__title">Available to: Skill Our Future</div>
-                <div class="rule-toggle-row__desc">Organization-scoped. Learners in this organization see the program automatically.</div>
+                <div class="rule-toggle-row__desc">Organization-scoped. Learners in this organization see the learning path automatically.</div>
               </div>
             </div>
           </div>
@@ -7935,7 +7938,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <!-- Certificate -->
         <div class="prog-tab-pane" data-prog-tab-pane="cert" style="display:none;">
           <div class="editor-section">
-            <h3>Program certificate</h3>
+            <h3>Learning Path certificate</h3>
             <p class="editor-hint">Awarded when the completion threshold is met. Verified, shareable to LinkedIn.</p>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
               <div>
@@ -8622,7 +8625,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:18px;">
           <div>
             <h3 style="font-size:20px; margin:0;">Visibility &amp; invitations</h3>
-            <p style="color:var(--medium-grey); font-size:13px; margin:2px 0 0;">Control whether this course (or program) is listed publicly, and bulk-invite specific learners by email. Powered by Open edX <code>invitation_only</code> + Bulk Enrollment + Discovery <code>hidden</code>.</p>
+            <p style="color:var(--medium-grey); font-size:13px; margin:2px 0 0;">Control whether this course (or learning path) is listed publicly, and bulk-invite specific learners by email. Powered by Open edX <code>invitation_only</code> + Bulk Enrollment + Discovery <code>hidden</code>.</p>
           </div>
         </div>
 
@@ -8803,8 +8806,8 @@ body.is-logged-out .is-learner-only { display: none; }
         <!-- 3-level navigator: Programs / Courses / Items -->
         <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-top:18px; margin-bottom:6px;">
           <div>
-            <h4 style="margin:0;">Drill into a program, course, or item</h4>
-            <p style="font-size:12px; color:var(--medium-grey); margin:2px 0 0;">Click any row to see its applicants. Click an applicant to see their full journey across program, course, and items.</p>
+            <h4 style="margin:0;">Drill into a learning path, course, or item</h4>
+            <p style="font-size:12px; color:var(--medium-grey); margin:2px 0 0;">Click any row to see its applicants. Click an applicant to see their full journey across learning path, course, and items.</p>
           </div>
           <div class="row">
             <button class="btn btn-tertiary btn-sm"><span class="material-symbols-outlined" style="font-size:16px;">filter_list</span> Filter</button>
@@ -8814,7 +8817,7 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
 
         <div class="an-tabs" id="anTabs" role="tablist" aria-label="Analytics scope">
-          <button class="an-tab is-active" data-an-tab="programs" role="tab"><span class="material-symbols-outlined">workspace_premium</span> Start at Programs <span class="an-tab__count" id="anTabCountPrograms">4</span></button>
+          <button class="an-tab is-active" data-an-tab="programs" role="tab"><span class="material-symbols-outlined">workspace_premium</span> Start at Learning Paths <span class="an-tab__count" id="anTabCountPrograms">4</span></button>
           <button class="an-tab" data-an-tab="courses" role="tab"><span class="material-symbols-outlined">menu_book</span> Start at Courses <span class="an-tab__count" id="anTabCountCourses">5</span></button>
           <button class="an-tab" data-an-tab="items" role="tab"><span class="material-symbols-outlined">view_list</span> Start at Course items <span class="an-tab__count" id="anTabCountItems">7</span></button>
         </div>
@@ -8874,7 +8877,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <div class="courses-pane__filters-row" style="margin-bottom:14px;">
           <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
             <select class="form-control" id="subsProgramFilter" style="max-width:240px;">
-              <option value="all">All programs</option>
+              <option value="all">All learning paths</option>
             </select>
             <select class="form-control" id="subsCourseFilter" style="max-width:260px;">
               <option value="all">All courses</option>
@@ -8888,14 +8891,14 @@ body.is-logged-out .is-learner-only { display: none; }
           </div>
           <div class="courses-pane__search">
             <span class="material-symbols-outlined" style="font-size:16px; color:var(--medium-grey);">search</span>
-            <input type="text" id="subsSearch" placeholder="Search learner, assignment, program…" />
+            <input type="text" id="subsSearch" placeholder="Search learner, assignment, learning path…" />
           </div>
         </div>
         <div class="card" style="padding:0; overflow:hidden;">
           <table class="data-table" style="width:100%; border-collapse:collapse; font-size:14px;">
             <thead><tr style="background:var(--surface); text-align:left;">
               <th style="padding:12px 16px; font-family:var(--font-display); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--dark-grey);">Learner</th>
-              <th style="padding:12px 16px; font-family:var(--font-display); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--dark-grey);">Program</th>
+              <th style="padding:12px 16px; font-family:var(--font-display); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--dark-grey);">Learning Path</th>
               <th style="padding:12px 16px; font-family:var(--font-display); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--dark-grey);">Course</th>
               <th style="padding:12px 16px; font-family:var(--font-display); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--dark-grey);">Assignment</th>
               <th style="padding:12px 16px; font-family:var(--font-display); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--dark-grey);">Status</th>
@@ -8919,7 +8922,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <div class="courses-pane__filters-row" style="margin-bottom:14px;">
           <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
             <select class="form-control" id="discsProgramFilter" style="max-width:240px;">
-              <option value="all">All programs</option>
+              <option value="all">All learning paths</option>
             </select>
             <select class="form-control" id="discsCourseFilter" style="max-width:260px;">
               <option value="all">All courses</option>
@@ -9043,7 +9046,7 @@ body.is-logged-out .is-learner-only { display: none; }
       <nav class="lms-mobile-drawer__nav">
         <a href="#" data-md-goto="dashboard"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
         <a href="#" data-md-goto="discover"><span class="material-symbols-outlined">explore</span> Courses</a>
-        <a href="#" data-md-goto="programs"><span class="material-symbols-outlined">workspace_premium</span> Programs</a>
+        <a href="#" data-md-goto="programs"><span class="material-symbols-outlined">workspace_premium</span> Learning Paths</a>
       </nav>
       <div class="lms-mobile-drawer__sub-label">Workspace</div>
       <nav class="lms-mobile-drawer__nav">
@@ -9298,7 +9301,7 @@ const PROGRAMS_DB = {
     desc: 'A one-course primer on Malaysia\u2019s green economy — sustainability, ESG reporting, and the emerging roles to aim for. Map where you fit and what to learn next.',
     courses: 1, hours: '~6h', learners: '420',
     price: 'RM 380',
-    rule: '<strong>Single-course program</strong> — complete the course to earn the certificate.',
+    rule: '<strong>Single-course learning path</strong> — complete the course to earn the certificate.',
     cert: { title: 'Embark on a Green Jobs Journey · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'AH', name: 'Aiman Hakim', extra: 'Sustainability consultant' },
     includes: ['1 expert-led course (~6h)', 'Self-assessment: where you fit', 'Reading list of green-economy resources', 'Course completion certificate', 'Lifetime access to materials'],
@@ -9309,10 +9312,10 @@ const PROGRAMS_DB = {
   'sof-speak': {
     state: 'browse', org: 'Skill Our Future', single: true,
     track: 'SOF-SPEAK-01', title: 'Speak with Impact',
-    desc: 'Structure your message, hold a room, and present with confidence. A focused one-course program for meetings, town halls, and pitches.',
+    desc: 'Structure your message, hold a room, and present with confidence. A focused one-course learning path for meetings, town halls, and pitches.',
     courses: 1, hours: '~5h', learners: '680',
     price: 'RM 320',
-    rule: '<strong>Single-course program</strong> — complete the course to earn the certificate.',
+    rule: '<strong>Single-course learning path</strong> — complete the course to earn the certificate.',
     cert: { title: 'Speak with Impact · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'RC', name: 'Rachel Choo', extra: 'Communications coach' },
     includes: ['1 expert-led course (~5h)', 'Practice exercises with feedback', 'Pitch and presentation templates', 'Course completion certificate', 'Lifetime access to materials'],
@@ -9326,7 +9329,7 @@ const PROGRAMS_DB = {
     desc: 'Validate an idea, find your first customers, and build a starter business plan. The practical first 90 days, in a single course.',
     courses: 1, hours: '~7h', learners: '540',
     price: 'RM 420',
-    rule: '<strong>Single-course program</strong> — complete the course to earn the certificate.',
+    rule: '<strong>Single-course learning path</strong> — complete the course to earn the certificate.',
     cert: { title: 'Become An Entrepreneur · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'AR', name: 'Adam Razali', extra: 'Founder, 2x exits' },
     includes: ['1 expert-led course (~7h)', 'Idea validation worksheet', 'Starter business plan template', 'Course completion certificate', 'Lifetime access to materials'],
@@ -9341,8 +9344,8 @@ const PROGRAMS_DB = {
     track: 'MEREKA-FOW-01', title: 'Future of Work',
     desc: 'Eight courses for the freelance, hybrid, portfolio-career era — the operating manual modern work didn\u2019t ship with. Pricing, contracts, money, writing, presence, and skill-mapping.',
     courses: 8, hours: '~52h', learners: '3,240',
-    progress: { completed: 8, total: 8, pct: 100, rule: '<strong>Program complete.</strong> Certificate issued Apr 22, 2026.' },
-    rule: '<strong>Flexible order</strong> — courses can be taken in any sequence. Complete all 8 to earn the program certificate.',
+    progress: { completed: 8, total: 8, pct: 100, rule: '<strong>Learning Path complete.</strong> Certificate issued Apr 22, 2026.' },
+    rule: '<strong>Flexible order</strong> — courses can be taken in any sequence. Complete all 8 to earn the learning path certificate.',
     cert: { title: 'Future of Work · Mereka Academy', desc: 'Awarded once you complete all eight courses. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'AY', name: 'Amira Yusof', extra: '+ 4 guest instructors' },
     includes: ['8 expert-led courses', 'Templates: contracts, invoices, pitches', 'Cohort discussions and live Q&As', 'Future of Work certificate (verified)', 'Lifetime access to materials'],
@@ -9366,39 +9369,11 @@ const PROGRAMS_DB = {
     rule: '<strong>Sequential unlock</strong> — each course unlocks after the previous one is 80% complete.',
     cert: { title: 'Unlocking the Power of AI · Mereka Academy', desc: 'Awarded once you complete all three courses. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'DN', name: 'Daniel Ng', extra: '+ 1 ML practitioner' },
-    includes: ['3 expert-led courses', 'Hands-on prompt exercises', 'Build a no-code AI tool by the end', 'Program certificate (verified)', 'Lifetime access to materials'],
+    includes: ['3 expert-led courses', 'Hands-on prompt exercises', 'Build a no-code AI tool by the end', 'Learning Path certificate (verified)', 'Lifetime access to materials'],
     steps: [
       { title: 'ChatGPT Fundamentals — prompts that work', meta: '4 modules · 4h · Required', status: null },
       { title: 'AI for Daily Workflows', meta: '5 modules · 5h · Required', status: null },
       { title: 'Building No-Code AI Tools', meta: '5 modules · 5h · Required', status: null }
-    ]
-  },
-  'sof-free-intro': {
-    state: 'browse', org: 'Skill Our Future', single: true,
-    track: 'SOF-FREE-01', title: 'Introduction to Digital Skills',
-    desc: 'A free introductory course covering digital literacy essentials — email, cloud tools, online safety, and basic productivity apps. Perfect for getting started.',
-    courses: 1, hours: '~3h', learners: '2,860',
-    price: 'Free',
-    rule: '<strong>Single-course program</strong> — complete the course to earn the certificate.',
-    cert: { title: 'Introduction to Digital Skills · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
-    instructor: { initials: 'SH', name: 'Siti Hawa', extra: 'Digital literacy advocate' },
-    includes: ['1 free expert-led course (~3h)', 'Hands-on exercises with real tools', 'Digital skills self-assessment', 'Course completion certificate', 'Lifetime access to materials'],
-    steps: [
-      { title: 'Introduction to Digital Skills', meta: '6 modules · ~3h · Required', status: null }
-    ]
-  },
-  'mereka-free-ai': {
-    state: 'browse', org: 'Mereka Academy', single: true,
-    track: 'MEREKA-FREE-01', title: 'AI for Everyone — Getting Started',
-    desc: 'A free taster course on practical AI — what it is, how ChatGPT works, and five ways to use it at work today. No coding, no jargon, just the useful bits.',
-    courses: 1, hours: '~2h', learners: '4,120',
-    price: 'Free',
-    rule: '<strong>Single-course program</strong> — complete the course to earn the certificate.',
-    cert: { title: 'AI for Everyone · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
-    instructor: { initials: 'DN', name: 'Daniel Ng', extra: 'AI educator' },
-    includes: ['1 free expert-led course (~2h)', 'Try-it-now prompt exercises', 'AI use-case cheat sheet', 'Course completion certificate', 'Lifetime access to materials'],
-    steps: [
-      { title: 'AI for Everyone — Getting Started', meta: '4 modules · ~2h · Required', status: null }
     ]
   }
 };
@@ -9417,9 +9392,7 @@ const PROGRAM_META = {
   'sof-speak':  { section: 'sof', order: 7, status: 'published', isPrivate: false, enrolled: 186, avgProgress: 76, courseIds: [],                             art: 'linear-gradient(120deg, #FFC043 0%, #C99000 100%)' },
   'sof-entre':  { section: 'sof', order: 8, status: 'draft',     isPrivate: false, enrolled: 0,   avgProgress: 0,  courseIds: ['e110'],                       art: 'linear-gradient(120deg, #D44333 0%, #8B2418 100%)' },
   'mereka-fow': { section: 'mereka', order: 1, status: 'published', isPrivate: false, enrolled: 820, avgProgress: 71, courseIds: ['strategy', 'f101', 'b100'], art: 'linear-gradient(120deg, #AB3B78 0%, #237072 60%, #295CAD 100%)' },
-  'mereka-ai':  { section: 'mereka', order: 2, status: 'draft',     isPrivate: false, enrolled: 0,   avgProgress: 0,  courseIds: ['a101'],                       art: 'linear-gradient(120deg, #1A1623 0%, #AB3B78 100%)' },
-  'sof-free-intro': { section: 'sof', order: 0, status: 'published', isPrivate: false, enrolled: 1840, avgProgress: 62, courseIds: [],  art: 'linear-gradient(120deg, #3AA76D 0%, #237072 100%)' },
-  'mereka-free-ai': { section: 'mereka', order: 0, status: 'published', isPrivate: false, enrolled: 2680, avgProgress: 55, courseIds: [], art: 'linear-gradient(120deg, #295CAD 0%, #7246C4 100%)' }
+  'mereka-ai':  { section: 'mereka', order: 2, status: 'draft',     isPrivate: false, enrolled: 0,   avgProgress: 0,  courseIds: ['a101'],                       art: 'linear-gradient(120deg, #1A1623 0%, #AB3B78 100%)' }
 };
 const PROGRAM_SECTION_LABEL = { sof: 'Mereka Academy', mereka: 'Mereka Academy' };
 
@@ -9470,12 +9443,12 @@ function renderStudioProgsList() {
     if (filtered.length === 0) return;
     const headerLabel = section === '__all__'
       ? ({
-          'title':         filtered.length + ' programs · A → Z',
-          'enrolled-desc': filtered.length + ' programs · most enrolled first',
-          'courses-desc':  filtered.length + ' programs · most courses first',
-          'progress-desc': filtered.length + ' programs · highest average progress first'
-        }[sortKey] || (filtered.length + ' programs'))
-      : (PROGRAM_SECTION_LABEL[section] + ' · ' + filtered.length + ' program' + (filtered.length === 1 ? '' : 's'));
+          'title':         filtered.length + ' learning paths · A → Z',
+          'enrolled-desc': filtered.length + ' learning paths · most enrolled first',
+          'courses-desc':  filtered.length + ' learning paths · most courses first',
+          'progress-desc': filtered.length + ' learning paths · highest average progress first'
+        }[sortKey] || (filtered.length + ' learning paths'))
+      : (PROGRAM_SECTION_LABEL[section] + ' · ' + filtered.length + ' learning path' + (filtered.length === 1 ? '' : 's'));
     list.insertAdjacentHTML('beforeend',
       '<div class="admin-prog-row admin-prog-row--head">' +
         '<div style="grid-column: 1 / -1; font-family:var(--font-display); font-weight:600; font-size:13px; color:var(--medium-grey); letter-spacing:0.4px; text-transform:uppercase;">' +
@@ -9605,7 +9578,7 @@ function renderProgramsCatalog() {
     // state lives in the meta footer so every card on every page reads the
     // same way at a glance.
     const typeIcon = p.single ? 'menu_book' : 'workspace_premium';
-    const typeText = p.single ? 'Course' : 'Program';
+    const typeText = p.single ? 'Course' : 'Learning Path';
     const badge = '<span class="prog-card__badge"><span class="material-symbols-outlined" style="font-size:13px;">' + typeIcon + '</span> ' + typeText + '</span>';
     const orgLabel = p.org || (m.section === 'mereka' ? 'Mereka Academy' : 'Skill Our Future');
     const orgChip = '<span class="prog-card__org" title="Published by ' + escapeHtml(orgLabel) + '"><span class="material-symbols-outlined">corporate_fare</span>' + escapeHtml(orgLabel) + '</span>';
@@ -9645,7 +9618,7 @@ function renderProgramsCatalog() {
   if (ordered.length === 0) {
     grid.insertAdjacentHTML('beforeend',
       '<div style="grid-column: 1 / -1; padding: 28px; text-align: center; color: var(--medium-grey); font-size: 13px; background: var(--surface); border-radius: var(--r-card);">' +
-        'No programs match the current filters. <a href="#" id="progCatEmptyClear" style="color:var(--primary);">Clear filters</a>' +
+        'No learning paths match the current filters. <a href="#" id="progCatEmptyClear" style="color:var(--primary);">Clear filters</a>' +
       '</div>'
     );
     document.getElementById('progCatEmptyClear')?.addEventListener('click', (e) => {
@@ -9662,8 +9635,8 @@ function renderProgramsCatalog() {
     const totalEligible = allEligible.length;
     const filterActive = state.org !== 'all' || state.format !== 'all' || state.state !== 'all';
     summary.textContent = filterActive
-      ? 'Showing ' + ordered.length + ' of ' + totalEligible + ' program' + (totalEligible === 1 ? '' : 's')
-      : ordered.length + ' program' + (ordered.length === 1 ? '' : 's');
+      ? 'Showing ' + ordered.length + ' of ' + totalEligible + ' learning path' + (totalEligible === 1 ? '' : 's')
+      : ordered.length + ' learning path' + (ordered.length === 1 ? '' : 's');
   }
 }
 window.renderProgramsCatalog = renderProgramsCatalog;
@@ -9729,10 +9702,6 @@ function gotoProgram(progId) {
   const typeLabel = p.single ? 'Single course' : 'Program';
   typeEl.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> ' +
     typeLabel + ' · ' + p.org + ' · ' + p.track;
-
-  // Show/hide private visibility chips based on program data
-  var progVisEl = document.getElementById('progHeroVisibility');
-  if (progVisEl) progVisEl.style.display = (PROGRAM_META[progId] && PROGRAM_META[progId].isPrivate) ? '' : 'none';
 
   // Status card
   const card = document.getElementById('progStatusCard');
@@ -12072,7 +12041,7 @@ window.handleCheckout = function() {
   function refreshSubsProgramOptions() {
     if (!subsProgramFilter) return;
     const ids = Array.from(new Set(SUBMISSIONS.map(s => s.programId)));
-    subsProgramFilter.innerHTML = '<option value="all">All programs</option>' +
+    subsProgramFilter.innerHTML = '<option value="all">All learning paths</option>' +
       ids.map(id => '<option value="' + id + '">' + escapeHtml(programLabel(id)) + '</option>').join('');
   }
   function refreshSubsCourseOptions() {
@@ -12200,7 +12169,7 @@ window.handleCheckout = function() {
   function refreshDiscsProgramOptions() {
     if (!discsProgramFilter) return;
     const ids = Array.from(new Set(DISCUSSIONS.map(d => d.programId)));
-    discsProgramFilter.innerHTML = '<option value="all">All programs</option>' +
+    discsProgramFilter.innerHTML = '<option value="all">All learning paths</option>' +
       ids.map(id => '<option value="' + id + '">' + escapeHtml(programLabel(id)) + '</option>').join('');
   }
   function refreshDiscsCourseOptions() {
@@ -12954,7 +12923,7 @@ window.handleCheckout = function() {
             '<button class="icon-btn pgn__icon-button" aria-label="Close" data-close="1"><span class="material-symbols-outlined">close</span></button>' +
           '</div>' +
           '<div class="studio-modal__body">' +
-            '<label class="form-label">Program title</label>' +
+            '<label class="form-label">Learning Path title</label>' +
             '<input type="text" class="form-control" id="peTitleInput" />' +
             '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:14px;">' +
               '<div><label class="form-label">Track code</label><input type="text" class="form-control" id="peCode" placeholder="e.g. SOF-PM-01" /></div>' +
@@ -12991,7 +12960,7 @@ window.handleCheckout = function() {
                 '<input type="text" class="form-control" id="peCoursePicker_search" placeholder="Filter courses…" style="max-width:240px; padding:8px 12px;" />' +
               '</div>' +
               '<div id="peCoursePickerList" style="display:flex; flex-direction:column; gap:6px; max-height:240px; overflow:auto; padding:4px 0;"></div>' +
-              '<p class="form-hint" style="margin:8px 2px 0;">Tick the courses learners must complete to earn the program certificate. Saving updates the Courses catalog, the course "Part of program" chip, and the program detail page.</p>' +
+              '<p class="form-hint" style="margin:8px 2px 0;">Tick the courses learners must complete to earn the learning path certificate. Saving updates the Courses catalog, the course "Part of program" chip, and the program detail page.</p>' +
             '</div>' +
           '</div>' +
           '<div class="studio-modal__foot">' +

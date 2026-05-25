@@ -3307,6 +3307,15 @@ a:hover { text-decoration: underline; }
   font-family: var(--font-display); font-weight:600; font-size: 11px;
   letter-spacing: 0.4px; text-transform: uppercase;
 }
+.prog-card__lang {
+  position: absolute; bottom: 12px; right: 12px; z-index: 1;
+  display: inline-flex; gap: 4px;
+}
+.prog-card__lang span {
+  background: rgba(0,0,0,0.55); color: var(--white);
+  padding: 3px 8px; border-radius: var(--r-pill);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+}
 /* Organization chip lives on the art area opposite the type badge — identifies
    which organization published the program, since the catalog is no
    longer grouped by org headers. */
@@ -5046,7 +5055,19 @@ body.is-logged-out .is-learner-only { display: none; }
 
     <div class="disc__toolbar">
       <span class="disc__count" id="discCount">Showing 9 of 150+ courses</span>
-      <div class="row" style="gap:8px;">
+      <div class="row" style="gap:8px; flex-wrap:wrap;">
+        <select class="form-control disc__refine-select" id="discLangFilter" aria-label="Language">
+          <option value="all">Language: All</option>
+          <option value="EN">English</option>
+          <option value="ID">Bahasa Indonesia</option>
+          <option value="VI">Vietnamese</option>
+          <option value="ZH">Chinese</option>
+        </select>
+        <select class="form-control disc__refine-select" id="discDurationFilter" aria-label="Duration">
+          <option value="all">Duration: All</option>
+          <option value="short">Short (≤ 6 modules)</option>
+          <option value="long">Long (> 6 modules)</option>
+        </select>
         <select class="form-control disc__refine-select" id="discSort" aria-label="Sort">
           <option value="popular">Sort: Popular</option>
           <option value="newest">Newest</option>
@@ -5367,6 +5388,16 @@ body.is-logged-out .is-learner-only { display: none; }
             <option value="browse">Open to enroll</option>
             <option value="enrolled">Enrolled</option>
             <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="prog-page__filter">
+          <label class="form-label" for="progCatLang">Language</label>
+          <select class="form-control form-select prog-catalog-select" id="progCatLang" aria-label="Language filter">
+            <option value="all">All languages</option>
+            <option value="EN">English</option>
+            <option value="ID">Bahasa Indonesia</option>
+            <option value="VI">Vietnamese</option>
+            <option value="ZH">Chinese</option>
           </select>
         </div>
         <div class="prog-page__filter">
@@ -9323,6 +9354,7 @@ const PROGRAMS_DB = {
     track: 'SOF-PM-01', title: 'Project Manager',
     desc: 'A practitioner pathway from kickoff to closeout. Five sequenced courses cover agile and waterfall fundamentals, stakeholder communication, risk and budgets, and delivery — with a portfolio-ready capstone.',
     courses: 5, hours: '~32h', learners: '1,420',
+    languages: ['EN','ID'],
     progress: { completed: 2, total: 5, pct: 40, rule: 'Complete <strong>5 of 5 required courses</strong> to earn the Project Manager certificate. The capstone is required.' },
     rule: '<strong>Sequential unlock</strong> — each course unlocks after the previous one is 80% complete. Capstone unlocks after Courses 1–4.',
     cert: { title: 'Project Manager · Mereka Academy', desc: 'Awarded once you complete all five courses including the capstone. Verified, shareable to LinkedIn.' },
@@ -9352,7 +9384,7 @@ const PROGRAMS_DB = {
     track: 'SOF-DATA-01', title: 'Data Analyst',
     desc: 'Career-switcher pathway from spreadsheets to SQL to dashboards. Build the muscle to clean messy data, find patterns, and communicate insight to non-technical stakeholders.',
     courses: 5, hours: '~36h', learners: '980',
-    price: 'RM 1,480',
+    price: 'RM 1,480', languages: ['EN','ID','VI'],
     rule: '<strong>Sequential unlock</strong> — each course unlocks after the previous one is 80% complete. Capstone unlocks after Courses 1–4.',
     cert: { title: 'Data Analyst · Mereka Academy', desc: 'Awarded once you complete all five courses and the capstone. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'PM', name: 'Priya Menon', extra: '+ 2 guest analysts' },
@@ -9370,7 +9402,7 @@ const PROGRAMS_DB = {
     track: 'SOF-DEV-01', title: 'Developer',
     desc: 'A from-zero pathway to a production-ready full-stack baseline. Five courses move from HTML/CSS to React and a working backend, ending in a portfolio-ready project you can ship.',
     courses: 5, hours: '~48h', learners: '1,640',
-    price: 'RM 1,680',
+    price: 'RM 1,680', languages: ['EN'],
     rule: '<strong>Sequential unlock</strong> — each course unlocks after the previous one is 80% complete. Capstone unlocks after Courses 1–4.',
     cert: { title: 'Developer · Mereka Academy', desc: 'Awarded once you complete all five courses and ship the portfolio capstone. Verified, shareable to LinkedIn and GitHub.' },
     instructor: { initials: 'KH', name: 'Kelvin Ho', extra: '+ 2 senior engineers' },
@@ -9388,7 +9420,7 @@ const PROGRAMS_DB = {
     track: 'SOF-ADMIN-01', title: 'Administrative Professional',
     desc: 'The operational spine of any modern team. Five courses on calendars, communications, vendor coordination, and exec support — plus the digital tools that make it all faster.',
     courses: 5, hours: '~28h', learners: '760',
-    price: 'RM 1,240',
+    price: 'RM 1,240', languages: ['EN','ID'],
     rule: '<strong>Sequential unlock</strong> — each course unlocks after the previous one is 80% complete. Capstone unlocks after Courses 1–4.',
     cert: { title: 'Administrative Professional · Mereka Academy', desc: 'Awarded once you complete all five courses and the capstone. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'SH', name: 'Siti Hawa', extra: '+ 2 senior EAs' },
@@ -9406,7 +9438,7 @@ const PROGRAMS_DB = {
     track: 'SOF-MKT-01', title: 'Digital Marketer',
     desc: 'Run a real campaign end-to-end. Five courses across SEO, paid ads, content, and analytics — culminating in a launch-and-measure capstone with real budget thinking.',
     courses: 5, hours: '~34h', learners: '1,120',
-    price: 'RM 1,420',
+    price: 'RM 1,420', languages: ['EN','ZH'],
     rule: '<strong>Sequential unlock</strong> — each course unlocks after the previous one is 80% complete. Capstone unlocks after Courses 1–4.',
     cert: { title: 'Digital Marketer · Mereka Academy', desc: 'Awarded once you complete all five courses and the launch capstone. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'JT', name: 'Jia Ting Lim', extra: '+ 2 brand strategists' },
@@ -9424,7 +9456,7 @@ const PROGRAMS_DB = {
     track: 'SOF-GREEN-01', title: 'Embark on a Green Jobs Journey',
     desc: 'A one-course primer on Malaysia\u2019s green economy — sustainability, ESG reporting, and the emerging roles to aim for. Map where you fit and what to learn next.',
     courses: 1, hours: '~6h', learners: '420',
-    price: 'RM 380',
+    price: 'RM 380', languages: ['EN','ID'],
     rule: '<strong>Single-course learning path</strong> — complete the course to earn the certificate.',
     cert: { title: 'Embark on a Green Jobs Journey · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'AH', name: 'Aiman Hakim', extra: 'Sustainability consultant' },
@@ -9438,7 +9470,7 @@ const PROGRAMS_DB = {
     track: 'SOF-SPEAK-01', title: 'Speak with Impact',
     desc: 'Structure your message, hold a room, and present with confidence. A focused one-course learning path for meetings, town halls, and pitches.',
     courses: 1, hours: '~5h', learners: '680',
-    price: 'RM 320',
+    price: 'RM 320', languages: ['EN'],
     rule: '<strong>Single-course learning path</strong> — complete the course to earn the certificate.',
     cert: { title: 'Speak with Impact · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'RC', name: 'Rachel Choo', extra: 'Communications coach' },
@@ -9452,7 +9484,7 @@ const PROGRAMS_DB = {
     track: 'SOF-ENTRE-01', title: 'Become An Entrepreneur',
     desc: 'Validate an idea, find your first customers, and build a starter business plan. The practical first 90 days, in a single course.',
     courses: 1, hours: '~7h', learners: '540',
-    price: 'RM 420',
+    price: 'RM 420', languages: ['EN','ID'],
     rule: '<strong>Single-course learning path</strong> — complete the course to earn the certificate.',
     cert: { title: 'Become An Entrepreneur · Mereka Academy', desc: 'Awarded on course completion. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'AR', name: 'Adam Razali', extra: 'Founder, 2x exits' },
@@ -9468,6 +9500,7 @@ const PROGRAMS_DB = {
     track: 'MEREKA-FOW-01', title: 'Future of Work',
     desc: 'Eight courses for the freelance, hybrid, portfolio-career era — the operating manual modern work didn\u2019t ship with. Pricing, contracts, money, writing, presence, and skill-mapping.',
     courses: 8, hours: '~52h', learners: '3,240',
+    languages: ['EN','ID'],
     progress: { completed: 8, total: 8, pct: 100, rule: '<strong>Learning Path complete.</strong> Certificate issued Apr 22, 2026.' },
     rule: '<strong>Flexible order</strong> — courses can be taken in any sequence. Complete all 8 to earn the learning path certificate.',
     cert: { title: 'Future of Work · Mereka Academy', desc: 'Awarded once you complete all eight courses. Verified, shareable to LinkedIn.' },
@@ -9489,7 +9522,7 @@ const PROGRAMS_DB = {
     track: 'MEREKA-AI-01', title: 'Unlocking the Power of AI',
     desc: 'Use ChatGPT to ship work faster. Three courses move from prompts that actually work, to integrating AI into daily workflows, to building small AI-powered tools without code.',
     courses: 3, hours: '~14h', learners: '1,840',
-    price: 'RM 680',
+    price: 'RM 680', languages: ['EN','ID','VI','ZH'],
     rule: '<strong>Sequential unlock</strong> — each course unlocks after the previous one is 80% complete.',
     cert: { title: 'Unlocking the Power of AI · Mereka Academy', desc: 'Awarded once you complete all three courses. Verified, shareable to LinkedIn.' },
     instructor: { initials: 'DN', name: 'Daniel Ng', extra: '+ 1 ML practitioner' },
@@ -9650,6 +9683,7 @@ window.MerekaProgCatalog = window.MerekaProgCatalog || {
   org: 'all',  // 'all' | 'sof' | 'mereka'
   format: 'all',  // 'all' | 'program' | 'single'
   state:  'all',  // 'all' | 'browse' | 'enrolled' | 'completed'
+  lang: 'all',
   sort:   'featured', // 'featured' | 'title' | 'learners-desc' | 'courses-desc' | 'hours-desc'
   search: ''
 };
@@ -9676,6 +9710,7 @@ function renderProgramsCatalog() {
     if (state.org !== 'all' && (x.m.section || 'sof') !== state.org) return false;
     if (state.format === 'program' && x.p.single)  return false;
     if (state.format === 'single'  && !x.p.single) return false;
+    if (state.lang && state.lang !== 'all' && !(x.p.languages || ['EN']).includes(state.lang)) return false;
     if (state.state !== 'all'  && (x.p.state || 'browse') !== state.state) return false;
     if (q) {
       const hay = ((x.p.title || '') + ' ' + (x.p.desc || '') + ' ' + (x.p.track || '')).toLowerCase();
@@ -9720,9 +9755,11 @@ function renderProgramsCatalog() {
       : isEnrolled
         ? '<span style="color:var(--success);"><strong>Enrolled</strong></span>'
         : '<span><strong>' + escapeHtml(p.price || '—') + '</strong></span>';
+    const langBadges = (p.languages || ['EN']).map(function(l) { return '<span>' + escapeHtml(l) + '</span>'; }).join('');
+    const langChip = '<span class="prog-card__lang">' + langBadges + '</span>';
     const html =
       '<article class="prog-card" data-prog-org="' + escapeHtml(m.section || 'sof') + '" onclick="gotoProgram(\'' + id + '\')">' +
-        '<div class="prog-card__art" style="background: ' + escapeHtml(m.art || 'linear-gradient(120deg, #295CAD 0%, #1A3D75 100%)') + ';">' + orgChip + badge + '</div>' +
+        '<div class="prog-card__art" style="background: ' + escapeHtml(m.art || 'linear-gradient(120deg, #295CAD 0%, #1A3D75 100%)') + ';">' + orgChip + badge + langChip + '</div>' +
         '<div class="prog-card__body">' +
           '<span class="prog-card__track">' + escapeHtml(p.track) + '</span>' +
           '<h3>' + escapeHtml(p.title) + '</h3>' +
@@ -9757,7 +9794,7 @@ function renderProgramsCatalog() {
     // dropdown already communicates the multi-org nature; the summary
     // intentionally just counts programs to avoid implying multi-tenancy.
     const totalEligible = allEligible.length;
-    const filterActive = state.org !== 'all' || state.format !== 'all' || state.state !== 'all';
+    const filterActive = state.org !== 'all' || state.format !== 'all' || state.state !== 'all' || state.lang !== 'all';
     summary.textContent = filterActive
       ? 'Showing ' + ordered.length + ' of ' + totalEligible + ' learning path' + (totalEligible === 1 ? '' : 's')
       : ordered.length + ' learning path' + (ordered.length === 1 ? '' : 's');
@@ -9773,11 +9810,13 @@ renderProgramsCatalog();
   const org = document.getElementById('progCatOrg');
   const format = document.getElementById('progCatFormat');
   const stateSel = document.getElementById('progCatState');
+  const langSel = document.getElementById('progCatLang');
   const sort = document.getElementById('progCatSort');
   const reset = document.getElementById('progCatReset');
   if (org) org.addEventListener('change', () => { window.MerekaProgCatalog.org = org.value; renderProgramsCatalog(); });
   if (format) format.addEventListener('change', () => { window.MerekaProgCatalog.format = format.value; renderProgramsCatalog(); });
   if (stateSel) stateSel.addEventListener('change', () => { window.MerekaProgCatalog.state = stateSel.value; renderProgramsCatalog(); });
+  if (langSel) langSel.addEventListener('change', () => { window.MerekaProgCatalog.lang = langSel.value; renderProgramsCatalog(); });
   if (sort) sort.addEventListener('change', () => { window.MerekaProgCatalog.sort = sort.value; renderProgramsCatalog(); });
   const searchInput = document.getElementById('progSearchInput');
   const searchBtn = document.getElementById('progSearchBtn');
@@ -9794,10 +9833,11 @@ renderProgramsCatalog();
     });
   }
   window.resetProgCatFilters = function () {
-    window.MerekaProgCatalog = { org: 'all', format: 'all', state: 'all', sort: 'featured', search: '' };
+    window.MerekaProgCatalog = { org: 'all', format: 'all', state: 'all', lang: 'all', sort: 'featured', search: '' };
     if (org) org.value = 'all';
     if (format) format.value = 'all';
     if (stateSel) stateSel.value = 'all';
+    if (langSel) langSel.value = 'all';
     if (sort) sort.value = 'featured';
     if (searchInput) searchInput.value = '';
     renderProgramsCatalog();

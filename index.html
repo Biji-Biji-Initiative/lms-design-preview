@@ -10707,7 +10707,7 @@ function applyEnrolledState(courseId) {
     if (progressBar) { progressBar.style.width = '100%'; progressBar.style.background = 'var(--success)'; }
     if (nextUnit) nextUnit.innerHTML = '<strong style="color:var(--success);">Certificate ready</strong>';
     if (continueBtn) { continueBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">workspace_premium</span> View certificate'; continueBtn.setAttribute('onclick', "goto('certificate')"); }
-    if (certBtn) { certBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">workspace_premium</span> View your certificate'; certBtn.setAttribute('onclick', "goto('certificate')"); }
+    if (certBtn) certBtn.style.display = 'none';
     if (heroProgress) heroProgress.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px; color:var(--success);">check_circle</span> Completed';
     if (heroContinueBtn) { heroContinueBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">workspace_premium</span> View certificate'; heroContinueBtn.setAttribute('onclick', "goto('certificate')"); }
   } else {
@@ -10718,7 +10718,7 @@ function applyEnrolledState(courseId) {
     if (progressBar) { progressBar.style.width = enr.pct + '%'; progressBar.style.background = ''; }
     if (nextUnit) nextUnit.innerHTML = '<strong>Next up:</strong> ' + escapeHtml(enr.nextUnit || '');
     if (continueBtn) { continueBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span> Continue learning'; continueBtn.setAttribute('onclick', "goto('unit')"); }
-    if (certBtn) { certBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">workspace_premium</span> View sample certificate'; certBtn.setAttribute('onclick', "window.__certMode='sample'; goto('certificate')"); }
+    if (certBtn) { certBtn.style.display = ''; certBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">workspace_premium</span> View sample certificate'; certBtn.setAttribute('onclick', "window.__certMode='sample'; goto('certificate')"); }
     if (heroProgress) heroProgress.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px; color:var(--primary);">pie_chart</span> ' + enr.pct + '% complete';
     if (heroContinueBtn) { heroContinueBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span> Continue learning'; heroContinueBtn.setAttribute('onclick', "goto('unit')"); }
   }
@@ -13960,8 +13960,8 @@ window.handleCheckout = function() {
    Format:
      /                          Landing (also: /landing, /home, /homepage)
      /login        /register    Auth
-     /dashboard    /discover    /programs   /my-learning
-     /programs/<id>             Program detail (e.g. /programs/sof-pm)
+     /dashboard    /discover    /learning-paths   /my-learning
+     /learning-paths/<id>       Learning path detail (e.g. /learning-paths/sof-pm)
      /course/<id>               Course detail (e.g. /course/strategy)
      /unit                      Unit player
      /checkout     /enrolled    Commerce
@@ -14016,7 +14016,8 @@ window.handleCheckout = function() {
     'my-learning': 'dashboard',        // merged into Dashboard
     'mylearning': 'dashboard',
     'discover': 'discover',
-    'programs': 'programs',
+    'learning-paths': 'programs',
+    'programs': 'programs',             // legacy alias
     'program': 'program-detail',
     'course': 'course',
     'learn': 'unit',
@@ -14035,7 +14036,8 @@ window.handleCheckout = function() {
   // Inverse: screen id → preferred URL slug (where it differs from the id).
   const SCREEN_TO_SLUG = {
     landing: '',                       // root path for landing
-    'program-detail': 'programs',
+    'programs': 'learning-paths',
+    'program-detail': 'learning-paths',
     'enrollment-success': 'enrolled',
     'my-certificates': 'certificates',
   };
@@ -14091,7 +14093,7 @@ window.handleCheckout = function() {
     if (screen === 'program-detail') {
       const el = document.getElementById('screen-program-detail');
       const id = el && el.dataset.progId;
-      return id ? '/programs/' + encodeURIComponent(id) : '/programs';
+      return id ? '/learning-paths/' + encodeURIComponent(id) : '/learning-paths';
     }
     if (screen === 'studio') {
       const courseId = window.MerekaStudioCurrentCourseId;
@@ -14138,14 +14140,16 @@ window.handleCheckout = function() {
       return;
     }
     const { screen, param } = parsed;
-    // Canonicalize legacy aliases (e.g. /my-learning → /dashboard) so the
-    // URL bar reflects the surface the user actually sees. Only do it when
-    // there's no entity param to preserve.
+    // Canonicalize legacy aliases (e.g. /my-learning → /dashboard,
+    // /programs → /learning-paths) so the URL bar reflects the preferred slug.
     if (!param) {
       const canonical = pathForScreen(screen);
       if (canonical && window.location.pathname !== canonical) {
         history.replaceState(null, '', canonical);
       }
+    } else if (screen === 'programs' && window.location.pathname.startsWith('/programs/')) {
+      // Legacy /programs/<id> → /learning-paths/<id>
+      history.replaceState(null, '', '/learning-paths/' + encodeURIComponent(param));
     }
     // Guest deep-linked to a protected screen — bounce to /login so they
     // can't see authenticated chrome (dashboard, profile, etc.) just by
@@ -14163,7 +14167,7 @@ window.handleCheckout = function() {
     }
     _suppressWrite = true;
     try {
-      if (screen === 'program-detail' && param && typeof window.gotoProgram === 'function') {
+      if ((screen === 'program-detail' || (screen === 'programs' && param)) && param && typeof window.gotoProgram === 'function') {
         window.gotoProgram(decodeURIComponent(param));
         window.goto('program-detail');
       } else if (screen === 'course' && param && typeof window.applyCourseDetail === 'function') {
@@ -14256,7 +14260,7 @@ window.handleCheckout = function() {
       try { _origGotoProgram.call(this, progId); }
       finally { _suppressWrite = wasSuppressed; }
       if (_suppressWrite) return;
-      const target = '/programs/' + encodeURIComponent(progId);
+      const target = '/learning-paths/' + encodeURIComponent(progId);
       if (window.location.pathname !== target) history.pushState(null, '', target);
       setDocTitle('program-detail', progId);
     };

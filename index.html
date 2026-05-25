@@ -4542,7 +4542,7 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="avatar-lg">FF</div>
       <div>
         <h1>Welcome back, Faiz</h1>
-        <p>3 courses in progress</p>
+        <p>4 items in progress</p>
         <button class="btn btn--discover" onclick="goto('discover')">Browse courses <span class="material-symbols-outlined">arrow_forward</span></button>
       </div>
       <div class="dash__hero-spacer"></div>
@@ -4565,7 +4565,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
     <div class="dash__grid">
       <div>
-        <div class="section-head"><h3>Active Learning Paths</h3><a href="#" onclick="goto('programs'); return false;">All →</a></div>
+        <div class="section-head"><h3>Active Learning Paths</h3><a href="#" onclick="document.querySelector('#screen-dashboard .mylearning__chip[data-filter=programs]').click(); document.querySelector('#screen-dashboard .dash__library').scrollIntoView({behavior:'smooth'}); return false;">All →</a></div>
         <div class="card lp-summary">
           <div class="lp-summary__item">
             <div class="lp-summary__info">
@@ -4574,14 +4574,6 @@ body.is-logged-out .is-learner-only { display: none; }
               <div class="lp-summary__progress"><div class="lp-summary__progress-bar" style="width:40%;"></div></div>
             </div>
             <button class="btn btn-outline-primary btn-sm" onclick="gotoProgram('sof-pm')">Continue</button>
-          </div>
-          <div class="lp-summary__item">
-            <div class="lp-summary__info">
-              <div class="lp-summary__name">Future of Work</div>
-              <div class="lp-summary__meta">Completed · 8 of 8 courses · 100% complete</div>
-              <div class="lp-summary__progress"><div class="lp-summary__progress-bar" style="width:100%; background:var(--success);"></div></div>
-            </div>
-            <button class="btn btn-outline-primary btn-sm" onclick="goto('certificate')">View</button>
           </div>
         </div>
       </div>

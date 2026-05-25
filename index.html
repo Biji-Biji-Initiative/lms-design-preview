@@ -1096,10 +1096,10 @@ a:hover { text-decoration: underline; }
 .disc__refine-select, .prog-catalog-select {
   padding: 8px 12px; font-size: 13px; width: 100%; min-width: 0;
 }
-/* Discover filter bar — labeled dropdown grid matching Learning Paths */
+/* Discover filter bar — labeled dropdown grid (3 filters + reset) */
 .disc__filter-bar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) auto;
+  grid-template-columns: repeat(3, 1fr) auto;
   gap: 12px;
   align-items: end;
   margin-bottom: 16px;
@@ -3246,7 +3246,7 @@ a:hover { text-decoration: underline; }
    right-aligned on every breakpoint. */
 .prog-page__filters {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) auto;
+  grid-template-columns: repeat(5, 1fr) auto;
   gap: 12px;
   align-items: end;
 }

@@ -4565,7 +4565,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
     <div class="dash__grid">
       <div>
-        <div class="section-head"><h3>Active Learning Paths</h3><a href="#" onclick="document.querySelector('#screen-dashboard .mylearning__chip[data-filter=programs]').click(); document.querySelector('#screen-dashboard .dash__library').scrollIntoView({behavior:'smooth'}); return false;">All →</a></div>
+        <div class="section-head"><h3>Active Learning Paths</h3><a href="#" onclick="var ch=document.querySelector('#screen-dashboard .mylearning__chip[data-filter=programs]');ch.click();document.querySelectorAll('#screen-dashboard .mylearning__grid .prog-card').forEach(function(c){if(c.dataset.mlType==='program'&&c.dataset.mlState==='completed')c.style.display='none';});document.querySelector('#screen-dashboard .dash__library').scrollIntoView({behavior:'smooth'});return false;">All →</a></div>
         <div class="card lp-summary">
           <div class="lp-summary__item">
             <div class="lp-summary__info">

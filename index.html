@@ -10626,8 +10626,49 @@ window.ENROLLED_COURSES = {
   'e110':     { pct: 100, module: 8, totalModules: 8, grade: 91, nextUnit: null, enrolled: 'Jan 15, 2026', completed: 'Mar 04, 2026', state: 'completed' }
 };
 
+/* Enrolled learning paths — courses inside these programs inherit enrolled status.
+   Maps program ID → enrollment data. Courses in these programs that aren't
+   explicitly in ENROLLED_COURSES get a default "enrolled via program" entry. */
+window.ENROLLED_PROGRAMS = {
+  'sof-pm':     { pct: 40, enrolled: 'Apr 02, 2026', state: 'progress' },
+  'mereka-fow': { pct: 100, enrolled: 'Jan 10, 2026', completed: 'Apr 22, 2026', state: 'completed' }
+};
+
+/* Resolve enrollment: check ENROLLED_COURSES first, then fall back to
+   checking if the course belongs to an enrolled program. */
+function getEnrollmentData(courseId) {
+  var direct = (window.ENROLLED_COURSES || {})[courseId];
+  if (direct) return direct;
+
+  // Check if this course is part of any enrolled program
+  var meta = window.PROGRAM_META || {};
+  var enrolledProgs = window.ENROLLED_PROGRAMS || {};
+  for (var pid in enrolledProgs) {
+    if (!enrolledProgs.hasOwnProperty(pid)) continue;
+    var pm = meta[pid];
+    if (pm && (pm.courseIds || []).indexOf(courseId) !== -1) {
+      var prog = enrolledProgs[pid];
+      var progDb = (window.PROGRAMS_DB || {})[pid];
+      var progTitle = progDb ? progDb.title : pid;
+      // Build a derived enrollment entry for this course
+      return {
+        pct: prog.state === 'completed' ? 100 : 0,
+        module: prog.state === 'completed' ? 4 : 1,
+        totalModules: 4,
+        grade: prog.state === 'completed' ? 85 : null,
+        nextUnit: prog.state === 'completed' ? null : 'Start this course',
+        enrolled: prog.enrolled,
+        completed: prog.completed || null,
+        state: prog.state,
+        viaProgram: progTitle
+      };
+    }
+  }
+  return null;
+}
+
 function applyEnrolledState(courseId) {
-  var enr = (window.ENROLLED_COURSES || {})[courseId];
+  var enr = getEnrollmentData(courseId);
   var card = document.getElementById('courseEnrollCard');
   var courseMain = document.querySelector('#screen-course .course');
 
@@ -10670,8 +10711,8 @@ function applyEnrolledState(courseId) {
     if (heroProgress) heroProgress.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px; color:var(--success);">check_circle</span> Completed';
     if (heroContinueBtn) { heroContinueBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">workspace_premium</span> View certificate'; heroContinueBtn.setAttribute('onclick', "goto('certificate')"); }
   } else {
-    if (statusLabel) statusLabel.textContent = "You're enrolled";
-    if (statusDate) statusDate.textContent = 'Enrolled since ' + enr.enrolled;
+    if (statusLabel) statusLabel.textContent = enr.viaProgram ? 'Included in ' + enr.viaProgram : "You're enrolled";
+    if (statusDate) statusDate.textContent = enr.viaProgram ? 'Enrolled via your learning path' : 'Enrolled since ' + enr.enrolled;
     if (pctLabel) pctLabel.textContent = enr.pct + '% complete';
     if (moduleLabel) moduleLabel.textContent = 'Module ' + enr.module + ' of ' + enr.totalModules;
     if (progressBar) { progressBar.style.width = enr.pct + '%'; progressBar.style.background = ''; }
@@ -10682,7 +10723,13 @@ function applyEnrolledState(courseId) {
     if (heroContinueBtn) { heroContinueBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span> Continue learning'; heroContinueBtn.setAttribute('onclick', "goto('unit')"); }
   }
 
-  if (gradeValue) gradeValue.textContent = enr.grade + '%';
+  var gradeCard = document.getElementById('enrolledGradeCard');
+  if (enr.grade != null) {
+    if (gradeValue) gradeValue.textContent = enr.grade + '%';
+    if (gradeCard) gradeCard.style.display = '';
+  } else {
+    if (gradeCard) gradeCard.style.display = 'none';
+  }
 }
 window.applyEnrolledState = applyEnrolledState;
 

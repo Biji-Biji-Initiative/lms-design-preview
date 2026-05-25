@@ -13020,7 +13020,7 @@ window.handleCheckout = function() {
         openMenuAt(btn, [
           { icon: 'edit', label: 'Open in Studio', onClick: () => selectCourseById(id) },
           { icon: 'tune', label: 'Edit basics…', onClick: () => openCourseEditor(id) },
-          { icon: 'workspace_premium', label: 'Assign to programs…', onClick: () => openCourseProgramsPicker(id) },
+          { icon: 'workspace_premium', label: 'Assign to learning paths…', onClick: () => openCourseProgramsPicker(id) },
           { icon: 'file_copy', label: 'Duplicate', onClick: () => {
             const src = getCourse(id);
             const copy = Object.assign({}, src, { id: src.id + '-copy-' + Date.now(), title: src.title + ' (copy)', code: src.code + '-CP', status: 'draft', enrolled: 0, completion: 0, rating: 0, updated: 'just now' });
@@ -13589,7 +13589,7 @@ window.handleCheckout = function() {
     anCrumb.style.display = 'flex';
     const trail = [];
     // Root segment: tab name
-    const rootLabel = anTab === 'programs' ? 'Programs' : anTab === 'courses' ? 'Courses' : 'Course items';
+    const rootLabel = anTab === 'programs' ? 'Learning Paths' : anTab === 'courses' ? 'Courses' : 'Course items';
     trail.push(`<a href="#" data-an-crumb="0">${rootLabel}</a>`);
     // Each path step
     if (anTab === 'programs') {
@@ -13988,8 +13988,8 @@ window.handleCheckout = function() {
     register: 'Create account',
     dashboard: 'Dashboard',
     discover: 'Courses',
-    programs: 'Programs',
-    'program-detail': 'Program',
+    programs: 'Learning Paths',
+    'program-detail': 'Learning Path',
     course: 'Course',
     unit: 'Learn',
     certificate: 'Certificate',

@@ -1168,8 +1168,8 @@ a:hover { text-decoration: underline; }
   align-self: flex-start;
 }
 .course-card__lang {
-  position: absolute; bottom: 12px; right: 12px;
-  display: inline-flex; gap: 4px;
+  position: absolute; top: 10px; right: 10px;
+  display: inline-flex; gap: 4px; z-index: 2;
 }
 .course-card__lang span {
   background: rgba(0,0,0,0.55); color: var(--white);
@@ -1190,7 +1190,7 @@ a:hover { text-decoration: underline; }
   color: var(--white); position: relative;
 }
 .course-card__lang {
-  position: absolute; bottom: 12px; right: 12px; z-index: 1;
+  position: absolute; top: 10px; right: 10px; z-index: 2;
   display: inline-flex; gap: 4px;
 }
 .course-card__lang span {
@@ -10728,7 +10728,7 @@ function discoverCardHtml(c, isPrivate) {
         '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">lock</span> Course · Invite-only</span>' +
         orgChip +
         '<span class="material-symbols-outlined" style="font-size:48px;">lock</span>' +
-        (function(){ var flags={EN:'🇬🇧',ID:'🇮🇩',VI:'🇻🇳',ZH:'🇨🇳',MS:'🇲🇾'}; var l=(c.languages||['EN'])[0]; return '<div class="course-card__lang"><span class="lang-badge" data-lang="'+escapeHtml(l)+'"><span class="lang-badge__flag">'+(flags[l]||'')+'</span> '+escapeHtml(l)+'</span></div>'; })() +
+        (function(){ var l=(c.languages||['EN'])[0]; return '<span class="course-card__lang"><span>'+escapeHtml(l)+'</span></span>'; })() +
       '</div>' +
       '<div class="course-card__body">' +
         '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +
@@ -10744,7 +10744,7 @@ function discoverCardHtml(c, isPrivate) {
       '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">menu_book</span> Course</span>' +
       orgChip +
       '<span class="material-symbols-outlined" style="font-size:48px;">' + escapeHtml(c.icon || 'school') + '</span>' +
-      (function(){ var flags={EN:'🇬🇧',ID:'🇮🇩',VI:'🇻🇳',ZH:'🇨🇳',MS:'🇲🇾'}; var l=(c.languages||['EN'])[0]; return '<div class="course-card__lang"><span class="lang-badge" data-lang="'+escapeHtml(l)+'"><span class="lang-badge__flag">'+(flags[l]||'')+'</span> '+escapeHtml(l)+'</span></div>'; })() +
+      (function(){ var l=(c.languages||['EN'])[0]; return '<span class="course-card__lang"><span>'+escapeHtml(l)+'</span></span>'; })() +
     '</div>' +
     '<div class="course-card__body">' +
       '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +

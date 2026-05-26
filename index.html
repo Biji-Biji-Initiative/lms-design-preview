@@ -1178,9 +1178,14 @@ a:hover { text-decoration: underline; }
 }
 .disc__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
+@media (max-width: 900px) { .disc__grid { grid-template-columns: 1fr; } }
+@media (min-width: 901px) and (max-width: 1100px) { .disc__grid { grid-template-columns: repeat(2, 1fr); } }
+.landing__course-meta .price { font-weight: 700; color: var(--off-black); }
+.landing__course-meta .price.is-free { color: var(--success); }
+.landing__course-meta .rating { color: var(--medium-grey); }
 .course-card { display: flex; flex-direction: column; }
 .course-card__img {
   height: 140px;
@@ -10712,50 +10717,44 @@ function renderDiscoverGrid() {
   if (reset) reset.addEventListener('click', () => window.resetDiscoverFilters());
 })();
 function discoverCardHtml(c, isPrivate) {
-  const orgLabel = c.org || 'Mereka Academy';
-  const orgChip = '<span class="course-card__org" title="Published by ' + escapeHtml(orgLabel) + '">' +
-    '<span class="material-symbols-outlined">corporate_fare</span>' + escapeHtml(orgLabel) + '</span>';
-  // Price chip — shows "Free" for free entries, the formatted price otherwise.
-  const rawPrice = (c.price || '').trim();
-  const isFree = !rawPrice || rawPrice.toLowerCase() === 'free' || rawPrice === '0' || rawPrice === 'RM 0';
-  const priceLabel = isFree ? 'Free' : escapeHtml(rawPrice);
-  const priceClass = 'course-card__price' + (isFree ? ' is-free' : '');
-  if (isPrivate) {
-    return '<article class="card course-card" data-private="true" data-course-id="' + escapeHtml(c.id) + '"' +
-      ' data-course-title="' + escapeHtml(c.title) + '" data-course-price="' + escapeHtml(c.price || 'Private') + '"' +
-      ' data-course-icon="' + escapeHtml(c.icon || 'lock') + '" data-course-tag="Private" onclick="gotoCourse(\'' + escapeHtml(c.id) + '\')">' +
-      '<div class="course-card__img course-art" data-topic="' + escapeHtml(c.topic || 'strategy') + '">' +
-        '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">lock</span> Course · Invite-only</span>' +
-        orgChip +
-        '<span class="material-symbols-outlined" style="font-size:48px;">lock</span>' +
-        (function(){ var l=(c.languages||['EN'])[0]; return '<span class="course-card__lang"><span>'+escapeHtml(l)+'</span></span>'; })() +
-      '</div>' +
-      '<div class="course-card__body">' +
-        '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +
-        '<h3>' + escapeHtml(c.title) + '</h3>' +
-        '<p class="course-card__meta">' + escapeHtml(c.description || '') + '</p>' +
-      '</div>' +
-    '</article>';
-  }
-  return '<article class="card course-card" data-course-id="' + escapeHtml(c.id) + '"' +
-    ' data-course-title="' + escapeHtml(c.title) + '" data-course-price="' + escapeHtml(c.price || '') + '"' +
-    ' data-course-icon="' + escapeHtml(c.icon || 'school') + '" data-course-tag="' + escapeHtml(c.tag || '') + '" onclick="gotoCourse(\'' + escapeHtml(c.id) + '\')">' +
-    '<div class="course-card__img course-art" data-topic="' + escapeHtml(c.topic || 'design') + '">' +
-      '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">menu_book</span> Course</span>' +
-      orgChip +
-      '<span class="material-symbols-outlined" style="font-size:48px;">' + escapeHtml(c.icon || 'school') + '</span>' +
-      (function(){ var l=(c.languages||['EN'])[0]; return '<span class="course-card__lang"><span>'+escapeHtml(l)+'</span></span>'; })() +
+  /* --- Tag-to-color map (matches landing page chip colors) --- */
+  var TAG_COLORS = {
+    'AI fluency':               { bg: 'rgba(41,92,173,0.1)',  fg: '#295CAD' },
+    'Developer':                { bg: 'rgba(35,112,114,0.1)', fg: '#237072' },
+    'Soft skills':              { bg: 'rgba(171,59,120,0.1)', fg: '#AB3B78' },
+    'Data & analytics':         { bg: 'rgba(35,112,114,0.1)', fg: '#237072' },
+    'Digital marketing':        { bg: 'rgba(200,74,91,0.1)',  fg: '#C84A5B' },
+    'Project management':       { bg: 'rgba(41,92,173,0.1)',  fg: '#295CAD' },
+    'Personal branding':        { bg: 'rgba(143,47,101,0.1)', fg: '#8F2F65' },
+    'Entrepreneurship':         { bg: 'rgba(224,122,62,0.1)', fg: '#E07A3E' },
+    'Climate & sustainability': { bg: 'rgba(58,167,109,0.1)', fg: '#3AA76D' },
+    'Private':                  { bg: 'rgba(0,0,0,0.08)',     fg: '#555' }
+  };
+  var tagColor = TAG_COLORS[c.tag] || TAG_COLORS[isPrivate ? 'Private' : 'Soft skills'];
+  var rawPrice = (c.price || '').trim();
+  var isFree = !rawPrice || rawPrice.toLowerCase() === 'free' || rawPrice === '0' || rawPrice === 'RM 0';
+  var priceLabel = isFree ? 'Free' : escapeHtml(rawPrice);
+  var priceClass = 'price' + (isFree ? ' is-free' : '');
+  var lang = (c.languages || ['EN'])[0];
+  var tagLabel = isPrivate ? 'Invite-only' : escapeHtml(c.tag || '');
+  var iconName = isPrivate ? 'lock' : escapeHtml(c.icon || 'school');
+  var ratingStr = c.rating ? ('★ ' + c.rating + (c.enrolled ? ' · ' + Number(c.enrolled).toLocaleString() + ' learners' : '')) : '';
+
+  return '<div class="landing__course-card" onclick="gotoCourse(\'' + escapeHtml(c.id) + '\')">' +
+    '<div class="landing__course-thumb course-art" data-topic="' + escapeHtml(c.topic || 'design') + '">' +
+      '<span class="material-symbols-outlined">' + iconName + '</span>' +
+      '<span class="course-card__lang"><span>' + escapeHtml(lang) + '</span></span>' +
     '</div>' +
-    '<div class="course-card__body">' +
-      '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +
-      '<h3>' + escapeHtml(c.title) + '</h3>' +
-      '<p class="course-card__meta">' + escapeHtml(c.description || '') + '</p>' +
-      '<div class="course-card__foot">' +
+    '<div class="landing__course-body">' +
+      '<span class="chip" style="background:' + tagColor.bg + '; color:' + tagColor.fg + ';">' + tagLabel + '</span>' +
+      '<h4>' + escapeHtml(c.title) + '</h4>' +
+      '<p>' + escapeHtml(c.description || '') + '</p>' +
+      '<div class="landing__course-meta">' +
         '<span class="' + priceClass + '">' + priceLabel + '</span>' +
-        '<button class="btn btn-primary btn-sm">View course</button>' +
+        '<span class="rating">' + ratingStr + '</span>' +
       '</div>' +
     '</div>' +
-  '</article>';
+  '</div>';
 }
 window.renderDiscoverGrid = renderDiscoverGrid;
 // First paint runs after the Studio IIFE seeds window.COURSES (see initial

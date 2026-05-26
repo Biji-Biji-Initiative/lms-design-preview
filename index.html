@@ -1269,9 +1269,9 @@ a:hover { text-decoration: underline; }
   display: inline-flex; align-items: center; gap: 6px;
   z-index: 1;
 }
-/* Language chips removed — surfaces became too noisy with a chip per
-   language, and the data lives on the course detail page anyway. */
-.course-card__lang { display: none !important; }
+/* Language badge — single badge per card (was hidden when multi-lang chips were noisy;
+   now each card is one language, so the badge is clean and useful). */
+/* .course-card__lang { display: none !important; } */
 /* Organization chip on the art opposite the type badge — mirrors
    .prog-card__org so Course/Program cards share the same hierarchy. */
 .course-card__org {

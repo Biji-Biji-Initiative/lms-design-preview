@@ -10699,6 +10699,7 @@ function discoverCardHtml(c, isPrivate) {
 
   return '<article class="card course-card" onclick="gotoCourse(\'' + escapeHtml(c.id) + '\')">' +
     '<div class="course-card__img course-art" data-topic="' + escapeHtml(c.topic || 'design') + '">' +
+      '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">' + typeIcon + '</span> ' + typeLabel + '</span>' +
       orgChip +
       '<span class="course-card__lang"><span>' + escapeHtml(lang) + '</span></span>' +
     '</div>' +

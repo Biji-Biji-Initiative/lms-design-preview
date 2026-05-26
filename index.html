@@ -1297,6 +1297,72 @@ a:hover { text-decoration: underline; }
 .course-card__price { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--off-black); }
 .course-card__price.is-free { color: var(--success); }
 
+/* ── Language badge & filter ────────────────────────────── */
+.lang-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; font-family: var(--font-display);
+  padding: 2px 8px; border-radius: var(--r-pill);
+  background: rgba(171,59,120,0.10); color: var(--primary);
+  letter-spacing: 0.3px; white-space: nowrap;
+  line-height: 1.6;
+}
+.lang-badge--sm { font-size: 10px; padding: 1px 6px; }
+.lang-badge__flag { font-size: 13px; line-height: 1; }
+
+/* Language-specific badge colors */
+.lang-badge[data-lang="EN"] { background: rgba(41,92,173,0.10); color: #295CAD; }
+.lang-badge[data-lang="ID"] { background: rgba(220,53,69,0.10); color: #C0392B; }
+.lang-badge[data-lang="VI"] { background: rgba(230,126,34,0.10); color: #D35400; }
+.lang-badge[data-lang="ZH"] { background: rgba(192,57,43,0.10); color: #C0392B; }
+.lang-badge[data-lang="MS"] { background: rgba(35,112,114,0.10); color: #237072; }
+
+/* Language filter row — sits alongside org chips or standalone */
+.lang-filter { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.lang-filter__label {
+  font-size: 12px; font-weight: 600; font-family: var(--font-display);
+  color: var(--medium-grey); text-transform: uppercase; letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+.lang-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 500; font-family: var(--font-display);
+  padding: 5px 12px; border-radius: var(--r-pill);
+  border: 1.5px solid var(--border); background: var(--white);
+  color: var(--dark-grey); cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.lang-chip:hover { border-color: var(--primary); color: var(--primary); background: rgba(171,59,120,0.04); }
+.lang-chip.is-active { border-color: var(--primary); background: var(--primary); color: var(--white); }
+.lang-chip__flag { font-size: 14px; line-height: 1; }
+
+/* Course card language position — top-right overlay next to type badge */
+.course-card__lang {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+}
+
+/* Program card language badge */
+.prog-card__lang { margin-left: auto; }
+
+/* Filter toolbar with language + other filters */
+.disc__filter-row {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.disc__filter-row .disc__chips { margin-bottom: 0; flex: 1; min-width: 200px; }
+.disc__filter-row .lang-filter { flex-shrink: 0; }
+
+/* Programs page language filter */
+.programs-page__filter-row {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  max-width: 1240px; margin: 0 auto; padding: 0 40px 20px;
+}
+.programs-page__filter-row .programs-page__filters { margin-bottom: 0; flex: 1; }
+
+@media (max-width: 640px) {
+  .disc__filter-row { flex-direction: column; align-items: stretch; }
+  .programs-page__filter-row { flex-direction: column; align-items: stretch; }
+}
+
 /* ===========================================================
    SCREEN: Course detail
    =========================================================== */
@@ -10662,7 +10728,7 @@ function discoverCardHtml(c, isPrivate) {
         '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">lock</span> Course · Invite-only</span>' +
         orgChip +
         '<span class="material-symbols-outlined" style="font-size:48px;">lock</span>' +
-        '<span class="course-card__lang">' + (c.languages || ['EN']).map(function(l) { return '<span>' + escapeHtml(l) + '</span>'; }).join('') + '</span>' +
+        (function(){ var flags={EN:'🇬🇧',ID:'🇮🇩',VI:'🇻🇳',ZH:'🇨🇳',MS:'🇲🇾'}; var l=(c.languages||['EN'])[0]; return '<div class="course-card__lang"><span class="lang-badge" data-lang="'+escapeHtml(l)+'"><span class="lang-badge__flag">'+(flags[l]||'')+'</span> '+escapeHtml(l)+'</span></div>'; })() +
       '</div>' +
       '<div class="course-card__body">' +
         '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +
@@ -10678,7 +10744,7 @@ function discoverCardHtml(c, isPrivate) {
       '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">menu_book</span> Course</span>' +
       orgChip +
       '<span class="material-symbols-outlined" style="font-size:48px;">' + escapeHtml(c.icon || 'school') + '</span>' +
-      '<span class="course-card__lang">' + (c.languages || ['EN']).map(function(l) { return '<span>' + escapeHtml(l) + '</span>'; }).join('') + '</span>' +
+      (function(){ var flags={EN:'🇬🇧',ID:'🇮🇩',VI:'🇻🇳',ZH:'🇨🇳',MS:'🇲🇾'}; var l=(c.languages||['EN'])[0]; return '<div class="course-card__lang"><span class="lang-badge" data-lang="'+escapeHtml(l)+'"><span class="lang-badge__flag">'+(flags[l]||'')+'</span> '+escapeHtml(l)+'</span></div>'; })() +
     '</div>' +
     '<div class="course-card__body">' +
       '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +
@@ -10716,8 +10782,11 @@ function programsContainingCourse(courseId) {
     .filter(pid => (window.PROGRAM_META[pid].status || 'draft') === 'published');
 }
 function applyCourseDetail(id) {
-  const c = (window.COURSES || []).find(x => x.id === id);
+  // Support legacy IDs (e.g. 'strategy') by falling back to id + '-en'
+  let c = (window.COURSES || []).find(x => x.id === id);
+  if (!c) c = (window.COURSES || []).find(x => x.id === id + '-en');
   if (!c) return;
+  id = c.id;
   window.MerekaCurrentCourseId = id;
 
   const hero = document.getElementById('courseHeroArt');
@@ -10826,10 +10895,15 @@ window.applyCourseDetail = applyCourseDetail;
    ENROLLED_COURSES maps course IDs to enrollment data (progress, grade, dates, etc.).
    These are the courses the prototype user is enrolled in (matching My Learning page). */
 window.ENROLLED_COURSES = {
+  'strategy-en': { pct: 60, module: 3, totalModules: 4, grade: 82, nextUnit: 'Frameworks for ambiguity', enrolled: 'Mar 28, 2026', state: 'progress' },
   'strategy': { pct: 60, module: 3, totalModules: 4, grade: 82, nextUnit: 'Frameworks for ambiguity', enrolled: 'Mar 28, 2026', state: 'progress' },
+  'd150-id':  { pct: 30, module: 2, totalModules: 6, grade: 74, nextUnit: 'Metrics that matter', enrolled: 'Apr 02, 2026', state: 'progress' },
   'd150':     { pct: 30, module: 2, totalModules: 6, grade: 74, nextUnit: 'Metrics that matter', enrolled: 'Apr 02, 2026', state: 'progress' },
+  'a101-vi':  { pct: 15, module: 1, totalModules: 5, grade: 90, nextUnit: 'Prompt patterns', enrolled: 'Apr 10, 2026', state: 'progress' },
   'a101':     { pct: 15, module: 1, totalModules: 5, grade: 90, nextUnit: 'Prompt patterns', enrolled: 'Apr 10, 2026', state: 'progress' },
+  'b100-en':  { pct: 100, module: 6, totalModules: 6, grade: 88, nextUnit: null, enrolled: 'Feb 12, 2026', completed: 'Apr 18, 2026', state: 'completed' },
   'b100':     { pct: 100, module: 6, totalModules: 6, grade: 88, nextUnit: null, enrolled: 'Feb 12, 2026', completed: 'Apr 18, 2026', state: 'completed' },
+  'e110-en':  { pct: 100, module: 8, totalModules: 8, grade: 91, nextUnit: null, enrolled: 'Jan 15, 2026', completed: 'Mar 04, 2026', state: 'completed' },
   'e110':     { pct: 100, module: 8, totalModules: 8, grade: 91, nextUnit: null, enrolled: 'Jan 15, 2026', completed: 'Mar 04, 2026', state: 'completed' }
 };
 
@@ -12676,37 +12750,69 @@ window.handleCheckout = function() {
      Single source of truth for the Studio "My courses" pane, the course
      switcher, and the Discover grid. Mutations from Studio propagate to
      Discover via renderDiscoverGrid().                                  */
+  /* ── COURSES catalog — one entry per language variant ──────────
+     Multi-language courses are split into separate cards so learners
+     can filter and enroll in the language they prefer. The `languages`
+     array is kept as a single-element array for backward compat with
+     Studio code that reads it. ─────────────────────────────────── */
   const COURSES = [
-    { id: 'strategy', title: 'Strategic thinking for modern leaders', code: 'MEREKA-STRAT-101', cohort: 'May 2026', modules: 12, status: 'published', enrolled: 1208, completion: 67, rating: 4.8, owner: 'Amira Yusof', updated: '2h ago', org: 'Mereka Academy',
+    { id: 'strategy-en', title: 'Strategic thinking for modern leaders', code: 'MEREKA-STRAT-101-EN', cohort: 'May 2026', modules: 12, status: 'published', enrolled: 1208, completion: 67, rating: 4.8, owner: 'Amira Yusof', updated: '2h ago', org: 'Mereka Academy',
       tag: 'Soft skills', icon: 'psychology', topic: 'strategy', price: 'RM 540', languages: ['EN'],
       description: 'Frameworks for clearer decisions — for leaders, founders, and senior operators.', isPrivate: false },
-    { id: 'f101', title: 'Freelancing 101', code: 'MEREKA-F101-MS', cohort: 'May 2026', modules: 5, status: 'published', enrolled: 980, completion: 70, rating: 4.6, owner: 'Amira Yusof', updated: '1d ago', org: 'Mereka Academy',
-      tag: 'Soft skills', icon: 'rocket_launch', topic: 'freelancing', price: 'Free', languages: ['EN','ID'],
+    { id: 'f101-en', title: 'Freelancing 101 [EN]', code: 'MEREKA-F101-EN', cohort: 'May 2026', modules: 5, status: 'published', enrolled: 620, completion: 70, rating: 4.6, owner: 'Amira Yusof', updated: '1d ago', org: 'Mereka Academy',
+      tag: 'Soft skills', icon: 'rocket_launch', topic: 'freelancing', price: 'Free', languages: ['EN'],
       description: 'See the syllabus, cadence, and commitment before you enroll.', isPrivate: false },
-    { id: 'd201', title: 'Developer foundations — full stack', code: 'MEREKA-D201-DEV', cohort: 'May 2026', modules: 7, status: 'published', enrolled: 1640, completion: 62, rating: 4.7, owner: 'Kelvin Ho', updated: '3h ago', org: 'Mereka Academy',
+    { id: 'f101-id', title: 'Freelancing 101 [ID]', code: 'MEREKA-F101-ID', cohort: 'May 2026', modules: 5, status: 'published', enrolled: 360, completion: 68, rating: 4.5, owner: 'Amira Yusof', updated: '1d ago', org: 'Mereka Academy',
+      tag: 'Soft skills', icon: 'rocket_launch', topic: 'freelancing', price: 'Free', languages: ['ID'],
+      description: 'Lihat silabus, jadwal, dan komitmen sebelum mendaftar.', isPrivate: false },
+    { id: 'd201-en', title: 'Developer foundations — full stack', code: 'MEREKA-D201-EN', cohort: 'May 2026', modules: 7, status: 'published', enrolled: 1640, completion: 62, rating: 4.7, owner: 'Kelvin Ho', updated: '3h ago', org: 'Mereka Academy',
       tag: 'Developer', icon: 'code', topic: 'developer', price: 'RM 780', languages: ['EN'],
       description: 'HTML, JS, React, Node — the production-ready baseline every dev needs.', isPrivate: false },
-    { id: 'd150', title: 'Data analytics for operators', code: 'MEREKA-D150-AN', cohort: 'May 2026', modules: 6, status: 'published', enrolled: 980, completion: 58, rating: 4.5, owner: 'Priya Menon', updated: '5h ago', org: 'Mereka Academy',
-      tag: 'Data & analytics', icon: 'analytics', topic: 'data', price: 'RM 520', languages: ['EN','ID','VI'],
+    { id: 'd150-en', title: 'Data analytics for operators [EN]', code: 'MEREKA-D150-EN', cohort: 'May 2026', modules: 6, status: 'published', enrolled: 520, completion: 58, rating: 4.5, owner: 'Priya Menon', updated: '5h ago', org: 'Mereka Academy',
+      tag: 'Data & analytics', icon: 'analytics', topic: 'data', price: 'RM 520', languages: ['EN'],
       description: 'SQL, Sheets mastery, and dashboards that actually drive decisions.', isPrivate: false },
-    { id: 'a101', title: 'AI fluency for every team', code: 'MEREKA-A101-AI', cohort: 'May 2026', modules: 5, status: 'published', enrolled: 1840, completion: 64, rating: 4.8, owner: 'Daniel Ng', updated: '7h ago', org: 'Mereka Academy',
-      tag: 'AI fluency', icon: 'smart_toy', topic: 'design', price: 'Free', languages: ['EN','ID'],
+    { id: 'd150-id', title: 'Data analytics for operators [ID]', code: 'MEREKA-D150-ID', cohort: 'May 2026', modules: 6, status: 'published', enrolled: 280, completion: 55, rating: 4.4, owner: 'Priya Menon', updated: '5h ago', org: 'Mereka Academy',
+      tag: 'Data & analytics', icon: 'analytics', topic: 'data', price: 'RM 520', languages: ['ID'],
+      description: 'SQL, penguasaan Sheets, dan dashboard yang benar-benar mendorong keputusan.', isPrivate: false },
+    { id: 'd150-vi', title: 'Data analytics for operators [VI]', code: 'MEREKA-D150-VI', cohort: 'May 2026', modules: 6, status: 'published', enrolled: 180, completion: 52, rating: 4.3, owner: 'Priya Menon', updated: '5h ago', org: 'Mereka Academy',
+      tag: 'Data & analytics', icon: 'analytics', topic: 'data', price: 'RM 520', languages: ['VI'],
+      description: 'SQL, làm chủ Sheets và dashboard thực sự thúc đẩy quyết định.', isPrivate: false },
+    { id: 'a101-en', title: 'AI fluency for every team [EN]', code: 'MEREKA-A101-EN', cohort: 'May 2026', modules: 5, status: 'published', enrolled: 1200, completion: 64, rating: 4.8, owner: 'Daniel Ng', updated: '7h ago', org: 'Mereka Academy',
+      tag: 'AI fluency', icon: 'smart_toy', topic: 'design', price: 'Free', languages: ['EN'],
       description: 'ChatGPT, Claude, and Copilot — plus guardrails and workflows that scale.', isPrivate: false },
-    { id: 'e110', title: 'Entrepreneurship essentials', code: 'MEREKA-E110-ENT', cohort: 'Jun 2026', modules: 8, status: 'published', enrolled: 540, completion: 55, rating: 4.5, owner: 'Adam Razali', updated: '1d ago', org: 'Mereka Academy',
+    { id: 'a101-id', title: 'AI fluency for every team [ID]', code: 'MEREKA-A101-ID', cohort: 'May 2026', modules: 5, status: 'published', enrolled: 640, completion: 60, rating: 4.7, owner: 'Daniel Ng', updated: '7h ago', org: 'Mereka Academy',
+      tag: 'AI fluency', icon: 'smart_toy', topic: 'design', price: 'Free', languages: ['ID'],
+      description: 'ChatGPT, Claude, dan Copilot — plus panduan dan alur kerja yang skalabel.', isPrivate: false },
+    { id: 'e110-en', title: 'Entrepreneurship essentials', code: 'MEREKA-E110-EN', cohort: 'Jun 2026', modules: 8, status: 'published', enrolled: 540, completion: 55, rating: 4.5, owner: 'Adam Razali', updated: '1d ago', org: 'Mereka Academy',
       tag: 'Entrepreneurship', icon: 'storefront', topic: 'entrepreneurship', price: 'RM 420', languages: ['EN'],
       description: 'From idea validation to your first paying customer — with SEA case studies.', isPrivate: false },
-    { id: 'm120', title: 'Digital marketing for SMEs', code: 'MEREKA-M120-DM', cohort: 'May 2026', modules: 10, status: 'published', enrolled: 1120, completion: 58, rating: 4.6, owner: 'Jia Ting Lim', updated: '4h ago', org: 'Mereka Academy',
-      tag: 'Digital marketing', icon: 'campaign', topic: 'marketing', price: 'RM 480', languages: ['EN','ZH'],
+    { id: 'm120-en', title: 'Digital marketing for SMEs [EN]', code: 'MEREKA-M120-EN', cohort: 'May 2026', modules: 10, status: 'published', enrolled: 780, completion: 58, rating: 4.6, owner: 'Jia Ting Lim', updated: '4h ago', org: 'Mereka Academy',
+      tag: 'Digital marketing', icon: 'campaign', topic: 'marketing', price: 'RM 480', languages: ['EN'],
       description: 'Paid, organic, CRM — the real playbook for regional SME teams.', isPrivate: false },
-    { id: 'b100', title: 'Personal branding on LinkedIn', code: 'MEREKA-B100-PB', cohort: 'Apr 2026', modules: 6, status: 'published', enrolled: 640, completion: 72, rating: 4.7, owner: 'Amira Yusof', updated: '3d ago', org: 'Mereka Academy',
+    { id: 'm120-zh', title: 'Digital marketing for SMEs [ZH]', code: 'MEREKA-M120-ZH', cohort: 'May 2026', modules: 10, status: 'published', enrolled: 340, completion: 54, rating: 4.5, owner: 'Jia Ting Lim', updated: '4h ago', org: 'Mereka Academy',
+      tag: 'Digital marketing', icon: 'campaign', topic: 'marketing', price: 'RM 480', languages: ['ZH'],
+      description: '付费、自然流量、CRM — 区域中小企业团队的真实营销手册。', isPrivate: false },
+    { id: 'b100-en', title: 'Personal branding on LinkedIn', code: 'MEREKA-B100-EN', cohort: 'Apr 2026', modules: 6, status: 'published', enrolled: 640, completion: 72, rating: 4.7, owner: 'Amira Yusof', updated: '3d ago', org: 'Mereka Academy',
       tag: 'Personal branding', icon: 'person', topic: 'branding', price: 'RM 240', languages: ['EN'],
       description: 'Build authority as a creator, operator, or freelancer — in 4 weeks.', isPrivate: false },
-    { id: 'c140', title: 'Climate literacy for business', code: 'MEREKA-C140-CL', cohort: 'Q3 2026', modules: 7, status: 'published', enrolled: 380, completion: 60, rating: 4.5, owner: 'Nadira S.', updated: '6d ago', org: 'Mereka Academy',
-      tag: 'Climate & sustainability', icon: 'eco', topic: 'climate', price: 'RM 380', languages: ['EN','ID'],
+    { id: 'c140-en', title: 'Climate literacy for business [EN]', code: 'MEREKA-C140-EN', cohort: 'Q3 2026', modules: 7, status: 'published', enrolled: 240, completion: 60, rating: 4.5, owner: 'Nadira S.', updated: '6d ago', org: 'Mereka Academy',
+      tag: 'Climate & sustainability', icon: 'eco', topic: 'climate', price: 'RM 380', languages: ['EN'],
       description: 'Scopes, disclosures, and sustainable ops — for teams that need to start now.', isPrivate: false },
-    { id: 'p130', title: 'Project management foundations', code: 'MEREKA-P130-PM', cohort: 'Jun 2026', modules: 9, status: 'review', enrolled: 0, completion: 0, rating: 0, owner: 'Dev Kumar', updated: '6h ago', org: 'Mereka Academy',
-      tag: 'Project management', icon: 'assignment', topic: 'pm', price: 'RM 460', languages: ['EN','ID','VI','ZH'],
+    { id: 'c140-id', title: 'Climate literacy for business [ID]', code: 'MEREKA-C140-ID', cohort: 'Q3 2026', modules: 7, status: 'published', enrolled: 140, completion: 56, rating: 4.4, owner: 'Nadira S.', updated: '6d ago', org: 'Mereka Academy',
+      tag: 'Climate & sustainability', icon: 'eco', topic: 'climate', price: 'RM 380', languages: ['ID'],
+      description: 'Lingkup, pengungkapan, dan operasi berkelanjutan — untuk tim yang harus mulai sekarang.', isPrivate: false },
+    { id: 'p130-en', title: 'Project management foundations [EN]', code: 'MEREKA-P130-EN', cohort: 'Jun 2026', modules: 9, status: 'review', enrolled: 0, completion: 0, rating: 0, owner: 'Dev Kumar', updated: '6h ago', org: 'Mereka Academy',
+      tag: 'Project management', icon: 'assignment', topic: 'pm', price: 'RM 460', languages: ['EN'],
       description: 'Scrum, Kanban, stakeholder comms — certificate-ready, globally relevant.', isPrivate: false },
+    { id: 'p130-id', title: 'Project management foundations [ID]', code: 'MEREKA-P130-ID', cohort: 'Jun 2026', modules: 9, status: 'review', enrolled: 0, completion: 0, rating: 0, owner: 'Dev Kumar', updated: '6h ago', org: 'Mereka Academy',
+      tag: 'Project management', icon: 'assignment', topic: 'pm', price: 'RM 460', languages: ['ID'],
+      description: 'Scrum, Kanban, komunikasi pemangku kepentingan — siap sertifikat, relevan global.', isPrivate: false },
+    { id: 'p130-vi', title: 'Project management foundations [VI]', code: 'MEREKA-P130-VI', cohort: 'Jun 2026', modules: 9, status: 'review', enrolled: 0, completion: 0, rating: 0, owner: 'Dev Kumar', updated: '6h ago', org: 'Mereka Academy',
+      tag: 'Project management', icon: 'assignment', topic: 'pm', price: 'RM 460', languages: ['VI'],
+      description: 'Scrum, Kanban, giao tiếp các bên liên quan — sẵn sàng chứng chỉ, phù hợp toàn cầu.', isPrivate: false },
+    { id: 'p130-zh', title: 'Project management foundations [ZH]', code: 'MEREKA-P130-ZH', cohort: 'Jun 2026', modules: 9, status: 'review', enrolled: 0, completion: 0, rating: 0, owner: 'Dev Kumar', updated: '6h ago', org: 'Mereka Academy',
+      tag: 'Project management', icon: 'assignment', topic: 'pm', price: 'RM 460', languages: ['ZH'],
+      description: 'Scrum、看板、利益相关者沟通 — 可获取证书，全球适用。', isPrivate: false },
     { id: 'cimb-leaders', title: 'CIMB Leadership Bootcamp', code: 'CIMB-LBP-01', cohort: 'May 2026', modules: 6, status: 'published', enrolled: 42, completion: 38, rating: 0, owner: 'CIMB L&D', updated: '2d ago', org: 'CIMB',
       tag: 'Private', icon: 'lock', topic: 'strategy', price: 'Private', languages: ['EN'],
       description: 'Private cohort for CIMB regional leaders. Not listed publicly.', isPrivate: true },
@@ -12727,7 +12833,7 @@ window.handleCheckout = function() {
   }
   let currentCourseId = 'strategy';
 
-  function getCourse(id) { return COURSES.find(c => c.id === id); }
+  function getCourse(id) { return COURSES.find(c => c.id === id) || COURSES.find(c => c.id === id + '-en'); }
 
   const statusLabel = { published: 'Published', draft: 'Draft', review: 'In Review', archived: 'Archived' };
   const statusClass = { published: 'is-published', draft: 'is-draft', review: 'is-review', archived: 'is-archived' };

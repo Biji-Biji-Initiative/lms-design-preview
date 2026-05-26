@@ -1211,8 +1211,8 @@ a:hover { text-decoration: underline; }
    decorative shapes, and a topic-specific motif.
    ================================================================ */
 .course-art { background-size: cover !important; background-position: center !important; }
-/* Central icon — visible on all cards (keep badges visible too) */
-.course-card__img.course-art > .material-symbols-outlined { color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.25); }
+/* Hide any stray direct-child icons in card image area (type tag & center icon removed) */
+.course-card__img.course-art > .material-symbols-outlined { display: none; }
 
 .course-art[data-topic="strategy"] {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23AB3B78'/><stop offset='1' stop-color='%234B1F3D'/></linearGradient></defs><rect width='400' height='240' fill='url(%23g)'/><circle cx='340' cy='200' r='80' fill='white' fill-opacity='0.07'/><circle cx='60' cy='40' r='44' fill='white' fill-opacity='0.06'/><circle cx='200' cy='120' r='70' fill='none' stroke='white' stroke-opacity='0.35' stroke-width='2'/><circle cx='200' cy='120' r='48' fill='none' stroke='white' stroke-opacity='0.5' stroke-width='2'/><circle cx='200' cy='120' r='24' fill='none' stroke='white' stroke-opacity='0.7' stroke-width='2'/><circle cx='200' cy='120' r='6' fill='white'/><path d='M 260 60 L 200 120 L 240 120 L 240 80 Z' fill='white' fill-opacity='0.85'/><path d='M 260 60 L 240 80 L 260 85 Z' fill='white' fill-opacity='0.55'/></svg>") !important;
@@ -4099,13 +4099,17 @@ a:hover { text-decoration: underline; }
 }
 .landing__hero-preview h3 { font-size: 16px; margin: 0 0 16px; opacity: 0.95; }
 .landing__preview-card {
-  background: var(--white); border-radius: var(--r-card); padding: 16px; margin-bottom: 12px;
+  background: var(--white); border-radius: var(--r-card); padding: 16px 18px; margin-bottom: 12px;
   color: var(--off-black); display: flex; gap: 14px; align-items: center;
+  border-left: 3px solid var(--brand-pink);
+  cursor: pointer; transition: transform .15s ease, box-shadow .15s ease;
 }
+.landing__preview-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
 .landing__preview-card:last-child { margin-bottom: 0; }
-.landing__preview-icon {
-  width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; font-size: 22px; color: var(--white);
+.landing__preview-rank {
+  font-family: var(--font-display); font-size: 20px; font-weight: 700;
+  color: var(--brand-pink); flex-shrink: 0; width: 24px; text-align: center;
+  opacity: 0.7;
 }
 .landing__preview-card h4 { font-size: 14px; margin: 0 0 3px; font-weight: 600; color: var(--off-black); }
 .landing__preview-card p { font-size: 12px; color: var(--medium-grey); margin: 0; }
@@ -4344,28 +4348,22 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
         <div class="landing__hero-preview">
           <h3>Popular right now</h3>
-          <div class="landing__preview-card">
-            <div class="landing__preview-icon" style="background:linear-gradient(135deg,#AB3B78,#7A2856);">
-              <span class="material-symbols-outlined">psychology</span>
-            </div>
+          <div class="landing__preview-card" onclick="gotoCourse('course-v1:MEREKA+STRAT-101-EN+course')">
+            <span class="landing__preview-rank">1</span>
             <div>
               <h4>Strategic thinking for modern leaders</h4>
               <p>4 modules · 8h · Certificate</p>
             </div>
           </div>
-          <div class="landing__preview-card">
-            <div class="landing__preview-icon" style="background:linear-gradient(135deg,#237072,#125253);">
-              <span class="material-symbols-outlined">bar_chart</span>
-            </div>
+          <div class="landing__preview-card" style="border-left-color:#237072;" onclick="gotoCourse('course-v1:MEREKA+D150-EN+course')">
+            <span class="landing__preview-rank" style="color:#237072;">2</span>
             <div>
               <h4>Data analytics for operators</h4>
               <p>5 modules · 12h · Certificate</p>
             </div>
           </div>
-          <div class="landing__preview-card">
-            <div class="landing__preview-icon" style="background:linear-gradient(135deg,#295CAD,#1A3F7A);">
-              <span class="material-symbols-outlined">storefront</span>
-            </div>
+          <div class="landing__preview-card" style="border-left-color:#295CAD;" onclick="gotoCourse('course-v1:MEREKA+E101-EN+course')">
+            <span class="landing__preview-rank" style="color:#295CAD;">3</span>
             <div>
               <h4>Entrepreneurship essentials</h4>
               <p>3 modules · 6h · Certificate</p>
@@ -10701,9 +10699,7 @@ function discoverCardHtml(c, isPrivate) {
 
   return '<article class="card course-card" onclick="gotoCourse(\'' + escapeHtml(c.id) + '\')">' +
     '<div class="course-card__img course-art" data-topic="' + escapeHtml(c.topic || 'design') + '">' +
-      '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">' + typeIcon + '</span> ' + typeLabel + '</span>' +
       orgChip +
-      '<span class="material-symbols-outlined" style="font-size:48px;">' + escapeHtml(c.icon || 'school') + '</span>' +
       '<span class="course-card__lang"><span>' + escapeHtml(lang) + '</span></span>' +
     '</div>' +
     '<div class="course-card__body">' +

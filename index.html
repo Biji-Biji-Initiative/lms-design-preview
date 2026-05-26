@@ -9999,14 +9999,17 @@ function gotoProgram(progId) {
   const p = PROGRAMS_DB[progId] || PROGRAMS_DB['sof-pm'];
   const screen = document.getElementById('screen-program-detail');
   if (!screen) return;
-  screen.dataset.progState = p.state;
+  // Guests always see browse (unenrolled) state
+  const isGuest = document.body && document.body.classList.contains('is-logged-out');
+  const effectiveState = isGuest ? 'browse' : p.state;
+  screen.dataset.progState = effectiveState;
   screen.dataset.progId = progId;
 
   // Hero
   document.getElementById('progHeroTitle').textContent = p.title;
   document.getElementById('progHeroDesc').textContent = p.desc;
   const meta = screen.querySelector('.prog-hero__meta');
-  const certCopy = (p.state === 'completed') ? 'Certificate earned' : 'Certificate on completion';
+  const certCopy = (effectiveState === 'completed') ? 'Certificate earned' : 'Certificate on completion';
   meta.innerHTML =
     '<span><strong>' + p.courses + '</strong> ' + (p.courses === 1 ? 'course' : 'courses') + '</span><span>·</span>' +
     '<span><strong>' + p.hours + '</strong> total</span><span>·</span>' +
@@ -10019,7 +10022,7 @@ function gotoProgram(progId) {
 
   // Status card
   const card = document.getElementById('progStatusCard');
-  if (p.state === 'browse') {
+  if (effectiveState === 'browse') {
     const ctaLabel = p.single ? 'Enroll · ' + p.price : 'Enroll · ' + p.price;
     card.innerHTML = '<h3>' + (p.single ? 'Enroll in this course' : 'Enroll in this learning path') + '</h3>' +
       '<div style="font-size:24px; font-family:var(--font-display); font-weight:700; color:var(--off-black); margin: 4px 0 6px;">' + p.price + '</div>' +
@@ -10034,7 +10037,7 @@ function gotoProgram(progId) {
           return '<button class="btn btn-primary btn-sm" style="flex:1;" onclick="goto(\'checkout\')">' + ctaLabel + '</button>';
         })() +
       '</div>';
-  } else if (p.state === 'completed') {
+  } else if (effectiveState === 'completed') {
     card.innerHTML = '<h3 style="color:var(--success);"><span class="material-symbols-outlined" style="font-size:18px; vertical-align:-3px;">verified</span> ' + (p.single ? 'Course complete' : 'Program complete') + '</h3>' +
       '<div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;"><span>' + p.progress.completed + ' of ' + p.progress.total + ' ' + (p.progress.total === 1 ? 'course' : 'courses') + '</span><strong>100%</strong></div>' +
       '<div class="progress"><div class="progress-bar" style="width:100%; background:var(--success);"></div></div>' +
@@ -10062,8 +10065,8 @@ function gotoProgram(progId) {
     stepList.innerHTML = p.steps.map((s, i) => {
       let status = s.status;
       // Override step status based on program state for browse/completed
-      if (p.state === 'browse') status = null;
-      else if (p.state === 'completed') status = 'done';
+      if (effectiveState === 'browse') status = null;
+      else if (effectiveState === 'completed') status = 'done';
       // For enrolled, use authored status
 
       const cls = status ? ' is-' + status : '';
@@ -10085,7 +10088,7 @@ function gotoProgram(progId) {
         // null — for browse state, first step is the CTA
         indexHtml = (i + 1);
         const isFirst = (i === 0);
-        if (p.state === 'browse' && isFirst) {
+        if (effectiveState === 'browse' && isFirst) {
           actionHtml = (function() {
             var sp = (p.price || '').trim().toLowerCase();
             var stepFree = !sp || sp === 'free' || sp === '0' || sp === 'rm 0';
@@ -10876,6 +10879,9 @@ window.ENROLLED_PROGRAMS = {
 /* Resolve enrollment: check ENROLLED_COURSES first, then fall back to
    checking if the course belongs to an enrolled program. */
 function getEnrollmentData(courseId) {
+  // Guests (logged-out users) are never enrolled
+  if (document.body && document.body.classList.contains('is-logged-out')) return null;
+
   var direct = (window.ENROLLED_COURSES || {})[courseId];
   if (direct) return direct;
 

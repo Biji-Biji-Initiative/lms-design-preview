@@ -4412,53 +4412,27 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="landing__courses-inner">
         <h2>Explore popular courses</h2>
         <p>Start with what's working for thousands of learners across the region.</p>
-        <div class="landing__courses-grid">
-          <div class="landing__course-card" onclick="gotoCourse('a101')">
-            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#295CAD 0%,#1A3F7A 100%);">
-              <span class="material-symbols-outlined">smart_toy</span>
-              <span class="course-card__lang"><span>EN</span><span>ID</span></span>
-            </div>
-            <div class="landing__course-body">
-              <span class="chip" style="background:rgba(41,92,173,0.1); color:#295CAD;">AI fluency</span>
-              <h4>AI fluency for every team</h4>
-              <p>ChatGPT, Claude, and Copilot — plus guardrails and workflows that scale.</p>
-              <div class="landing__course-meta">
-                <span class="price is-free">Free</span>
-                <span class="rating">★ 4.8 · 1,840 learners</span>
-              </div>
-            </div>
-          </div>
-          <div class="landing__course-card" onclick="gotoCourse('d201')">
-            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#237072 0%,#125253 100%);">
-              <span class="material-symbols-outlined">code</span>
-              <span class="course-card__lang"><span>EN</span></span>
-            </div>
-            <div class="landing__course-body">
-              <span class="chip" style="background:rgba(35,112,114,0.1); color:#237072;">Developer</span>
-              <h4>Developer foundations — full stack</h4>
-              <p>HTML, JS, React, Node — the production-ready baseline every dev needs.</p>
-              <div class="landing__course-meta">
-                <span class="price">RM 780</span>
-                <span class="rating">★ 4.7 · 1,640 learners</span>
-              </div>
-            </div>
-          </div>
-          <div class="landing__course-card" onclick="gotoCourse('strategy')">
-            <div class="landing__course-thumb" style="background:linear-gradient(135deg,#AB3B78 0%,#7A2856 100%);">
-              <span class="material-symbols-outlined">psychology</span>
-              <span class="course-card__lang"><span>EN</span></span>
-            </div>
-            <div class="landing__course-body">
-              <span class="chip" style="background:rgba(171,59,120,0.1); color:#AB3B78;">Soft skills</span>
-              <h4>Strategic thinking for modern leaders</h4>
-              <p>Frameworks for clearer decisions — for leaders, founders, and senior operators.</p>
-              <div class="landing__course-meta">
-                <span class="price">RM 540</span>
-                <span class="rating">★ 4.8 · 1,208 learners</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="landing__courses-grid" id="landing-featured-grid"></div>
+        <script>
+        /* Render featured courses once COURSES + discoverCardHtml are ready.
+           Both are defined later in the page, so we poll briefly after DOMContentLoaded. */
+        function _renderFeaturedGrid() {
+          var grid = document.getElementById('landing-featured-grid');
+          if (!grid || !window.COURSES || !window.discoverCardHtml) return false;
+          var top3 = window.COURSES
+            .filter(function(c){ return !c.isPrivate && c.status === 'published'; })
+            .sort(function(a,b){ return (b.enrolled||0)-(a.enrolled||0); })
+            .slice(0, 3);
+          grid.innerHTML = top3.map(function(c){ return window.discoverCardHtml(c, false); }).join('');
+          return true;
+        }
+        document.addEventListener('DOMContentLoaded', function(){
+          if (!_renderFeaturedGrid()) {
+            var tries = 0;
+            var iv = setInterval(function(){ if (_renderFeaturedGrid() || ++tries > 20) clearInterval(iv); }, 50);
+          }
+        });
+        </script>
       </div>
     </div>
 
@@ -10757,6 +10731,7 @@ function discoverCardHtml(c, isPrivate) {
   '</div>';
 }
 window.renderDiscoverGrid = renderDiscoverGrid;
+window.discoverCardHtml = discoverCardHtml;
 // First paint runs after the Studio IIFE seeds window.COURSES (see initial
 // renderDiscoverGrid() call near renderCoursesGrid()).
 

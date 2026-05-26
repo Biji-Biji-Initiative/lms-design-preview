@@ -10029,6 +10029,9 @@ function gotoProgram(progId) {
       '<p class="prog-status-card__rule">' + (p.single ? 'One focused course with a verified completion certificate.' : 'Save <strong>15%</strong> vs buying each course separately. Includes the learning path certificate.') + '</p>' +
       '<div class="prog-status-card__cta">' +
         (function() {
+          if (isGuest) {
+            return '<button class="btn btn-primary btn-sm" style="flex:1;" onclick="goto(\'login\')"><span class="material-symbols-outlined" style="font-size:16px;">login</span> Login to enroll</button>';
+          }
           var pp = (p.price || '').trim().toLowerCase();
           var progFree = !pp || pp === 'free' || pp === '0' || pp === 'rm 0';
           if (progFree) {
@@ -10848,6 +10851,13 @@ function applyCourseDetail(id) {
       enrollBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">lock</span> Enroll now';
       enrollBtn.setAttribute('onclick', "goto('checkout')");
     }
+  }
+
+  /* --- Guest override: guests must log in before they can enroll --- */
+  var isGuest = document.body && document.body.classList.contains('is-logged-out');
+  if (isGuest && enrollBtn) {
+    enrollBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">login</span> Login to enroll';
+    enrollBtn.setAttribute('onclick', "goto('login')");
   }
 }
 window.applyCourseDetail = applyCourseDetail;

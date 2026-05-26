@@ -1168,7 +1168,7 @@ a:hover { text-decoration: underline; }
   align-self: flex-start;
 }
 .course-card__lang {
-  position: absolute; top: 10px; right: 10px;
+  position: absolute; bottom: 12px; right: 12px;
   display: inline-flex; gap: 4px; z-index: 2;
 }
 .course-card__lang span {
@@ -1183,9 +1183,6 @@ a:hover { text-decoration: underline; }
 }
 @media (max-width: 900px) { .disc__grid { grid-template-columns: 1fr; } }
 @media (min-width: 901px) and (max-width: 1100px) { .disc__grid { grid-template-columns: repeat(2, 1fr); } }
-.landing__course-meta .price { font-weight: 700; color: var(--off-black); }
-.landing__course-meta .price.is-free { color: var(--success); }
-.landing__course-meta .rating { color: var(--medium-grey); }
 .course-card { display: flex; flex-direction: column; }
 .course-card__img {
   height: 140px;
@@ -1195,7 +1192,7 @@ a:hover { text-decoration: underline; }
   color: var(--white); position: relative;
 }
 .course-card__lang {
-  position: absolute; top: 10px; right: 10px; z-index: 2;
+  position: absolute; bottom: 12px; right: 12px; z-index: 2;
   display: inline-flex; gap: 4px;
 }
 .course-card__lang span {
@@ -1214,8 +1211,8 @@ a:hover { text-decoration: underline; }
    decorative shapes, and a topic-specific motif.
    ================================================================ */
 .course-art { background-size: cover !important; background-position: center !important; }
-/* Hide ONLY the big central icon (direct child of the card image), keep badges visible */
-.course-card__img.course-art > .material-symbols-outlined { display: none; }
+/* Central icon — visible on all cards (keep badges visible too) */
+.course-card__img.course-art > .material-symbols-outlined { color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.25); }
 
 .course-art[data-topic="strategy"] {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23AB3B78'/><stop offset='1' stop-color='%234B1F3D'/></linearGradient></defs><rect width='400' height='240' fill='url(%23g)'/><circle cx='340' cy='200' r='80' fill='white' fill-opacity='0.07'/><circle cx='60' cy='40' r='44' fill='white' fill-opacity='0.06'/><circle cx='200' cy='120' r='70' fill='none' stroke='white' stroke-opacity='0.35' stroke-width='2'/><circle cx='200' cy='120' r='48' fill='none' stroke='white' stroke-opacity='0.5' stroke-width='2'/><circle cx='200' cy='120' r='24' fill='none' stroke='white' stroke-opacity='0.7' stroke-width='2'/><circle cx='200' cy='120' r='6' fill='white'/><path d='M 260 60 L 200 120 L 240 120 L 240 80 Z' fill='white' fill-opacity='0.85'/><path d='M 260 60 L 240 80 L 260 85 Z' fill='white' fill-opacity='0.55'/></svg>") !important;
@@ -1340,9 +1337,9 @@ a:hover { text-decoration: underline; }
 .lang-chip.is-active { border-color: var(--primary); background: var(--primary); color: var(--white); }
 .lang-chip__flag { font-size: 14px; line-height: 1; }
 
-/* Course card language position — top-right overlay next to type badge */
+/* Course card language position — bottom-right overlay */
 .course-card__lang {
-  position: absolute; top: 10px; right: 10px; z-index: 2;
+  position: absolute; bottom: 12px; right: 12px; z-index: 2;
 }
 
 /* Program card language badge */
@@ -10691,44 +10688,34 @@ function renderDiscoverGrid() {
   if (reset) reset.addEventListener('click', () => window.resetDiscoverFilters());
 })();
 function discoverCardHtml(c, isPrivate) {
-  /* --- Tag-to-color map (matches landing page chip colors) --- */
-  var TAG_COLORS = {
-    'AI fluency':               { bg: 'rgba(41,92,173,0.1)',  fg: '#295CAD' },
-    'Developer':                { bg: 'rgba(35,112,114,0.1)', fg: '#237072' },
-    'Soft skills':              { bg: 'rgba(171,59,120,0.1)', fg: '#AB3B78' },
-    'Data & analytics':         { bg: 'rgba(35,112,114,0.1)', fg: '#237072' },
-    'Digital marketing':        { bg: 'rgba(200,74,91,0.1)',  fg: '#C84A5B' },
-    'Project management':       { bg: 'rgba(41,92,173,0.1)',  fg: '#295CAD' },
-    'Personal branding':        { bg: 'rgba(143,47,101,0.1)', fg: '#8F2F65' },
-    'Entrepreneurship':         { bg: 'rgba(224,122,62,0.1)', fg: '#E07A3E' },
-    'Climate & sustainability': { bg: 'rgba(58,167,109,0.1)', fg: '#3AA76D' },
-    'Private':                  { bg: 'rgba(0,0,0,0.08)',     fg: '#555' }
-  };
-  var tagColor = TAG_COLORS[c.tag] || TAG_COLORS[isPrivate ? 'Private' : 'Soft skills'];
+  var orgLabel = c.org || 'Mereka Academy';
+  var orgChip = '<span class="course-card__org" title="Published by ' + escapeHtml(orgLabel) + '">' +
+    '<span class="material-symbols-outlined">corporate_fare</span>' + escapeHtml(orgLabel) + '</span>';
   var rawPrice = (c.price || '').trim();
   var isFree = !rawPrice || rawPrice.toLowerCase() === 'free' || rawPrice === '0' || rawPrice === 'RM 0';
   var priceLabel = isFree ? 'Free' : escapeHtml(rawPrice);
-  var priceClass = 'price' + (isFree ? ' is-free' : '');
+  var priceClass = 'course-card__price' + (isFree ? ' is-free' : '');
   var lang = (c.languages || ['EN'])[0];
-  var tagLabel = isPrivate ? 'Invite-only' : escapeHtml(c.tag || '');
-  var iconName = isPrivate ? 'lock' : escapeHtml(c.icon || 'school');
-  var ratingStr = c.rating ? ('★ ' + c.rating + (c.enrolled ? ' · ' + Number(c.enrolled).toLocaleString() + ' learners' : '')) : '';
+  var typeIcon = isPrivate ? 'lock' : 'menu_book';
+  var typeLabel = isPrivate ? 'Course · Invite-only' : 'Course';
 
-  return '<div class="landing__course-card" onclick="gotoCourse(\'' + escapeHtml(c.id) + '\')">' +
-    '<div class="landing__course-thumb course-art" data-topic="' + escapeHtml(c.topic || 'design') + '">' +
-      '<span class="material-symbols-outlined">' + iconName + '</span>' +
+  return '<article class="card course-card" onclick="gotoCourse(\'' + escapeHtml(c.id) + '\')">' +
+    '<div class="course-card__img course-art" data-topic="' + escapeHtml(c.topic || 'design') + '">' +
+      '<span class="course-card__type"><span class="material-symbols-outlined" style="font-size:12px;">' + typeIcon + '</span> ' + typeLabel + '</span>' +
+      orgChip +
+      '<span class="material-symbols-outlined" style="font-size:48px;">' + escapeHtml(c.icon || 'school') + '</span>' +
       '<span class="course-card__lang"><span>' + escapeHtml(lang) + '</span></span>' +
     '</div>' +
-    '<div class="landing__course-body">' +
-      '<span class="chip" style="background:' + tagColor.bg + '; color:' + tagColor.fg + ';">' + tagLabel + '</span>' +
-      '<h4>' + escapeHtml(c.title) + '</h4>' +
-      '<p>' + escapeHtml(c.description || '') + '</p>' +
-      '<div class="landing__course-meta">' +
+    '<div class="course-card__body">' +
+      '<span class="course-card__track">' + escapeHtml(c.code) + '</span>' +
+      '<h3>' + escapeHtml(c.title) + '</h3>' +
+      '<p class="course-card__meta">' + escapeHtml(c.description || '') + '</p>' +
+      '<div class="course-card__foot">' +
         '<span class="' + priceClass + '">' + priceLabel + '</span>' +
-        '<span class="rating">' + ratingStr + '</span>' +
+        '<button class="btn btn-primary btn-sm">View course</button>' +
       '</div>' +
     '</div>' +
-  '</div>';
+  '</article>';
 }
 window.renderDiscoverGrid = renderDiscoverGrid;
 window.discoverCardHtml = discoverCardHtml;

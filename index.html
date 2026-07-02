@@ -3600,7 +3600,7 @@ a:hover { text-decoration: underline; }
 .prog-step {
   background: var(--white); border:1px solid var(--border);
   border-radius: var(--r-card); padding: 18px 20px;
-  display:grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items:center;
+  display:grid; grid-template-columns: 44px 96px 1fr auto; gap: 14px; align-items:center;
   margin-bottom: 12px;
   position:relative;
 }
@@ -3614,6 +3614,16 @@ a:hover { text-decoration: underline; }
 .prog-step.is-active .prog-step__index { background: var(--primary); color: var(--white); }
 .prog-step.is-locked { opacity: 0.55; }
 .prog-step.is-locked .prog-step__index { background: #EAE7F0; }
+.prog-step__thumb {
+  width: 96px; height: 60px; border-radius: 10px;
+  background: var(--brand-gradient);
+  background-size: cover; background-position: center;
+  align-self: center; flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .prog-step { grid-template-columns: 36px 1fr auto; }
+  .prog-step__thumb { display: none; }
+}
 .prog-step h4 { font-size: 15px; margin-bottom: 2px; display:flex; align-items:center; gap: 8px; flex-wrap:wrap; }
 .prog-step__meta { font-size: 12px; color: var(--medium-grey); }
 .prog-step__pill {
@@ -10036,6 +10046,38 @@ renderProgramsCatalog();
   if (reset) reset.addEventListener('click', () => window.resetProgCatFilters());
 })();
 
+function progTopicFromTrack(p) {
+  var tr = ((p && p.track) || '').toUpperCase();
+  if (tr.indexOf('DATA') >= 0) return 'data';
+  if (tr.indexOf('DEV') >= 0) return 'developer';
+  if (tr.indexOf('MKT') >= 0) return 'marketing';
+  if (tr.indexOf('GREEN') >= 0) return 'climate';
+  if (tr.indexOf('FOW') >= 0) return 'freelancing';
+  if (tr.indexOf('AI') >= 0) return 'developer';
+  if (tr.indexOf('ENTRE') >= 0) return 'entrepreneurship';
+  if (tr.indexOf('SPEAK') >= 0) return 'branding';
+  if (tr.indexOf('ADMIN') >= 0) return 'strategy';
+  if (tr.indexOf('PM') >= 0) return 'pm';
+  return 'design';
+}
+function progStepTopic(s, p) {
+  if (s && s.topic) return s.topic;
+  var t = ((s && s.title) || '').toLowerCase();
+  var rules = [
+    [/(sql|spreadsheet|dashboard|statistic|\bdata\b|analy)/, 'data'],
+    [/(html|css|javascript|react|node|backend|frontend|full-?stack|web found|no-?code|chatgpt|\bai\b|develop|coding|programming)/, 'developer'],
+    [/(seo|paid ads|campaign|marketing|advertis)/, 'marketing'],
+    [/(brand|logo|identity|presence)/, 'branding'],
+    [/(design|\bux\b|\bui\b|figma)/, 'design'],
+    [/(green|climate|sustain|environment)/, 'climate'],
+    [/(freelanc|client|contract|pricing|invoice|finance|negotiat)/, 'freelancing'],
+    [/(entrepreneur|startup|founder|venture)/, 'entrepreneurship'],
+    [/(strateg|positioning|leadership|stakeholder)/, 'strategy'],
+    [/(project|program|portfolio|agile|scrum|kanban|planning|schedul|\brisk\b|budget)/, 'pm']
+  ];
+  for (var i = 0; i < rules.length; i++) { if (rules[i][0].test(t)) return rules[i][1]; }
+  return progTopicFromTrack(p);
+}
 function gotoProgram(progId) {
   const p = PROGRAMS_DB[progId] || PROGRAMS_DB['sof-pm'];
   const screen = document.getElementById('screen-program-detail');
@@ -10160,6 +10202,7 @@ function gotoProgram(progId) {
 
       return '<div class="prog-step' + cls + '">' +
         '<div class="prog-step__index">' + indexHtml + '</div>' +
+        '<div class="prog-step__thumb course-art" data-topic="' + progStepTopic(s, p) + '"></div>' +
         '<div>' +
           '<h4>' + s.title + ' ' + pillHtml + '</h4>' +
           '<div class="prog-step__meta">' + s.meta + '</div>' +

@@ -533,6 +533,54 @@ a:hover { text-decoration: underline; }
 .studio-menu__item.is-danger .material-symbols-outlined { color: var(--error); }
 .studio-menu__divider { height: 1px; background: var(--border); margin: 6px -6px; }
 
+/* ---- Unenroll: three-dot (kebab) control on enrolled cards + detail pages ---- */
+.enroll-kebab {
+  position: absolute; top: 10px; right: 10px; z-index: 3;
+  width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(0,0,0,0.42); color: #fff; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  transition: background 0.15s ease;
+}
+.enroll-kebab:hover { background: rgba(0,0,0,0.62); }
+.enroll-kebab:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.enroll-kebab .material-symbols-outlined { font-size: 20px; }
+/* Make room for the kebab so it never overlaps the org chip (both top-right). */
+.course-card:has(.enroll-kebab) .course-card__org,
+.prog-card:has(.enroll-kebab) .prog-card__org { right: 50px; max-width: calc(100% - 64px); }
+/* On solid surfaces (detail pages) the kebab sits inline, not over artwork. */
+.course__hero-enrolled { align-items: center; }
+.course__hero-enrolled .enroll-kebab {
+  position: static; background: rgba(255,255,255,0.18);
+}
+.course__hero-enrolled .enroll-kebab:hover { background: rgba(255,255,255,0.30); }
+.prog-status-card__kebab-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.prog-status-card__kebab-row h3 { margin: 0; }
+.prog-status-card__kebab-row .enroll-kebab {
+  position: static; flex-shrink: 0; background: var(--surface); color: var(--medium-grey);
+}
+.prog-status-card__kebab-row .enroll-kebab:hover { background: var(--border); color: var(--off-black); }
+
+.unenroll-overlay {
+  position: fixed; inset: 0; z-index: 4000; display: none;
+  align-items: center; justify-content: center; padding: 20px;
+  background: rgba(15,10,20,0.55);
+}
+.unenroll-overlay.is-open { display: flex; }
+.unenroll-dialog {
+  background: var(--white); border-radius: var(--r-card, 14px);
+  max-width: 420px; width: 100%; padding: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+}
+.unenroll-dialog__icon {
+  width: 44px; height: 44px; border-radius: 50%; margin-bottom: 14px;
+  background: rgba(214,69,69,0.12); color: var(--error);
+  display: flex; align-items: center; justify-content: center;
+}
+.unenroll-dialog h3 { margin: 0 0 8px; font-size: 18px; }
+.unenroll-dialog p { margin: 0 0 20px; color: var(--medium-grey); font-size: 14px; line-height: 1.5; }
+.unenroll-dialog__actions { display: flex; gap: 10px; justify-content: flex-end; }
+
 .outline-unit.is-editing {
   background: rgba(31,163,166,0.08);
   border-radius: 10px;
@@ -5979,6 +6027,7 @@ body.is-logged-out .is-learner-only { display: none; }
           <button class="btn btn-primary btn-sm" id="courseEnrolledContinueBtn" onclick="goto('unit')"><span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span> Continue learning</button>
           <button class="btn btn-outline-primary btn-sm js-course-share" style="border-color:rgba(255,255,255,0.6); color:#fff;"><span class="material-symbols-outlined" style="font-size:18px;">share</span> Share</button>
           <span id="courseEnrolledHeroProgress" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:600; color:rgba(255,255,255,0.9);"><span class="material-symbols-outlined" style="font-size:18px; color:#fff;">pie_chart</span> 60% complete</span>
+          <button class="enroll-kebab" type="button" aria-haspopup="true" aria-label="Enrollment options" data-enroll-scope="course-detail"><span class="material-symbols-outlined">more_vert</span></button>
         </div>
       </div>
     </div>
@@ -15079,6 +15128,223 @@ window.handleCheckout = function() {
   }
   wire('#screen-deadlines', 'data-deadline-filter', 'data-deadline-bucket');
   wire('#screen-my-certificates', 'data-cert-filter', 'data-cert-bucket');
+})();
+</script>
+
+<!-- Unenroll: three-dot (kebab) menu on enrolled course / learning-path cards and detail pages -->
+<script>
+(function () {
+  'use strict';
+  var LANG_RE = /-(en|id|vi|zh|ms|ar|th|fr|es)$/i;
+  function esc(s){
+    s = String(s == null ? '' : s);
+    return window.escapeHtml ? window.escapeHtml(s)
+      : s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+  function isGuest(){ return document.body && document.body.classList.contains('is-logged-out'); }
+
+  /* ---- Enrollment model — reads the prototype's existing stores ---- */
+  function courseEnrollment(id){
+    if (isGuest() || !id) return null;
+    var ec = window.ENROLLED_COURSES || {};
+    // Match the exact course the learner enrolled in — do NOT fall back to the
+    // base id, so language siblings the learner didn't enroll in stay clean.
+    return ec[id] || null;
+  }
+  function pathEnrollment(id){
+    if (isGuest() || !id) return null;
+    var p = (window.PROGRAMS_DB || {})[id];
+    return (p && (p.state === 'enrolled' || p.state === 'completed')) ? p : null;
+  }
+  function courseTitle(id){
+    var list = window.COURSES || [];
+    var c = list.find(function(x){ return x.id === id; }) || list.find(function(x){ return x.id === id + '-en'; });
+    return c ? c.title : 'this course';
+  }
+  function pathTitle(id){
+    var p = (window.PROGRAMS_DB || {})[id];
+    return p ? p.title : 'this learning path';
+  }
+
+  /* ---- Kebab markup ---- */
+  function kebabHtml(scope, type, id, title){
+    return '<button class="enroll-kebab" type="button" aria-haspopup="true" aria-label="Enrollment options"'
+      + ' data-enroll-scope="' + esc(scope) + '" data-enroll-type="' + esc(type) + '"'
+      + ' data-enroll-id="' + esc(id) + '" data-enroll-title="' + esc(title) + '">'
+      + '<span class="material-symbols-outlined">more_vert</span></button>';
+  }
+
+  /* ---- Dropdown (reuses the existing .studio-menu styling) ---- */
+  var openMenuEl = null;
+  function closeMenu(){ if (openMenuEl){ openMenuEl.remove(); openMenuEl = null; } }
+  document.addEventListener('click', function(e){ if (openMenuEl && !openMenuEl.contains(e.target)) closeMenu(); });
+  window.addEventListener('resize', closeMenu);
+  function openMenu(anchor, items){
+    closeMenu();
+    var m = document.createElement('div');
+    m.className = 'studio-menu';
+    m.style.minWidth = '180px';
+    items.forEach(function(it){
+      var el = document.createElement('div');
+      el.className = 'studio-menu__item' + (it.danger ? ' is-danger' : '');
+      el.innerHTML = (it.icon ? '<span class="material-symbols-outlined">' + it.icon + '</span>' : '') + '<span>' + it.label + '</span>';
+      el.addEventListener('click', function(){ closeMenu(); if (it.onClick) it.onClick(); });
+      m.appendChild(el);
+    });
+    var r = anchor.getBoundingClientRect();
+    m.style.top = (window.scrollY + r.bottom + 6) + 'px';
+    m.style.left = (window.scrollX + Math.max(12, r.right - 180)) + 'px';
+    document.body.appendChild(m);
+    openMenuEl = m;
+  }
+
+  /* ---- Confirmation dialog ---- */
+  var pendingConfirm = null;
+  function ensureDialog(){
+    var ov = document.getElementById('unenrollOverlay');
+    if (ov) return ov;
+    ov = document.createElement('div');
+    ov.className = 'unenroll-overlay';
+    ov.id = 'unenrollOverlay';
+    ov.innerHTML =
+      '<div class="unenroll-dialog" role="dialog" aria-modal="true" aria-labelledby="unenrollTitle">' +
+        '<div class="unenroll-dialog__icon"><span class="material-symbols-outlined">logout</span></div>' +
+        '<h3 id="unenrollTitle">Unenroll?</h3>' +
+        '<p id="unenrollBody"></p>' +
+        '<div class="unenroll-dialog__actions">' +
+          '<button class="btn btn-tertiary btn-sm" id="unenrollCancel">Cancel</button>' +
+          '<button class="btn btn-primary btn-sm" id="unenrollConfirm" style="background:var(--error); border-color:var(--error);"><span class="material-symbols-outlined" style="font-size:16px;">logout</span> Unenroll</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e){ if (e.target === ov) hideDialog(); });
+    ov.querySelector('#unenrollCancel').addEventListener('click', hideDialog);
+    ov.querySelector('#unenrollConfirm').addEventListener('click', function(){ var fn = pendingConfirm; hideDialog(); if (fn) fn(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') hideDialog(); });
+    return ov;
+  }
+  function hideDialog(){ var ov = document.getElementById('unenrollOverlay'); if (ov) ov.classList.remove('is-open'); pendingConfirm = null; }
+  function confirmUnenroll(type, id, title){
+    var ov = ensureDialog();
+    var isPath = type === 'path';
+    ov.querySelector('#unenrollBody').innerHTML =
+      'You’re about to unenroll from <strong>' + esc(title) + '</strong>. Your progress'
+      + (isPath ? ' across this learning path' : '') + ' will no longer appear in My Learning. You can re-enroll anytime.';
+    pendingConfirm = function(){ (isPath ? doUnenrollPath : doUnenrollCourse)(id, title); };
+    ov.classList.add('is-open');
+  }
+
+  /* ---- Mutations ---- */
+  function removeMyLearningCards(fnName, id){
+    var base = String(id).replace(LANG_RE, '');
+    var re = new RegExp(fnName + "\\(['\"]([^'\"]+)['\"]\\)");
+    document.querySelectorAll('.mylearning__grid article.prog-card[onclick]').forEach(function(card){
+      var m = (card.getAttribute('onclick') || '').match(re);
+      if (!m) return;
+      var cid = m[1];
+      if (cid === id || cid.replace(LANG_RE, '') === base){
+        card.style.transition = 'opacity .2s ease, transform .2s ease';
+        card.style.opacity = '0'; card.style.transform = 'scale(.97)';
+        setTimeout(function(){ card.remove(); }, 200);
+      }
+    });
+  }
+  function doUnenrollCourse(id, title){
+    var ec = window.ENROLLED_COURSES || {};
+    var base = String(id).replace(LANG_RE, '');
+    Object.keys(ec).forEach(function(k){ if (k === id || k === base || k.indexOf(base + '-') === 0) delete ec[k]; });
+    if (typeof window.renderDiscoverGrid === 'function') window.renderDiscoverGrid();
+    removeMyLearningCards('gotoCourse', id);
+    if (window.MerekaCurrentCourseId &&
+        (window.MerekaCurrentCourseId === id || String(window.MerekaCurrentCourseId).replace(LANG_RE, '') === base) &&
+        typeof window.applyCourseDetail === 'function'){
+      window.applyCourseDetail(window.MerekaCurrentCourseId);
+    }
+    enhance();
+    toast('Unenrolled from ' + title);
+  }
+  function doUnenrollPath(id, title){
+    if (window.PROGRAMS_DB && window.PROGRAMS_DB[id]) window.PROGRAMS_DB[id].state = 'browse';
+    if (window.ENROLLED_PROGRAMS) delete window.ENROLLED_PROGRAMS[id];
+    if (typeof window.renderProgramsCatalog === 'function') window.renderProgramsCatalog();
+    if (typeof window.renderDiscoverGrid === 'function') window.renderDiscoverGrid();
+    removeMyLearningCards('gotoProgram', id);
+    var pd = document.getElementById('screen-program-detail');
+    if (pd && pd.dataset.progId === id && typeof window.gotoProgram === 'function') window.gotoProgram(id);
+    enhance();
+    toast('Unenrolled from ' + title);
+  }
+  function toast(msg){ if (window.studioToast) window.studioToast(msg, 'success'); }
+
+  /* ---- Inject kebabs into enrolled cards + the program detail page ---- */
+  function enhanceCards(){
+    document.querySelectorAll('article.course-card[onclick], article.prog-card[onclick]').forEach(function(card){
+      var oc = card.getAttribute('onclick') || '';
+      var mC = oc.match(/gotoCourse\(['"]([^'"]+)['"]\)/);
+      var mP = oc.match(/gotoProgram\(['"]([^'"]+)['"]\)/);
+      var type, id, enr;
+      if (mC){ type = 'course'; id = mC[1]; enr = courseEnrollment(id); }
+      else if (mP){ type = 'path'; id = mP[1]; enr = pathEnrollment(id); }
+      else return;
+      var art = card.querySelector('.course-card__img, .prog-card__art');
+      if (!art) return;
+      var existing = art.querySelector('.enroll-kebab');
+      if (enr && !existing){
+        art.insertAdjacentHTML('beforeend', kebabHtml('card', type, id, type === 'course' ? courseTitle(id) : pathTitle(id)));
+      } else if (!enr && existing){ existing.remove(); }
+    });
+  }
+  function enhanceProgramDetail(){
+    var screen = document.getElementById('screen-program-detail');
+    var card = document.getElementById('progStatusCard');
+    if (!screen || !card) return;
+    var enrolled = !isGuest() && (screen.dataset.progState === 'enrolled' || screen.dataset.progState === 'completed');
+    var existing = card.querySelector('.enroll-kebab');
+    if (enrolled && !existing){
+      var h3 = card.querySelector('h3');
+      if (h3){
+        var row = document.createElement('div');
+        row.className = 'prog-status-card__kebab-row';
+        h3.parentNode.insertBefore(row, h3);
+        row.appendChild(h3);
+        row.insertAdjacentHTML('beforeend', kebabHtml('detail', 'path', screen.dataset.progId, pathTitle(screen.dataset.progId)));
+      }
+    } else if (!enrolled && existing){ existing.remove(); }
+  }
+  function enhance(){ enhanceCards(); enhanceProgramDetail(); }
+  window.MerekaEnhanceEnrollControls = enhance;
+
+  /* ---- Kebab click — capture phase so the card's own onclick never fires ---- */
+  document.addEventListener('click', function(e){
+    var k = (e.target && e.target.closest) ? e.target.closest('.enroll-kebab') : null;
+    if (!k) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var type = k.dataset.enrollType || 'course';
+    var id = k.dataset.enrollId;
+    var title = k.dataset.enrollTitle;
+    if (k.dataset.enrollScope === 'course-detail'){
+      id = window.MerekaCurrentCourseId; type = 'course'; title = courseTitle(id);
+    }
+    openMenu(k, [{ label: 'Unenroll', icon: 'logout', danger: true, onClick: function(){ confirmUnenroll(type, id, title); } }]);
+  }, true);
+
+  /* ---- Re-run enhancement whenever the app re-renders a card surface ---- */
+  ['renderDiscoverGrid','renderProgramsCatalog','gotoProgram','gotoCourse','goto','setMerekaViewMode'].forEach(function(name){
+    var orig = window[name];
+    if (typeof orig !== 'function' || orig.__enrollWrapped) return;
+    var wrapped = function(){
+      var out = orig.apply(this, arguments);
+      (window.requestAnimationFrame || window.setTimeout)(enhance, 0);
+      return out;
+    };
+    wrapped.__enrollWrapped = true;
+    window[name] = wrapped;
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enhance);
+  else enhance();
+  setTimeout(enhance, 300);
 })();
 </script>
 

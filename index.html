@@ -547,13 +547,12 @@ a:hover { text-decoration: underline; }
 .enroll-kebab .material-symbols-outlined { font-size: 20px; }
 /* Card titles keep their spacing to the description; the row owns the gap. */
 .course-card__body .enroll-title-row, .prog-card__body .enroll-title-row { margin-bottom: 6px; }
-/* On the dark hero art of the detail pages, the kebab reads light. */
-.course__hero .enroll-kebab, .prog-hero .enroll-kebab {
-  color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.14);
-}
-.course__hero .enroll-kebab:hover, .prog-hero .enroll-kebab:hover {
-  background: rgba(255,255,255,0.28); color: #fff;
-}
+/* Detail pages: the kebab sits at the top-right of the progress card/section. */
+.enroll-kebab--corner { position: absolute; top: 14px; right: 12px; }
+.prog-status-card { position: relative; }
+.prog-status-card > h3 { padding-right: 34px; }
+#courseEnrollCard .enroll-card__enrolled { position: relative; }
+#courseEnrollCard .enroll-card__enrolled-status { padding-right: 34px; }
 
 .unenroll-overlay {
   position: fixed; inset: 0; z-index: 4000; display: none;
@@ -15160,8 +15159,8 @@ window.handleCheckout = function() {
   }
 
   /* ---- Kebab markup ---- */
-  function kebabHtml(scope, type, id, title){
-    return '<button class="enroll-kebab" type="button" aria-haspopup="true" aria-label="Enrollment options"'
+  function kebabHtml(scope, type, id, title, extraCls){
+    return '<button class="enroll-kebab' + (extraCls ? ' ' + extraCls : '') + '" type="button" aria-haspopup="true" aria-label="Enrollment options"'
       + ' data-enroll-scope="' + esc(scope) + '" data-enroll-type="' + esc(type) + '"'
       + ' data-enroll-id="' + esc(id) + '" data-enroll-title="' + esc(title) + '">'
       + '<span class="material-symbols-outlined">more_vert</span></button>';
@@ -15303,21 +15302,28 @@ window.handleCheckout = function() {
       syncKebab(ensureTitleRow(h3), !!enr, 'card', type, id, type === 'course' ? courseTitle(id) : pathTitle(id));
     });
   }
+  // Detail pages: place the kebab at the top-right corner of the progress card.
+  function cornerKebab(container, enrolled, scope, type, id, title){
+    if (!container) return;
+    var existing = container.querySelector(':scope > .enroll-kebab');
+    if (enrolled && !existing) container.insertAdjacentHTML('afterbegin', kebabHtml(scope, type, id, title, 'enroll-kebab--corner'));
+    else if (!enrolled && existing) existing.remove();
+  }
   function enhanceCourseDetail(){
-    var titleEl = document.getElementById('courseHeroTitle');
-    if (!titleEl) return;
+    // The progress section on the course page is the enrolled sidebar block.
+    var block = document.querySelector('#courseEnrollCard .enroll-card__enrolled');
+    if (!block) return;
     // Gate on DIRECT course enrollment — a course accessed only via an enrolled
     // learning path is unenrolled by leaving the path, not the course itself.
     var id = window.MerekaCurrentCourseId;
-    var enrolled = !!courseEnrollment(id);
-    syncKebab(ensureTitleRow(titleEl), enrolled, 'course-detail', 'course', id, courseTitle(id));
+    cornerKebab(block, !!courseEnrollment(id), 'course-detail', 'course', id, courseTitle(id));
   }
   function enhanceProgramDetail(){
     var screen = document.getElementById('screen-program-detail');
-    var titleEl = document.getElementById('progHeroTitle');
-    if (!screen || !titleEl) return;
+    var card = document.getElementById('progStatusCard');
+    if (!screen || !card) return;
     var enrolled = !isGuest() && (screen.dataset.progState === 'enrolled' || screen.dataset.progState === 'completed');
-    syncKebab(ensureTitleRow(titleEl), enrolled, 'detail', 'path', screen.dataset.progId, pathTitle(screen.dataset.progId));
+    cornerKebab(card, enrolled, 'detail', 'path', screen.dataset.progId, pathTitle(screen.dataset.progId));
   }
   function enhance(){ enhanceCards(); enhanceCourseDetail(); enhanceProgramDetail(); }
   window.MerekaEnhanceEnrollControls = enhance;

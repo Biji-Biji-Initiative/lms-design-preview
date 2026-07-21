@@ -533,33 +533,27 @@ a:hover { text-decoration: underline; }
 .studio-menu__item.is-danger .material-symbols-outlined { color: var(--error); }
 .studio-menu__divider { height: 1px; background: var(--border); margin: 6px -6px; }
 
-/* ---- Unenroll: three-dot (kebab) control on enrolled cards + detail pages ---- */
+/* ---- Unenroll: three-dot (kebab) control beside the enrolled item's title ---- */
+.enroll-title-row { display: flex; align-items: center; gap: 6px; }
+.enroll-title-row > h1, .enroll-title-row > h3 { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
 .enroll-kebab {
-  position: absolute; top: 10px; right: 10px; z-index: 3;
-  width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%;
-  background: rgba(0,0,0,0.42); color: #fff; cursor: pointer;
+  flex: 0 0 auto; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; color: var(--medium-grey); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
-  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
-.enroll-kebab:hover { background: rgba(0,0,0,0.62); }
-.enroll-kebab:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.enroll-kebab:hover { background: var(--surface); color: var(--off-black); }
+.enroll-kebab:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .enroll-kebab .material-symbols-outlined { font-size: 20px; }
-/* Make room for the kebab so it never overlaps the org chip (both top-right). */
-.course-card:has(.enroll-kebab) .course-card__org,
-.prog-card:has(.enroll-kebab) .prog-card__org { right: 50px; max-width: calc(100% - 64px); }
-/* On solid surfaces (detail pages) the kebab sits inline, not over artwork. */
-.course__hero-enrolled { align-items: center; }
-.course__hero-enrolled .enroll-kebab {
-  position: static; background: rgba(255,255,255,0.18);
+/* Card titles keep their spacing to the description; the row owns the gap. */
+.course-card__body .enroll-title-row, .prog-card__body .enroll-title-row { margin-bottom: 6px; }
+/* On the dark hero art of the detail pages, the kebab reads light. */
+.course__hero .enroll-kebab, .prog-hero .enroll-kebab {
+  color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.14);
 }
-.course__hero-enrolled .enroll-kebab:hover { background: rgba(255,255,255,0.30); }
-.prog-status-card__kebab-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.prog-status-card__kebab-row h3 { margin: 0; }
-.prog-status-card__kebab-row .enroll-kebab {
-  position: static; flex-shrink: 0; background: var(--surface); color: var(--medium-grey);
+.course__hero .enroll-kebab:hover, .prog-hero .enroll-kebab:hover {
+  background: rgba(255,255,255,0.28); color: #fff;
 }
-.prog-status-card__kebab-row .enroll-kebab:hover { background: var(--border); color: var(--off-black); }
 
 .unenroll-overlay {
   position: fixed; inset: 0; z-index: 4000; display: none;
@@ -6027,7 +6021,6 @@ body.is-logged-out .is-learner-only { display: none; }
           <button class="btn btn-primary btn-sm" id="courseEnrolledContinueBtn" onclick="goto('unit')"><span class="material-symbols-outlined" style="font-size:18px;">play_arrow</span> Continue learning</button>
           <button class="btn btn-outline-primary btn-sm js-course-share" style="border-color:rgba(255,255,255,0.6); color:#fff;"><span class="material-symbols-outlined" style="font-size:18px;">share</span> Share</button>
           <span id="courseEnrolledHeroProgress" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:600; color:rgba(255,255,255,0.9);"><span class="material-symbols-outlined" style="font-size:18px; color:#fff;">pie_chart</span> 60% complete</span>
-          <button class="enroll-kebab" type="button" aria-haspopup="true" aria-label="Enrollment options" data-enroll-scope="course-detail"><span class="material-symbols-outlined">more_vert</span></button>
         </div>
       </div>
     </div>
@@ -15276,7 +15269,22 @@ window.handleCheckout = function() {
   }
   function toast(msg){ if (window.studioToast) window.studioToast(msg, 'success'); }
 
-  /* ---- Inject kebabs into enrolled cards + the program detail page ---- */
+  /* ---- Inject the kebab beside the title (cards + both detail pages) ---- */
+  function ensureTitleRow(titleEl){
+    var row = titleEl.parentElement;
+    if (!row || !row.classList.contains('enroll-title-row')){
+      row = document.createElement('div');
+      row.className = 'enroll-title-row';
+      titleEl.parentNode.insertBefore(row, titleEl);
+      row.appendChild(titleEl);
+    }
+    return row;
+  }
+  function syncKebab(row, enrolled, scope, type, id, title){
+    var existing = row.querySelector(':scope > .enroll-kebab');
+    if (enrolled && !existing) row.insertAdjacentHTML('beforeend', kebabHtml(scope, type, id, title));
+    else if (!enrolled && existing) existing.remove();
+  }
   function enhanceCards(){
     document.querySelectorAll('article.course-card[onclick], article.prog-card[onclick]').forEach(function(card){
       var oc = card.getAttribute('onclick') || '';
@@ -15286,32 +15294,32 @@ window.handleCheckout = function() {
       if (mC){ type = 'course'; id = mC[1]; enr = courseEnrollment(id); }
       else if (mP){ type = 'path'; id = mP[1]; enr = pathEnrollment(id); }
       else return;
-      var art = card.querySelector('.course-card__img, .prog-card__art');
-      if (!art) return;
-      var existing = art.querySelector('.enroll-kebab');
-      if (enr && !existing){
-        art.insertAdjacentHTML('beforeend', kebabHtml('card', type, id, type === 'course' ? courseTitle(id) : pathTitle(id)));
-      } else if (!enr && existing){ existing.remove(); }
+      var body = card.querySelector('.course-card__body, .prog-card__body');
+      var h3 = body ? body.querySelector('h3') : null;
+      if (!h3) return;
+      // Clean up any stray kebab a previous build may have placed over the art.
+      var artK = card.querySelector('.course-card__img .enroll-kebab, .prog-card__art .enroll-kebab');
+      if (artK) artK.remove();
+      syncKebab(ensureTitleRow(h3), !!enr, 'card', type, id, type === 'course' ? courseTitle(id) : pathTitle(id));
     });
+  }
+  function enhanceCourseDetail(){
+    var titleEl = document.getElementById('courseHeroTitle');
+    if (!titleEl) return;
+    // Gate on DIRECT course enrollment — a course accessed only via an enrolled
+    // learning path is unenrolled by leaving the path, not the course itself.
+    var id = window.MerekaCurrentCourseId;
+    var enrolled = !!courseEnrollment(id);
+    syncKebab(ensureTitleRow(titleEl), enrolled, 'course-detail', 'course', id, courseTitle(id));
   }
   function enhanceProgramDetail(){
     var screen = document.getElementById('screen-program-detail');
-    var card = document.getElementById('progStatusCard');
-    if (!screen || !card) return;
+    var titleEl = document.getElementById('progHeroTitle');
+    if (!screen || !titleEl) return;
     var enrolled = !isGuest() && (screen.dataset.progState === 'enrolled' || screen.dataset.progState === 'completed');
-    var existing = card.querySelector('.enroll-kebab');
-    if (enrolled && !existing){
-      var h3 = card.querySelector('h3');
-      if (h3){
-        var row = document.createElement('div');
-        row.className = 'prog-status-card__kebab-row';
-        h3.parentNode.insertBefore(row, h3);
-        row.appendChild(h3);
-        row.insertAdjacentHTML('beforeend', kebabHtml('detail', 'path', screen.dataset.progId, pathTitle(screen.dataset.progId)));
-      }
-    } else if (!enrolled && existing){ existing.remove(); }
+    syncKebab(ensureTitleRow(titleEl), enrolled, 'detail', 'path', screen.dataset.progId, pathTitle(screen.dataset.progId));
   }
-  function enhance(){ enhanceCards(); enhanceProgramDetail(); }
+  function enhance(){ enhanceCards(); enhanceCourseDetail(); enhanceProgramDetail(); }
   window.MerekaEnhanceEnrollControls = enhance;
 
   /* ---- Kebab click — capture phase so the card's own onclick never fires ---- */

@@ -3752,6 +3752,120 @@ a:hover { text-decoration: underline; }
   .ci-modal__path { width: 100%; margin: 0 0 6px; }
 }
 
+/* ===========================================================
+   Capability version switch - "Current phase" vs "Future"
+   -----------------------------------------------------------
+   The prototype ships two readings of the same product:
+
+     future  (default) - everything designed so far, including
+                         capability that still needs a custom build
+     current           - only what the platform can actually do in
+                         the current phase; the rest is hidden
+
+   Mechanism: <body data-lms-version="current|future">.
+   Anything carrying .v-future-only disappears in current mode,
+   plus the selector list below (which covers JS-rendered nodes
+   without needing the renderers to tag them).
+   Text-level differences (prices in CTA labels, the track code in
+   the learning-path hero) are handled in applyLmsVersion().
+   =========================================================== */
+body[data-lms-version="current"] .v-future-only,
+/* Track / SKU codes on cards and detail heroes */
+body[data-lms-version="current"] .course-card__track,
+body[data-lms-version="current"] .prog-card__track,
+body[data-lms-version="current"] .studio-course-card__code,
+body[data-lms-version="current"] .admin-prog-row__code,
+/* Commerce */
+body[data-lms-version="current"] .course-card__price,
+body[data-lms-version="current"] .prog-card__price,
+body[data-lms-version="current"] #enrollPrice,
+body[data-lms-version="current"] #enrollSave,
+body[data-lms-version="current"] .enroll-card__promo,
+body[data-lms-version="current"] .enroll-card__guarantee,
+body[data-lms-version="current"] #discSort option[value^="price-"],
+body[data-lms-version="current"] .demo-switcher__panel button[data-screen="checkout"],
+/* Mentor constructs */
+body[data-lms-version="current"] .prog-step__mentors,
+/* Learning-path rules engine */
+body[data-lms-version="current"] .prog-rule,
+/* Private / invite-only + org-scoped catalogs */
+body[data-lms-version="current"] .visibility-chip,
+body[data-lms-version="current"] .disc__private-note,
+/* Enforced watch-time completion */
+body[data-lms-version="current"] .watch-gate,
+/* Studio panes that need a custom build */
+body[data-lms-version="current"] .studio__nav li[data-studio-pane="analytics"],
+body[data-lms-version="current"] .studio__nav li[data-studio-pane="submissions"],
+body[data-lms-version="current"] .studio__nav li[data-studio-pane="pricing"],
+body[data-lms-version="current"] .studio__nav li[data-studio-pane="visibility"],
+body[data-lms-version="current"] .js-prog-tab[data-prog-tab="rules"],
+body[data-lms-version="current"] .js-prog-tab[data-prog-tab="pricing"]
+{ display: none !important; }
+
+/* Copy that only makes sense in the reduced reading. */
+.v-current-only { display: none !important; }
+body[data-lms-version="current"] p.v-current-only { display: block !important; }
+
+/* Version switch control - sits above the demo switcher, bottom-right.
+   NOT product UI; it exists so reviewers can compare the two readings. */
+.ver-switch {
+  position: fixed; bottom: 72px; right: 20px; z-index: 1000;
+  font-family: var(--font-display);
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--off-black); border-radius: var(--r-pill);
+  padding: 4px; box-shadow: var(--shadow-lift);
+}
+.ver-switch__btn {
+  border: 0; cursor: pointer; background: transparent;
+  color: rgba(255,255,255,0.62);
+  font-family: inherit; font-weight: 600; font-size: 12px; letter-spacing: 0.2px;
+  padding: 7px 14px; border-radius: var(--r-pill);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.ver-switch__btn:hover { color: #fff; }
+.ver-switch__btn.is-active { background: var(--primary); color: #fff; }
+.ver-switch__btn .material-symbols-outlined { font-size: 15px; }
+.ver-switch__info {
+  border: 0; background: transparent; cursor: pointer; padding: 6px 6px 6px 2px;
+  color: rgba(255,255,255,0.5); display: inline-flex; align-items: center;
+}
+.ver-switch__info:hover { color: #fff; }
+.ver-switch__info .material-symbols-outlined { font-size: 17px; }
+.ver-switch__pop {
+  position: absolute; bottom: calc(100% + 10px); right: 0;
+  width: 320px; max-width: calc(100vw - 40px);
+  background: var(--white); color: var(--off-black);
+  border-radius: 14px; box-shadow: var(--shadow-lift);
+  padding: 16px 18px; display: none; text-align: left;
+}
+.ver-switch.is-open .ver-switch__pop { display: block; }
+.ver-switch__pop h5 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--medium-grey); margin: 0 0 8px; font-weight: 600;
+}
+.ver-switch__pop p { font-size: 12px; color: var(--dark-grey); margin: 0 0 10px; line-height: 1.55; }
+.ver-switch__pop ul { margin: 0; padding-left: 16px; font-size: 12px; color: var(--dark-grey); line-height: 1.65; }
+.ver-switch__pop code {
+  background: var(--surface); padding: 1px 5px; border-radius: 4px; font-size: 11px;
+}
+
+/* Ribbon marking the reduced view, so a screenshot is never ambiguous. */
+.ver-ribbon {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: var(--anchor-ribbon, #1F3F7C); color: #fff;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase;
+  text-align: center; padding: 5px 12px;
+}
+body[data-lms-version="current"] .ver-ribbon { display: block; }
+body[data-lms-version="current"] { padding-top: 25px; }
+@media (max-width: 640px) {
+  .ver-switch { bottom: 66px; right: 12px; }
+  .ver-switch__btn { padding: 7px 10px; font-size: 11px; }
+}
+
 .prog-section { margin-bottom: 28px; }
 .prog-section h2 { font-size: 22px; margin-bottom: 12px; }
 
@@ -4430,7 +4544,58 @@ body.is-logged-out .is-learner-only { display: none; }
 
 </style>
 </head>
-<body>
+<body data-lms-version="future">
+<script>
+/* Capability version bootstrap - must run before the screen router.
+   The router pushes bare paths ('/courses', '/studio'), which would drop
+   ?v= from the URL, so the version param is pinned onto every pushState /
+   replaceState. Setting the body attribute here also avoids a flash of the
+   full "future" UI before applyLmsVersion() runs at the end of the page. */
+(function () {
+  var m = /[?&]v=(current|future)/.exec(window.location.search || '');
+  var V = m ? m[1] : 'future';
+  window.__LMS_VERSION_INIT = V;
+  document.body.setAttribute('data-lms-version', V);
+  ['pushState', 'replaceState'].forEach(function (fn) {
+    var orig = window.history[fn];
+    window.history[fn] = function (state, title, url) {
+      if (typeof url === 'string' && url.indexOf('v=') === -1) {
+        var v = document.body.getAttribute('data-lms-version') || 'future';
+        if (v !== 'future') url += (url.indexOf('?') === -1 ? '?' : '&') + 'v=' + v;
+      }
+      return orig.call(window.history, state, title, url);
+    };
+  });
+})();
+</script>
+
+<!-- ========================================================
+     Capability version: ribbon + switch. NOT product UI.
+     "Current phase" hides capability that still needs a custom
+     build; "Future" is the full design. See applyLmsVersion().
+     ======================================================== -->
+<div class="ver-ribbon" id="verRibbon">Current phase &middot; capability available today</div>
+<div class="ver-switch" id="verSwitch" role="group" aria-label="Prototype capability version">
+  <button type="button" class="ver-switch__btn" data-version="current" aria-pressed="false"><span class="material-symbols-outlined">flag</span> Current phase</button>
+  <button type="button" class="ver-switch__btn is-active" data-version="future" aria-pressed="true"><span class="material-symbols-outlined">rocket_launch</span> Future</button>
+  <button type="button" class="ver-switch__info" id="verSwitchInfo" aria-label="What is the difference?" aria-expanded="false"><span class="material-symbols-outlined">info</span></button>
+  <div class="ver-switch__pop" id="verSwitchPop">
+    <h5>Two readings of the same product</h5>
+    <p><strong>Current phase</strong> shows only what the platform can do today. <strong>Future</strong> is the full design, including capability that still needs a custom build.</p>
+    <h5>Hidden in Current phase</h5>
+    <ul>
+      <li>Course &amp; learning path ID codes on cards</li>
+      <li>Pricing, checkout and bundle discounts</li>
+      <li>Reviews &amp; ratings, related-course recommendations</li>
+      <li>Mentor stacks, path representative, Message / Book a call</li>
+      <li>Sequential unlock rules and prerequisites</li>
+      <li>Studio analytics drill-down and submissions queue</li>
+      <li>Invite-only and org-scoped catalogs</li>
+      <li>Enforced watch-time gating, cross-course deadlines</li>
+    </ul>
+    <p style="margin:10px 0 0;">Shareable by link: <code>?v=current</code> or <code>?v=future</code>.</p>
+  </div>
+</div>
 
 <!-- ========================================================
      Demo switcher (floating, bottom-right). NOT product UI.
@@ -4457,7 +4622,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <button data-screen="certificate"><span class="material-symbols-outlined">workspace_premium</span> Certificate</button>
     <button data-screen="profile"><span class="material-symbols-outlined">person</span> Profile</button>
     <button data-screen="settings"><span class="material-symbols-outlined">settings</span> Settings</button>
-    <div class="demo-switcher__group-label">Commerce flow</div>
+    <div class="demo-switcher__group-label v-future-only">Commerce flow</div>
     <button data-screen="checkout"><span class="material-symbols-outlined">school</span> Enrollment</button>
     <button data-screen="enrollment-success"><span class="material-symbols-outlined">celebration</span> Enrollment success</button>
     <div class="demo-switcher__group-label">Instructor (Studio)</div>
@@ -4498,7 +4663,7 @@ body.is-logged-out .is-learner-only { display: none; }
           </div>
           <dl class="landing__hero-stats">
             <div><dt>150+</dt><dd>Hands-on modules</dd></div>
-            <div><dt>45</dt><dd>Industry mentors</dd></div>
+            <div class="v-future-only"><dt>45</dt><dd>Industry mentors</dd></div>
             <div><dt>18k</dt><dd>Learners</dd></div>
           </dl>
         </div>
@@ -4870,8 +5035,8 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
       </div>
       <div>
-        <div class="section-head"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">All →</a></div>
-        <div class="card deadlines">
+        <div class="section-head v-future-only"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">All →</a></div>
+        <div class="card deadlines v-future-only">
           <div class="deadline"><div class="deadline__dot is-warn"></div><div class="deadline__body"><div class="deadline__title">Quiz - Market sizing</div><div class="deadline__meta">Due Apr 23 · 15 min</div></div></div>
           <div class="deadline"><div class="deadline__dot"></div><div class="deadline__body"><div class="deadline__title">Reading - OKR principles</div><div class="deadline__meta">Due Apr 25 · 20 min</div></div></div>
           <div class="deadline"><div class="deadline__dot is-err"></div><div class="deadline__body"><div class="deadline__title">Peer review - case study</div><div class="deadline__meta">Due tomorrow</div></div></div>
@@ -5295,7 +5460,8 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="disc__hero-inner">
         <span class="eyebrow"><span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span> Mereka Academy</span>
         <h1>Train teams that can ship what Southeast Asia needs next.</h1>
-        <p>Strategy-grade learning journeys, hands-on pathways, and industry mentors - built for operators, creators, and curious builders across the region.</p>
+        <p class="v-future-only">Strategy-grade learning journeys, hands-on pathways, and industry mentors - built for operators, creators, and curious builders across the region.</p>
+        <p class="v-current-only">Strategy-grade learning journeys and hands-on pathways - built for operators, creators, and curious builders across the region.</p>
         <div class="disc__hero-cta">
           <button class="btn btn-primary is-guest-only" type="button" onclick="goto('register')">Join the community</button>
           <button class="btn btn-primary is-learner-only" type="button" onclick="goto('dashboard')">My learning</button>
@@ -5308,7 +5474,7 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
         <div class="disc__stats">
           <div class="disc__stat"><strong>150+</strong><span>Hands-on modules</span></div>
-          <div class="disc__stat"><strong>45</strong><span>Industry mentors</span></div>
+          <div class="disc__stat v-future-only"><strong>45</strong><span>Industry mentors</span></div>
           <div class="disc__stat"><strong>18k</strong><span>Learners empowered</span></div>
           <div class="disc__stat"><strong>4</strong><span>Languages · EN · ID · VI · ZH</span></div>
         </div>
@@ -5621,7 +5787,8 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="disc__hero-inner">
         <span class="eyebrow"><span class="material-symbols-outlined" style="font-size:14px;">workspace_premium</span> Learning Paths · Multi-course pathways</span>
         <h1>Build mastery, not just modules.</h1>
-        <p>Learning Paths bundle related courses with shared rules, prerequisites, and a single program-level certificate - designed for full-stack career changes, not solo course collecting.</p>
+        <p class="v-future-only">Learning Paths bundle related courses with shared rules, prerequisites, and a single program-level certificate - designed for full-stack career changes, not solo course collecting.</p>
+        <p class="v-current-only">Learning Paths bundle related courses into one sequence with a single path-level certificate - designed for full-stack career changes, not solo course collecting.</p>
         <div class="disc__hero-cta">
           <button class="btn btn-primary is-guest-only" type="button" onclick="goto('register')">Join the community</button>
           <button class="btn btn-primary is-learner-only" type="button" onclick="goto('dashboard')">My learning</button>
@@ -5635,7 +5802,7 @@ body.is-logged-out .is-learner-only { display: none; }
         <div class="disc__stats">
           <div class="disc__stat"><strong>10</strong><span>Learning Paths</span></div>
           <div class="disc__stat"><strong>5–8</strong><span>Courses each</span></div>
-          <div class="disc__stat"><strong>45</strong><span>Industry mentors</span></div>
+          <div class="disc__stat v-future-only"><strong>45</strong><span>Industry mentors</span></div>
           <div class="disc__stat"><strong>4</strong><span>Languages · EN · ID · VI · ZH</span></div>
         </div>
       </div>
@@ -5969,7 +6136,7 @@ body.is-logged-out .is-learner-only { display: none; }
 
         <section class="prog-section">
           <h2>Courses in this learning path</h2>
-          <div class="prog-rule" id="progRule" style="margin-bottom:16px;">
+          <div class="prog-rule v-future-only" id="progRule" style="margin-bottom:16px;">
             <span class="material-symbols-outlined">lock_open</span>
             <div id="progRuleText"><strong>Sequential unlock</strong> - Course 2 unlocks after Course 1 is 80% complete. Capstone unlocks after Courses 1–3 are complete.</div>
           </div>
@@ -6001,7 +6168,7 @@ body.is-logged-out .is-learner-only { display: none; }
             <li>Lifetime access to materials</li>
           </ul>
         </div>
-        <div class="card" style="padding:20px;">
+        <div class="card v-future-only" style="padding:20px;">
           <h4 style="margin-bottom:4px;">Learning Path representative</h4>
           <p style="font-size:12px; color:var(--medium-grey); margin:0 0 12px;">Your single point of contact for this learning path. Not the lead instructor - courses each have their own.</p>
           <div style="display:flex; gap:12px; align-items:center;">
@@ -6018,7 +6185,7 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
 
         <!-- Mentors aside - populated from PROGRAMS_DB.<id>.mentors -->
-        <div class="card" style="padding:20px; margin-top:18px;">
+        <div class="card v-future-only" style="padding:20px; margin-top:18px;">
           <h4 style="margin-bottom:4px;">Mentors</h4>
           <p style="font-size:12px; color:var(--medium-grey); margin:0 0 12px;">Industry practitioners who teach and coach across courses in this learning path.</p>
           <div class="prog-mentors" id="progMentorsList"><!-- populated by JS --></div>
@@ -6066,7 +6233,7 @@ body.is-logged-out .is-learner-only { display: none; }
       <div class="course__hero-body">
         <!-- Programs this course is part of (filtered to ones the learner is enrolled in).
              Renders one chip per enrolled program, each linking to that program's detail. -->
-        <div class="part-of-chips" id="coursePartOfChips">
+        <div class="part-of-chips v-future-only" id="coursePartOfChips">
           <span class="part-of-chips__label">Part of:</span>
         </div>
         <span class="chip chip--tag is-strategy pgn__chip" id="courseHeroTag" style="margin-bottom:10px;">Strategy</span>
@@ -6076,8 +6243,8 @@ body.is-logged-out .is-learner-only { display: none; }
         <h1 id="courseHeroTitle">Strategic thinking for modern leaders</h1>
         <p id="courseHeroDesc">Frameworks, mental models, and real-world case studies to sharpen how you see the playing field and choose where to play.</p>
         <div class="course__hero-meta">
-          <a href="#reviews" class="js-smooth-scroll" data-target="courseReviews" style="color:inherit; text-decoration:none; cursor:pointer;">★ 4.8 (1,204 reviews)</a>
-          <span class="dot-sep">·</span>
+          <a href="#reviews" class="js-smooth-scroll v-future-only" data-target="courseReviews" style="color:inherit; text-decoration:none; cursor:pointer;">★ 4.8 (1,204 reviews)</a>
+          <span class="dot-sep v-future-only">·</span>
           <span>6,800 learners</span>
           <span class="dot-sep">·</span>
           <span>Certificate included</span>
@@ -6290,7 +6457,7 @@ body.is-logged-out .is-learner-only { display: none; }
           </div>
         </section>
 
-        <section class="course__section">
+        <section class="course__section v-future-only">
           <h2>Meet your instructors</h2>
           <p style="color:var(--medium-grey); font-size:13px; margin:-6px 0 14px;">This course is co-taught by three practitioners. Each instructor below contributes specific modules.</p>
           <div class="instructors-grid">
@@ -6348,7 +6515,7 @@ body.is-logged-out .is-learner-only { display: none; }
         </section>
 
 
-        <section class="course__section" id="courseReviews">
+        <section class="course__section v-future-only" id="courseReviews">
           <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:10px;">
             <h2 style="margin-bottom:0;">Reviews</h2>
             <button class="btn btn-outline-primary btn-sm js-write-review"><span class="material-symbols-outlined" style="font-size:16px;">rate_review</span> Write a review</button>
@@ -6478,7 +6645,7 @@ body.is-logged-out .is-learner-only { display: none; }
           </div>
         </section>
 
-        <section class="course__section">
+        <section class="course__section v-future-only">
           <h2>Students also bought</h2>
           <div class="related-courses">
             <article class="card course-card" onclick="gotoCourse('e110')" style="cursor:pointer;">
@@ -7147,8 +7314,8 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="profile__grid">
       <div>
         <section class="profile__section">
-          <div class="section-head"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">View all →</a></div>
-          <div class="card deadlines">
+          <div class="section-head v-future-only"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">View all →</a></div>
+          <div class="card deadlines v-future-only">
             <div class="deadline"><div class="deadline__dot is-warn"></div><div class="deadline__body"><div class="deadline__title">Quiz - Market sizing</div><div class="deadline__meta">Strategic thinking · Due Apr 23 · 15 min</div></div></div>
             <div class="deadline"><div class="deadline__dot"></div><div class="deadline__body"><div class="deadline__title">Reading - OKR principles</div><div class="deadline__meta">Strategic thinking · Due Apr 25 · 20 min</div></div></div>
             <div class="deadline"><div class="deadline__dot is-err"></div><div class="deadline__body"><div class="deadline__title">Peer review - case study</div><div class="deadline__meta">AI fluency · Due tomorrow</div></div></div>
@@ -8205,7 +8372,7 @@ body.is-logged-out .is-learner-only { display: none; }
               <div class="avatar pgn__avatar" style="width:44px; height:44px;">NS</div>
               <div style="flex:1;">
                 <div style="font-family:var(--font-display); font-weight:600; font-size:14px;">Nadia Salleh</div>
-                <div style="font-size:12px; color:var(--medium-grey);">+ 3 industry mentors across courses</div>
+                <div class="v-future-only" style="font-size:12px; color:var(--medium-grey);">+ 3 industry mentors across courses</div>
               </div>
               <button class="btn btn-tertiary btn-sm">Change</button>
             </div>
@@ -9587,6 +9754,11 @@ body.is-logged-out .is-learner-only { display: none; }
 /* ---------- Demo switcher (preview only) ---------- */
 const buttons = document.querySelectorAll('.demo-switcher__panel button[data-screen]');
 function goto(name) {
+  // Current-phase build has no commerce: paid enrolment resolves straight
+  // to the success screen instead of routing through Stripe checkout.
+  if (name === 'checkout' && window.isFutureVersion && !window.isFutureVersion()) {
+    name = 'enrollment-success';
+  }
   // Track whether we came from an enrolled program - used to flip the course
   // enroll card into "Included with your program" state (no re-payment).
   const prevScreen = document.querySelector('.screen.is-active')?.id?.replace(/^screen-/, '');
@@ -10486,9 +10658,11 @@ function renderStudioProgsList() {
 
     filtered.forEach(({ id, p, m }) => {
       visible++;
-      const sub = p.track + ' · ' + p.courses + ' ' + (p.courses === 1 ? 'course' : 'courses') +
+      // Track code and the "+ N industry mentors" clause are future-only.
+      const subFull = !window.isFutureVersion || window.isFutureVersion();
+      const sub = (subFull ? p.track + ' · ' : '') + p.courses + ' ' + (p.courses === 1 ? 'course' : 'courses') +
         (p.instructor?.name ? ' · ' + p.instructor.name : '') +
-        (p.instructor?.extra ? ' ' + p.instructor.extra : '');
+        (subFull && p.instructor?.extra ? ' ' + p.instructor.extra : '');
       const statusKey = m.status === 'archived' ? 'archived' : (m.status || 'draft');
       const statusLabelMap = { published: 'Published', draft: 'Draft', archived: 'Archived' };
       const statusClassMap = { published: 'is-published', draft: 'is-draft', archived: 'is-archived' };
@@ -10624,7 +10798,7 @@ function renderProgramsCatalog() {
       ? '<span style="color:var(--success);"><strong>Certificate earned</strong></span>'
       : isEnrolled
         ? '<span style="color:var(--success);"><strong>Enrolled</strong></span>'
-        : '<span><strong>' + escapeHtml(p.price || '-') + '</strong></span>';
+        : '<span class="prog-card__price"><strong>' + escapeHtml(p.price || '-') + '</strong></span>';
     const langBadges = (p.languages || ['EN']).map(function(l) { return '<span>' + escapeHtml(l) + '</span>'; }).join('');
     const langChip = '<span class="prog-card__lang">' + langBadges + '</span>';
     const html =
@@ -10770,15 +10944,17 @@ function gotoProgram(progId) {
   const typeEl = screen.querySelector('.prog-hero__type');
   const typeLabel = p.single ? 'Single course' : 'Program';
   typeEl.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;">workspace_premium</span> ' +
-    typeLabel + ' · ' + p.org + ' · ' + p.track;
+    typeLabel + ' · ' + p.org +
+    '<span class="v-future-only"> · ' + p.track + '</span>';
 
   // Status card
   const card = document.getElementById('progStatusCard');
   if (effectiveState === 'browse') {
-    const ctaLabel = p.single ? 'Enroll · ' + p.price : 'Enroll · ' + p.price;
+    const ctaLabel = window.enrollCtaLabel ? window.enrollCtaLabel(p.price) : 'Enroll · ' + p.price;
+    const showPrice = !window.isFutureVersion || window.isFutureVersion();
     card.innerHTML = '<h3>' + (p.single ? 'Enroll in this course' : 'Enroll in this learning path') + '</h3>' +
-      '<div style="font-size:24px; font-family:var(--font-display); font-weight:700; color:var(--off-black); margin: 4px 0 6px;">' + p.price + '</div>' +
-      '<p class="prog-status-card__rule">' + (p.single ? 'One focused course with a verified completion certificate.' : 'Save <strong>15%</strong> vs buying each course separately. Includes the learning path certificate.') + '</p>' +
+      '<div class="v-future-only" style="font-size:24px; font-family:var(--font-display); font-weight:700; color:var(--off-black); margin: 4px 0 6px;">' + p.price + '</div>' +
+      '<p class="prog-status-card__rule">' + (p.single ? 'One focused course with a verified completion certificate.' : (showPrice ? 'Save <strong>15%</strong> vs buying each course separately. Includes the learning path certificate.' : 'Complete every required course to earn the learning path certificate.')) + '</p>' +
       '<div class="prog-status-card__cta">' +
         (function() {
           if (isGuest) {
@@ -16086,7 +16262,7 @@ window.handleCheckout = function() {
     var mentors = Array.isArray(s.mentors) && s.mentors.length ? s.mentors
                 : (Array.isArray(p.mentors) ? p.mentors.slice(0, 2) : []);
     if (mentors.length) {
-      html += '<div class="ci-modal__section"><h4>Taught by</h4><div class="ci-modal__mentors">' +
+      html += '<div class="ci-modal__section v-future-only"><h4>Taught by</h4><div class="ci-modal__mentors">' +
         mentors.map(function (m) {
           var full = (Array.isArray(p.mentors) ? p.mentors : []).filter(function (x) { return x.name === m.name; })[0] || m;
           return '<div class="ci-modal__mentor">' +
@@ -16116,7 +16292,8 @@ window.handleCheckout = function() {
         cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); enrollFree(\'' +
               esc((p.courseIds && p.courseIds[0]) || '') + '\');">Enroll - Free</button>';
       } else if (effectiveState === 'browse') {
-        cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'checkout\');">Enroll · ' + esc(p.price) + '</button>';
+        cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'checkout\');">' +
+              esc(window.enrollCtaLabel ? window.enrollCtaLabel(p.price) : 'Enroll') + '</button>';
       } else {
         cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'course\');">Preview course</button>';
       }
@@ -16130,6 +16307,117 @@ window.handleCheckout = function() {
     modal.querySelector('.ci-modal__body').scrollTop = 0;
     closeBtn.focus();
   };
+})();
+
+
+/* ==== Capability version switch: "current phase" vs "future" =========
+ * Sets <body data-lms-version>. CSS does the hiding (see the selector
+ * list next to .v-future-only); this function handles the differences
+ * that are textual rather than structural, and re-renders the two
+ * JS-driven catalogs so their markup is rebuilt under the new mode.
+ * ==================================================================== */
+(function () {
+  var VALID = { current: 1, future: 1 };
+
+  function readInitial() {
+    /* Captured by the bootstrap script at the top of <body>, before the
+       screen router had a chance to rewrite the URL. */
+    if (window.__LMS_VERSION_INIT && VALID[window.__LMS_VERSION_INIT]) return window.__LMS_VERSION_INIT;
+    try {
+      var q = new URLSearchParams(window.location.search).get('v');
+      if (q && VALID[q]) return q;
+    } catch (e) {}
+    return 'future';
+  }
+
+  window.lmsVersion = function () {
+    return document.body.getAttribute('data-lms-version') || 'future';
+  };
+  window.isFutureVersion = function () { return window.lmsVersion() === 'future'; };
+
+  /* Strip or restore the price fragment in an "Enroll · RM 480" style
+     label. Renderers call priceLabel() so they stay version-agnostic. */
+  window.enrollCtaLabel = function (price) {
+    if (!window.isFutureVersion()) return 'Enroll now';
+    return 'Enroll \u00b7 ' + (price || '');
+  };
+
+  function syncButtons(v) {
+    document.querySelectorAll('.ver-switch__btn').forEach(function (b) {
+      var on = b.dataset.version === v;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  window.applyLmsVersion = function (v, opts) {
+    if (!VALID[v]) v = 'future';
+    document.body.setAttribute('data-lms-version', v);
+    syncButtons(v);
+
+    if (!(opts && opts.silent)) {
+      try {
+        var url = new URL(window.location.href);
+        if (v === 'future') url.searchParams.delete('v');
+        else url.searchParams.set('v', v);
+        window.history.replaceState({}, '', url);
+      } catch (e) {}
+    }
+
+    /* Rebuild the JS-rendered catalogs so per-card markup (price chunk,
+       track code) is regenerated for this mode. */
+    try { if (typeof renderDiscoverGrid === 'function') renderDiscoverGrid(); } catch (e) {}
+    try { if (typeof renderProgramsCatalog === 'function') renderProgramsCatalog(); } catch (e) {}
+
+    /* Re-stamp the learning-path detail screen if it has been visited -
+       its hero type line and status-card CTA are built in gotoProgram(). */
+    try {
+      var progScreen = document.getElementById('screen-program-detail');
+      if (progScreen && progScreen.dataset.progId && typeof gotoProgram === 'function') {
+        var wasActive = progScreen.classList.contains('is-active');
+        gotoProgram(progScreen.dataset.progId);
+        if (!wasActive) progScreen.classList.remove('is-active');
+      }
+    } catch (e) {}
+
+    try { if (typeof renderStudioProgsList === 'function') renderStudioProgsList(); } catch (e) {}
+
+    /* A few Studio strings are authored inline rather than rendered, so the
+       track code has to be stripped textually. Originals are cached on the
+       node the first time through so switching back restores them. */
+    document.querySelectorAll('#courseSwitcherSub, .admin-prog-row__sub').forEach(function (el) {
+      if (el.dataset.vFull === undefined) el.dataset.vFull = el.textContent;
+      if (v === 'future') { el.textContent = el.dataset.vFull; return; }
+      el.textContent = el.dataset.vFull
+        .replace(/^\s*[A-Z][A-Z0-9]*(?:[ -][A-Z0-9]+)*\s*·\s*/, '')
+        .replace(/\s*\+\s*\d+\s+(?:industry\s+)?\w+\s*$/, '');
+    });
+
+    /* Close the course "More Info" popup - its footer CTA is priced. */
+    try { if (typeof closeCourseInfo === 'function') closeCourseInfo(); } catch (e) {}
+  };
+
+  document.querySelectorAll('.ver-switch__btn').forEach(function (b) {
+    b.addEventListener('click', function () { window.applyLmsVersion(b.dataset.version); });
+  });
+
+  var sw = document.getElementById('verSwitch');
+  var info = document.getElementById('verSwitchInfo');
+  if (sw && info) {
+    info.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = sw.classList.toggle('is-open');
+      info.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) {
+      if (!sw.contains(e.target)) { sw.classList.remove('is-open'); info.setAttribute('aria-expanded', 'false'); }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { sw.classList.remove('is-open'); info.setAttribute('aria-expanded', 'false'); }
+    });
+  }
+
+  window.applyLmsVersion(readInitial(), { silent: true });
 })();
 
 </script>

@@ -3680,6 +3680,78 @@ a:hover { text-decoration: underline; }
 .prog-step__pill.is-done { background: rgba(58,167,109,0.12); color: var(--success); }
 .prog-step__action .btn { white-space:nowrap; }
 
+/* Learning-path step: secondary "More Info" action */
+.prog-step__action { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.prog-step__more {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 18px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); background: var(--white);
+  color: var(--link); font-family: var(--font-display); font-weight: 700;
+  font-size: 13px; line-height: 1; white-space: nowrap; cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.prog-step__more:hover { background: var(--surface); border-color: var(--link); }
+.prog-step__more:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.prog-step.is-locked .prog-step__more { opacity: 1; }
+
+/* Course detail popup (opened from a learning-path step) */
+.ci-modal {
+  position: fixed; inset: 0; z-index: 900; display: flex;
+  align-items: center; justify-content: center; padding: 20px;
+  background: rgba(26,22,35,0.55);
+  opacity: 0; pointer-events: none; transition: opacity 0.18s ease;
+}
+.ci-modal.is-open { opacity: 1; pointer-events: auto; }
+.ci-modal__card {
+  background: var(--white); border-radius: var(--r-card);
+  width: 100%; max-width: 620px; max-height: 88vh;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+  transform: translateY(10px) scale(0.99); transition: transform 0.18s ease;
+}
+.ci-modal.is-open .ci-modal__card { transform: none; }
+.ci-modal__art { height: 116px; flex-shrink: 0; background: var(--brand-gradient); position: relative; }
+.ci-modal__close {
+  position: absolute; top: 10px; right: 10px; width: 32px; height: 32px;
+  border: 0; border-radius: 50%; cursor: pointer; color: var(--off-black);
+  background: rgba(255,255,255,0.92);
+  display: flex; align-items: center; justify-content: center;
+}
+.ci-modal__close:hover { background: var(--white); }
+.ci-modal__close .material-symbols-outlined { font-size: 20px; }
+.ci-modal__head { padding: 18px 24px 0; }
+.ci-modal__pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.ci-modal__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--off-black); margin: 0 0 6px; line-height: 1.3; }
+.ci-modal__meta { font-size: 12px; color: var(--medium-grey); }
+.ci-modal__body { padding: 14px 24px 22px; overflow-y: auto; }
+.ci-modal__section { margin-top: 18px; }
+.ci-modal__section:first-child { margin-top: 4px; }
+.ci-modal__section h4 {
+  font-family: var(--font-display); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px; color: var(--dark-grey); margin: 0 0 8px;
+}
+.ci-modal__desc { font-size: 14px; line-height: 1.65; color: var(--dark-grey); margin: 0; }
+.ci-modal__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.ci-modal__list li { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; line-height: 1.55; color: var(--dark-grey); }
+.ci-modal__list li .material-symbols-outlined { font-size: 18px; color: var(--primary); flex-shrink: 0; }
+.ci-modal__mentors { display: flex; flex-wrap: wrap; gap: 14px; }
+.ci-modal__mentor { display: flex; align-items: center; gap: 8px; }
+.ci-modal__mentor .avatar { width: 32px; height: 32px; font-size: 11px; }
+.ci-modal__mentor-name { font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--off-black); }
+.ci-modal__mentor-role { font-size: 11px; color: var(--medium-grey); }
+.ci-modal__foot {
+  display: flex; gap: 8px; justify-content: flex-end; align-items: center;
+  padding: 14px 24px; border-top: 1px solid var(--border);
+  background: var(--surface-2); flex-shrink: 0;
+}
+.ci-modal__path { font-size: 12px; color: var(--medium-grey); margin-right: auto; }
+@media (max-width: 640px) {
+  .ci-modal { padding: 12px; }
+  .ci-modal__card { max-height: 92vh; }
+  .ci-modal__foot { flex-wrap: wrap; }
+  .ci-modal__path { width: 100%; margin: 0 0 6px; }
+}
+
 .prog-section { margin-bottom: 28px; }
 .prog-section h2 { font-size: 22px; margin-bottom: 12px; }
 
@@ -9345,6 +9417,22 @@ body.is-logged-out .is-learner-only { display: none; }
   </main>
 </section>
 
+<!-- ==== Learning path: course "More Info" popup ==== -->
+<div class="ci-modal" id="courseInfoModal" role="dialog" aria-modal="true" aria-labelledby="courseInfoTitle" aria-hidden="true">
+  <div class="ci-modal__card" role="document">
+    <div class="ci-modal__art course-art" id="courseInfoArt" data-topic="design">
+      <button class="ci-modal__close" id="courseInfoClose" type="button" aria-label="Close"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="ci-modal__head">
+      <div class="ci-modal__pills" id="courseInfoPills"></div>
+      <h3 class="ci-modal__title" id="courseInfoTitle">Course</h3>
+      <div class="ci-modal__meta" id="courseInfoMeta"></div>
+    </div>
+    <div class="ci-modal__body" id="courseInfoBody"><!-- populated by openCourseInfo() --></div>
+    <div class="ci-modal__foot" id="courseInfoFoot"></div>
+  </div>
+</div>
+
 <!-- ==== Studio analytics: learner journey modal ==== -->
 <div class="an-modal" id="anModal" role="dialog" aria-modal="true" aria-labelledby="anModalTitle">
   <div class="an-modal__card">
@@ -9589,6 +9677,546 @@ buttons.forEach(b => b.addEventListener('click', () => {
  * is tagged "Single course" and the detail page shows the lone course as
  * its only step.
  */
+
+/* ---------- Course info: copy shown in the "More Info" popup on a
+ * learning-path detail page. Keyed by the exact step title in PROGRAMS_DB.
+ * A step may also carry its own `info: { desc, outcomes }` which wins.
+ * Anything without an entry falls back to a generated summary.
+ * ---------- */
+const COURSE_INFO_DB = {
+  "AI for Daily Workflows": {
+    "desc": "Applying AI to the work already on your desk. Drafting and editing, summarising long material, research support, meeting notes and data tidying - with clear guidance on what should never be pasted into a public tool.",
+    "outcomes": [
+      "Use AI to draft, edit and summarise without losing your own voice",
+      "Speed up research while keeping a citation and verification trail",
+      "Turn meeting notes into decisions, owners and actions automatically",
+      "Apply sensible data-privacy rules to what you share with a tool"
+    ]
+  },
+  "Agile dalam Praktik - Scrum & Kanban": {
+    "desc": "Agile sebagaimana dijalankan tim delivery di lapangan, termasuk kombinasi hibrida. Anda menjalankan seremoni, menyusun backlog, membaca burndown secara jujur, dan memilih pendekatan yang sesuai.",
+    "outcomes": [
+      "Memfasilitasi planning, standup, review, dan retrospektif secara efektif",
+      "Menulis user story dan acceptance criteria yang siap dikerjakan",
+      "Membaca velocity dan burndown untuk mendeteksi masalah lebih awal",
+      "Memilih Scrum, Kanban, atau hibrida sesuai cara kerja tim"
+    ]
+  },
+  "Agile in Practice - Scrum, Kanban, hybrid": {
+    "desc": "Agile as practitioners actually run it in Southeast Asian delivery teams - including the hybrid setups nobody writes books about. You will run the ceremonies, size a backlog, read a burndown honestly, and decide when Scrum, Kanban or a blend of both is the right call.",
+    "outcomes": [
+      "Facilitate sprint planning, standups, review and retrospective without them going stale",
+      "Write user stories and acceptance criteria a developer can pick up unaided",
+      "Read velocity, burndown and cumulative-flow charts to spot trouble early",
+      "Choose between Scrum, Kanban and a hybrid based on how the work actually arrives"
+    ]
+  },
+  "Analytics - measuring what matters": {
+    "desc": "The reporting layer that makes the rest of marketing accountable. Event tracking and UTMs, attribution and its limits, dashboard design for stakeholders, and how to run and read an experiment without fooling yourself.",
+    "outcomes": [
+      "Instrument events and UTMs so campaign data is trustworthy",
+      "Explain what attribution models can and cannot tell you",
+      "Build a marketing dashboard aimed at a decision, not a status update",
+      "Design an A/B test and call the result honestly"
+    ]
+  },
+  "Backend & API c\u01a1 b\u1ea3n": {
+    "desc": "N\u1eeda c\u00f2n l\u1ea1i c\u1ee7a m\u1ed9t l\u1eadp tr\u00ecnh vi\u00ean full-stack. HTTP v\u00e0 REST, API v\u1edbi Express, l\u01b0\u1ee3c \u0111\u1ed3 quan h\u1ec7, x\u00e1c th\u1ef1c v\u00e0 c\u1ea5u h\u00ecnh m\u00f4i tr\u01b0\u1eddng, c\u00f9ng nh\u1eefng \u0111i\u1ec1u c\u01a1 b\u1ea3n \u0111\u1ec3 tri\u1ec3n khai.",
+    "outcomes": [
+      "Thi\u1ebft k\u1ebf v\u00e0 x\u00e2y d\u1ef1ng REST API k\u00e8m ki\u1ec3m tra h\u1ee3p l\u1ec7 v\u00e0 x\u1eed l\u00fd l\u1ed7i",
+      "M\u00f4 h\u00ecnh h\u00f3a d\u1eef li\u1ec7u quan h\u1ec7 v\u00e0 truy v\u1ea5n t\u1eeb m\u00e3 \u1ee9ng d\u1ee5ng",
+      "Tri\u1ec3n khai x\u00e1c th\u1ef1c v\u00e0 b\u1ea3o v\u1ec7 route \u0111\u00fang c\u00e1ch",
+      "\u0110\u01b0a API l\u00ean m\u00f4i tr\u01b0\u1eddng th\u1ef1c v\u1edbi c\u1ea5u h\u00ecnh v\u00e0 log c\u01a1 b\u1ea3n"
+    ]
+  },
+  "Backend Basics - Node, Express, databases": {
+    "desc": "The other half of a full-stack developer. HTTP and REST, an Express API, a relational schema, authentication and environment config, and the deployment basics that get it off your laptop.",
+    "outcomes": [
+      "Design and build a REST API with Express, including validation and error handling",
+      "Model data in a relational schema and query it from application code",
+      "Implement authentication and protect routes properly",
+      "Deploy an API with environment configuration and basic logging"
+    ]
+  },
+  "Become An Entrepreneur": {
+    "desc": "From idea to something a customer will pay for. Problem and customer validation, business model and unit economics, a testable MVP, early go-to-market, and the funding and legal basics for starting up in Malaysia - all taught as things to go and do this week.",
+    "outcomes": [
+      "Validate a problem with real customer conversations before building",
+      "Map a business model and check whether the unit economics work",
+      "Scope and test an MVP without burning your runway",
+      "Understand the funding, registration and legal basics for a Malaysian start-up"
+    ]
+  },
+  "Building No-Code AI Tools": {
+    "desc": "Move from using AI to building with it, without writing code. Chaining prompts, connecting apps with automation platforms, building a simple assistant on your own documents, and testing it before you let a colleague near it.",
+    "outcomes": [
+      "Chain prompts and steps into a repeatable workflow",
+      "Connect AI into your existing tools with a no-code automation platform",
+      "Build a document-grounded assistant for a real team need",
+      "Test, monitor and hand over a tool other people will rely on"
+    ]
+  },
+  "Building Your Online Presence": {
+    "desc": "A presence that brings work to you rather than one you have to keep pushing. Portfolio and case-study construction, a LinkedIn profile that reads as a service, a sustainable content cadence, and the inbound basics that compound over months.",
+    "outcomes": [
+      "Build a portfolio of case studies structured around client outcomes",
+      "Rewrite your LinkedIn profile to read as an offer, not a resume",
+      "Set a content cadence you can actually sustain",
+      "Turn profile visitors into qualified enquiries"
+    ]
+  },
+  "Business Communication & Documentation": {
+    "desc": "Clear writing is an administrative superpower. Email and memo structure, minutes that people actually reference, standard operating procedures, and the tone calibration needed across internal, client and vendor audiences.",
+    "outcomes": [
+      "Write emails and memos that get a decision in one pass",
+      "Take minutes that capture decisions, owners and deadlines",
+      "Document a process as an SOP someone else can follow unaided",
+      "Adjust register and tone across internal, client and vendor contexts"
+    ]
+  },
+  "B\u1ea3ng t\u00ednh c\u00f3 kh\u1ea3 n\u0103ng m\u1edf r\u1ed9ng": {
+    "desc": "X\u00e2y d\u1ef1ng l\u1ea1i th\u00f3i quen l\u00e0m vi\u1ec7c v\u1edbi b\u1ea3ng t\u00ednh: c\u1ea5u tr\u00fac d\u1eef li\u1ec7u s\u1ea1ch, c\u00f4ng th\u1ee9c tra c\u1ee9u v\u00e0 m\u1ea3ng, pivot table kh\u00f4ng v\u1ee1 khi th\u00eam d\u1eef li\u1ec7u, v\u00e0 th\u1eddi \u0111i\u1ec3m n\u00ean chuy\u1ec3n t\u1eeb b\u1ea3ng t\u00ednh sang c\u01a1 s\u1edf d\u1eef li\u1ec7u.",
+    "outcomes": [
+      "T\u1ed5 ch\u1ee9c d\u1eef li\u1ec7u th\u00f4 \u0111\u1ec3 c\u00f4ng th\u1ee9c v\u00e0 pivot v\u1eabn ho\u1ea1t \u0111\u1ed9ng khi th\u00eam d\u00f2ng",
+      "S\u1eed d\u1ee5ng th\u00e0nh th\u1ea1o h\u00e0m tra c\u1ee9u, index/match v\u00e0 c\u00f4ng th\u1ee9c m\u1ea3ng \u0111\u1ed9ng",
+      "X\u00e2y d\u1ef1ng pivot table v\u00e0 named range t\u1ef1 c\u1eadp nh\u1eadt",
+      "Nh\u1eadn bi\u1ebft khi n\u00e0o b\u1ea3ng t\u00ednh \u0111\u00e3 qu\u00e1 t\u1ea3i v\u00e0 c\u1ea7n chuy\u1ec3n sang c\u00f4ng c\u1ee5 kh\u00e1c"
+    ]
+  },
+  "B\u1ea3ng \u0111i\u1ec1u khi\u1ec3n & K\u1ec3 chuy\u1ec7n b\u1eb1ng d\u1eef li\u1ec7u": {
+    "desc": "M\u1ed9t bi\u1ec3u \u0111\u1ed3 ch\u1ec9 h\u1eefu \u00edch khi n\u00f3 thay \u0111\u1ed5i \u0111\u01b0\u1ee3c quy\u1ebft \u0111\u1ecbnh. H\u1ecdc c\u00e1ch ch\u1ecdn bi\u1ec3u \u0111\u1ed3, b\u1ed1 c\u1ee5c v\u00e0 m\u00e0u s\u1eafc \u0111\u1ea1t chu\u1ea9n ti\u1ebfp c\u1eadn, r\u1ed3i x\u00e2y d\u1ef1ng v\u00e0 tr\u00ecnh b\u00e0y m\u1ed9t dashboard ho\u00e0n ch\u1ec9nh.",
+    "outcomes": [
+      "Ch\u1ecdn \u0111\u00fang d\u1ea1ng bi\u1ec3u \u0111\u1ed3 cho so s\u00e1nh, ph\u00e2n ph\u1ed1i, c\u1ea5u ph\u1ea7n v\u00e0 xu h\u01b0\u1edbng",
+      "Thi\u1ebft k\u1ebf dashboard c\u00f3 th\u1ee9 b\u1eadc r\u00f5 r\u00e0ng thay v\u00ec d\u00e0y \u0111\u1eb7c th\u1ebb s\u1ed1",
+      "\u00c1p d\u1ee5ng m\u00e0u s\u1eafc v\u00e0 nh\u00e3n d\u1ec5 ti\u1ebfp c\u1eadn \u0111\u1ec3 \u0111\u1ecdc hi\u1ec3u trong m\u1ed9t l\u01b0\u1ee3t",
+      "Tr\u00ecnh b\u00e0y k\u1ebft qu\u1ea3 nh\u01b0 m\u1ed9t khuy\u1ebfn ngh\u1ecb, kh\u00f4ng ph\u1ea3i b\u00e3i d\u1eef li\u1ec7u"
+    ]
+  },
+  "Capstone - analyse a real business problem": {
+    "desc": "End-to-end analysis on a live-shaped dataset: scope the question, clean the data, query it, visualise it, and deliver a written recommendation with your working attached. Assessed on the reasoning, not just the chart.",
+    "outcomes": [
+      "Turn a vague business question into an answerable analytical one",
+      "Document a reproducible cleaning and query pipeline",
+      "Deliver a dashboard plus a one-page recommendation memo",
+      "Complete the evidence required for the Data Analyst certificate"
+    ]
+  },
+  "Capstone - deliver a real project plan": {
+    "desc": "The portfolio piece. You take a real brief - your own workplace project or a supplied scenario - and produce a complete delivery pack: charter, WBS, schedule, RACI, risk register and budget. Two rounds of peer review, then a final mentor assessment against the same rubric an employer would use.",
+    "outcomes": [
+      "Produce an end-to-end delivery pack you can show in an interview",
+      "Defend your plan in a live review and incorporate structured feedback",
+      "Give useful critique on two peers' plans using the assessment rubric",
+      "Complete the evidence required for the Project Manager certificate"
+    ]
+  },
+  "Capstone - design a workflow for a real team": {
+    "desc": "Pick a real recurring process - onboarding, procurement, event runs, monthly reporting - and redesign it end to end. You will deliver a process map, an SOP, the supporting templates and a rollout plan, then defend the design in review.",
+    "outcomes": [
+      "Map an existing process and identify where time and clarity are lost",
+      "Deliver an SOP with templates a colleague can run without you",
+      "Build a rollout and change-communication plan",
+      "Complete the evidence required for the Admin Professional certificate"
+    ]
+  },
+  "Capstone - launch and measure a real campaign": {
+    "desc": "Plan, launch and report on a live campaign with a real budget - your own or a supplied scenario. Strategy brief, creative, tracking plan, then a results readout with what you would change and why.",
+    "outcomes": [
+      "Produce a campaign brief with objective, audience, message and budget",
+      "Launch across at least two channels with proper tracking in place",
+      "Deliver a results readout with a clear next-round recommendation",
+      "Complete the evidence required for the Digital Marketer certificate"
+    ]
+  },
+  "Capstone - ph\u00e2n t\u00edch b\u00e0i to\u00e1n kinh doanh th\u1ef1c": {
+    "desc": "Ph\u00e2n t\u00edch tr\u1ecdn v\u1eb9n tr\u00ean t\u1eadp d\u1eef li\u1ec7u th\u1ef1c t\u1ebf: x\u00e1c \u0111\u1ecbnh c\u00e2u h\u1ecfi, l\u00e0m s\u1ea1ch d\u1eef li\u1ec7u, truy v\u1ea5n, tr\u1ef1c quan h\u00f3a v\u00e0 \u0111\u01b0a ra khuy\u1ebfn ngh\u1ecb b\u1eb1ng v\u0103n b\u1ea3n k\u00e8m ph\u1ea7n tr\u00ecnh b\u00e0y c\u00e1ch l\u00e0m.",
+    "outcomes": [
+      "Chuy\u1ec3n c\u00e2u h\u1ecfi kinh doanh m\u01a1 h\u1ed3 th\u00e0nh c\u00e2u h\u1ecfi ph\u00e2n t\u00edch tr\u1ea3 l\u1eddi \u0111\u01b0\u1ee3c",
+      "Ghi l\u1ea1i quy tr\u00ecnh l\u00e0m s\u1ea1ch v\u00e0 truy v\u1ea5n c\u00f3 th\u1ec3 t\u00e1i l\u1eadp",
+      "B\u00e0n giao dashboard k\u00e8m b\u1ea3n khuy\u1ebfn ngh\u1ecb m\u1ed9t trang",
+      "Ho\u00e0n t\u1ea5t minh ch\u1ee9ng c\u1ea7n thi\u1ebft \u0111\u1ec3 nh\u1eadn ch\u1ee9ng ch\u1ec9"
+    ]
+  },
+  "Capstone - rancang kampanye nyata": {
+    "desc": "Merancang, meluncurkan, dan melaporkan satu kampanye nyata dari awal hingga akhir. Brief strategi, materi kreatif, rencana pelacakan, lalu laporan hasil beserta rekomendasi perbaikan.",
+    "outcomes": [
+      "Menyusun brief kampanye dengan tujuan, audiens, pesan, dan anggaran",
+      "Meluncurkan kampanye di minimal dua kanal dengan pelacakan yang benar",
+      "Menyampaikan laporan hasil dengan rekomendasi lanjutan yang jelas",
+      "Melengkapi bukti yang dibutuhkan untuk sertifikat"
+    ]
+  },
+  "Capstone - ship a full-stack portfolio project": {
+    "desc": "One application, built and shipped: React front end, Express API, database, authentication, deployed to a public URL with a README that explains your decisions. Reviewed by a mentor the way a technical hiring manager would review it.",
+    "outcomes": [
+      "Ship a deployed full-stack application with a public repository",
+      "Write a README and commit history that make your reasoning legible",
+      "Handle authentication, validation and error states end to end",
+      "Complete the evidence required for the Web Developer certificate"
+    ]
+  },
+  "Capstone - susun rencana proyek nyata": {
+    "desc": "Karya portofolio Anda. Mengambil brief nyata dan menghasilkan paket delivery lengkap: charter, WBS, jadwal, RACI, risk register, dan anggaran, lalu dipertahankan dalam sesi review.",
+    "outcomes": [
+      "Menghasilkan paket delivery lengkap yang layak ditunjukkan saat wawancara",
+      "Mempertahankan rencana Anda dalam review langsung",
+      "Memberi kritik terstruktur pada rencana rekan sejawat",
+      "Melengkapi bukti yang dibutuhkan untuk sertifikat"
+    ]
+  },
+  "Capstone - tri\u1ec3n khai \u1ee9ng d\u1ee5ng full-stack": {
+    "desc": "M\u1ed9t \u1ee9ng d\u1ee5ng, x\u00e2y d\u1ef1ng v\u00e0 tri\u1ec3n khai th\u1ef1c t\u1ebf: front end React, API Express, c\u01a1 s\u1edf d\u1eef li\u1ec7u, x\u00e1c th\u1ef1c, deploy l\u00ean URL c\u00f4ng khai k\u00e8m README gi\u1ea3i th\u00edch c\u00e1c quy\u1ebft \u0111\u1ecbnh k\u1ef9 thu\u1eadt.",
+    "outcomes": [
+      "Tri\u1ec3n khai \u1ee9ng d\u1ee5ng full-stack k\u00e8m repository c\u00f4ng khai",
+      "Vi\u1ebft README v\u00e0 l\u1ecbch s\u1eed commit th\u1ec3 hi\u1ec7n r\u00f5 l\u1eadp lu\u1eadn c\u1ee7a b\u1ea1n",
+      "X\u1eed l\u00fd x\u00e1c th\u1ef1c, ki\u1ec3m tra h\u1ee3p l\u1ec7 v\u00e0 tr\u1ea1ng th\u00e1i l\u1ed7i \u0111\u1ea7u-cu\u1ed1i",
+      "Ho\u00e0n t\u1ea5t minh ch\u1ee9ng c\u1ea7n thi\u1ebft \u0111\u1ec3 nh\u1eadn ch\u1ee9ng ch\u1ec9"
+    ]
+  },
+  "ChatGPT Fundamentals - prompts that work": {
+    "desc": "What these tools are, what they are not, and how to get consistently useful output. Prompt structure, context and examples, iteration, and the verification habits that keep confident-sounding errors out of your work.",
+    "outcomes": [
+      "Explain in plain terms how a language model produces its answers",
+      "Write prompts with role, context, constraints and examples",
+      "Iterate on a weak answer instead of accepting the first response",
+      "Verify output and recognise where the model is likely to be wrong"
+    ]
+  },
+  "Contracts & Negotiation Basics": {
+    "desc": "The protective layer around everything else. The clauses that matter for freelancers, IP and payment terms, deposits and late-payment handling, and negotiation as a structured conversation rather than a confrontation.",
+    "outcomes": [
+      "Read and redline the clauses that actually carry risk for you",
+      "Set payment terms, deposits and milestones that protect your cash flow",
+      "Handle IP, confidentiality and usage rights clearly",
+      "Negotiate scope and price with prepared positions instead of improvising"
+    ]
+  },
+  "Dasar Manajemen Proyek": {
+    "desc": "Titik awal setiap peran delivery: memahami perbedaan proyek, program, dan portofolio, siklus hidup proyek dari inisiasi hingga penutupan, serta kosakata yang diharapkan dalam rapat pengarah.",
+    "outcomes": [
+      "Membedakan proyek, program, dan portofolio beserta tata kelolanya",
+      "Menyusun project charter yang layak dibawa ke steering committee",
+      "Memetakan lima process group ke pekerjaan nyata Anda",
+      "Menjalankan kickoff dengan lingkup, peran, dan milestone yang jelas"
+    ]
+  },
+  "Dasar Pemasaran Digital & Strategi Konten": {
+    "desc": "Fondasi pemasaran digital: memahami audiens, menyusun positioning, dan merancang strategi konten yang terarah. Setiap materi dikaitkan langsung dengan keputusan nyata, bukan sekadar teori kerangka kerja.",
+    "outcomes": [
+      "Menentukan segmen audiens dan pernyataan positioning yang kuat",
+      "Menyusun hirarki pesan dari proposisi hingga salinan iklan",
+      "Merancang kalender konten yang selaras dengan tahapan funnel",
+      "Menetapkan target pemasaran dengan metrik yang terhubung ke hasil bisnis"
+    ]
+  },
+  "Dashboards & Storytelling with Data": {
+    "desc": "A chart is only useful if it changes a decision. You will learn chart selection, layout and colour that survive accessibility checks, then build a dashboard and present it - because the narration around the numbers is half the job.",
+    "outcomes": [
+      "Pick the right chart form for comparison, distribution, composition and trend",
+      "Design a dashboard with a clear hierarchy instead of a wall of tiles",
+      "Apply accessible colour and labelling so the chart reads in one pass",
+      "Present findings as a recommendation, not a data dump"
+    ]
+  },
+  "Email & Otomasi Pemasaran": {
+    "desc": "Membangun hubungan berulang melalui email dan otomasi. Daftar dan segmentasi, alur otomatis untuk onboarding dan retensi, penulisan email yang dibuka, serta pengujian yang memberi hasil terukur.",
+    "outcomes": [
+      "Membangun dan menyegmentasi daftar email secara etis",
+      "Merancang alur otomasi untuk onboarding, nurturing, dan retensi",
+      "Menulis subjek dan isi email yang meningkatkan konversi",
+      "Menguji dan mengukur performa kampanye email"
+    ]
+  },
+  "Embark on a Green Jobs Journey": {
+    "desc": "A practical primer on Malaysia's green economy and the careers forming inside it. You will cover the sustainability and ESG landscape, how reporting requirements are reshaping hiring, and the roles - technical, commercial and policy - that are actually being filled, then map where your existing experience fits.",
+    "outcomes": [
+      "Explain the drivers behind Malaysia's green transition in plain terms",
+      "Understand ESG reporting basics and why they create jobs",
+      "Identify green roles that build on the skills you already have",
+      "Leave with a personal next-step learning and networking plan"
+    ]
+  },
+  "Executive Calendars & Inbox Triage": {
+    "desc": "Time and attention are the scarcest resources you manage. This course covers calendar strategy across time zones, meeting hygiene, inbox triage systems that hold up under volume, and the judgement calls behind protecting an executive's focus.",
+    "outcomes": [
+      "Design a calendar that protects deep work and travel recovery",
+      "Triage a high-volume inbox with a system you can sustain",
+      "Run agendas, pre-reads and follow-ups so meetings produce decisions",
+      "Handle competing priorities and reschedules without dropping commitments"
+    ]
+  },
+  "Freelancing 101": {
+    "desc": "The honest orientation to independent work: how the market actually pays, what to set up before your first client, and the operating rhythm that keeps freelancing from becoming an unpaid full-time job.",
+    "outcomes": [
+      "Decide whether freelancing fits your finances and temperament right now",
+      "Set up the accounts, tools and admin you need before client one",
+      "Find and qualify your first paying opportunities",
+      "Build a weekly rhythm that protects delivery time and pipeline time"
+    ]
+  },
+  "JavaScript - ng\u00f4n ng\u1eef c\u1ee7a web": {
+    "desc": "JavaScript hi\u1ec7n \u0111\u1ea1i d\u00e0nh cho ng\u01b0\u1eddi c\u00f3 \u00fd \u0111\u1ecbnh \u0111\u01b0a s\u1ea3n ph\u1ea9m ra th\u1ef1c t\u1ebf. Ki\u1ec3u d\u1eef li\u1ec7u v\u00e0 ph\u1ea1m vi, h\u00e0m v\u00e0 closure, async/await v\u00e0 fetch, module v\u00e0 x\u1eed l\u00fd l\u1ed7i.",
+    "outcomes": [
+      "S\u1eed d\u1ee5ng th\u00e0nh th\u1ea1o c\u00fa ph\u00e1p ES hi\u1ec7n \u0111\u1ea1i",
+      "L\u1eadp lu\u1eadn v\u1ec1 scope, closure v\u00e0 event loop khi g\u1ee1 l\u1ed7i",
+      "G\u1ecdi API b\u1eb1ng fetch v\u00e0 async/await, x\u1eed l\u00fd \u0111\u1ea7y \u0111\u1ee7 lu\u1ed3ng l\u1ed7i",
+      "Thao t\u00e1c DOM v\u00e0 x\u1eed l\u00fd s\u1ef1 ki\u1ec7n kh\u00f4ng c\u1ea7n framework"
+    ]
+  },
+  "JavaScript - the working language of the web": {
+    "desc": "Modern JavaScript for people who intend to ship. Types and scope, functions and closures, arrays and objects, async/await and fetch, modules and error handling - each anchored to something you build rather than something you memorise.",
+    "outcomes": [
+      "Use modern ES syntax - destructuring, modules, optional chaining - fluently",
+      "Reason about scope, closures and the event loop when debugging",
+      "Call APIs with fetch and async/await, and handle failure paths properly",
+      "Manipulate the DOM and handle events without a framework"
+    ]
+  },
+  "Managing Your First Client": {
+    "desc": "Most freelance disasters are relationship failures, not skill failures. Scoping and expectation setting, communication cadence, handling scope creep and revisions, and closing a project so the client comes back and refers you on.",
+    "outcomes": [
+      "Run a scoping conversation that surfaces the real requirement",
+      "Set a communication cadence and stick to it under pressure",
+      "Handle scope creep and revision requests without damaging the relationship",
+      "Close a project with a handover, a testimonial and a referral ask"
+    ]
+  },
+  "Marketing Foundations - strategy & positioning": {
+    "desc": "Before channels, tactics or budget: who you are for, what you claim, and why anyone should believe it. Segmentation, positioning, messaging hierarchy and the funnel - taught as decisions you can defend rather than frameworks you can recite.",
+    "outcomes": [
+      "Define a segment and a positioning statement that survives a competitor test",
+      "Build a messaging hierarchy from proposition down to ad copy",
+      "Map the funnel and choose the right objective for each stage",
+      "Set marketing goals with metrics that connect to business outcomes"
+    ]
+  },
+  "Media Sosial & Iklan Berbayar": {
+    "desc": "Menjalankan media sosial organik dan iklan berbayar di Google, Meta, dan TikTok. Struktur kampanye, strategi audiens dan kreatif, pengelolaan anggaran, serta disiplin pengukuran agar anggaran tidak terbuang.",
+    "outcomes": [
+      "Menyusun struktur kampanye dan ad set agar hasilnya mudah dibaca",
+      "Membangun audiens dan variasi kreatif yang layak diuji",
+      "Mengelola anggaran dan bid terhadap target CPA atau ROAS",
+      "Mendiagnosis kampanye yang berkinerja rendah secara sistematis"
+    ]
+  },
+  "N\u1ec1n t\u1ea3ng Web - HTML, CSS, DOM": {
+    "desc": "L\u1edbp n\u1ec1n cho m\u1ecdi th\u1ee9 ph\u00eda tr\u00ean. HTML ng\u1eef ngh\u0129a, b\u1ed1 c\u1ee5c CSS hi\u1ec7n \u0111\u1ea1i v\u1edbi flexbox v\u00e0 grid, h\u00e0nh vi responsive, m\u00f4 h\u00ecnh DOM, c\u00f9ng c\u00e1c nguy\u00ean t\u1eafc ti\u1ebfp c\u1eadn c\u01a1 b\u1ea3n.",
+    "outcomes": [
+      "Vi\u1ebft HTML ng\u1eef ngh\u0129a, d\u1ec5 ti\u1ebfp c\u1eadn v\u1edbi tr\u00ecnh \u0111\u1ecdc m\u00e0n h\u00ecnh",
+      "D\u1ef1ng b\u1ed1 c\u1ee5c responsive b\u1eb1ng flexbox v\u00e0 grid",
+      "Gi\u1ea3i th\u00edch c\u00e1ch tr\u00ecnh duy\u1ec7t ph\u00e2n t\u00edch v\u00e0 k\u1ebft xu\u1ea5t trang",
+      "G\u1ee1 l\u1ed7i b\u1ed1 c\u1ee5c v\u00e0 \u0111\u1ed9 \u01b0u ti\u00ean CSS b\u1eb1ng dev tools"
+    ]
+  },
+  "PM Foundations - projects, programs, portfolios": {
+    "desc": "Start where every delivery role starts: knowing what you are actually running. This course separates projects, programs and portfolios, walks the full lifecycle from initiation to closeout, and gives you the vocabulary that hiring managers and steering committees expect you to use.",
+    "outcomes": [
+      "Tell a project, a program and a portfolio apart - and pick the right governance for each",
+      "Write a project charter that survives a steering-committee review",
+      "Map the five process groups onto a real piece of work you own today",
+      "Run a kickoff that leaves everyone clear on scope, roles and the first milestone"
+    ]
+  },
+  "Paid Ads - Google, Meta, TikTok": {
+    "desc": "Running paid media across the three platforms that matter in this region. Account and campaign structure, audience and creative strategy, budget and bid management, and the measurement discipline that stops you scaling a losing campaign.",
+    "outcomes": [
+      "Structure campaigns and ad sets so results are actually readable",
+      "Build audiences and creative variants worth testing",
+      "Manage budgets, bids and pacing against a target CPA or ROAS",
+      "Diagnose a underperforming campaign rather than guessing at it"
+    ]
+  },
+  "Pemangku Kepentingan, Risiko & Anggaran": {
+    "desc": "Tiga hal yang menenggelamkan proyek sebelum tim delivery sempat gagal. Memetakan pemangku kepentingan, mengelola risk register yang benar-benar dibaca, serta menyusun dan mempertahankan anggaran.",
+    "outcomes": [
+      "Memetakan pemangku kepentingan berdasarkan pengaruh dan kepentingan",
+      "Mengelola risk register dengan pemilik, pemicu, dan rencana respons",
+      "Menyusun anggaran bottom-up dan memantaunya dengan earned value",
+      "Mengeskalasi perubahan lingkup, biaya, atau jadwal secara profesional"
+    ]
+  },
+  "Perencanaan & Penjadwalan": {
+    "desc": "Keterampilan perencanaan yang diajarkan lewat jadwal nyata. Memecah lingkup menjadi WBS, menyusun dependensi, menemukan critical path, dan memahami di mana estimasi biasanya meleset.",
+    "outcomes": [
+      "Memecah lingkup menjadi WBS yang selaras dengan deliverable",
+      "Memodelkan dependensi dan menghitung critical path",
+      "Membuat estimasi dengan rentang dan buffer, bukan angka tunggal",
+      "Melakukan re-baseline jadwal tanpa kehilangan kepercayaan pemangku kepentingan"
+    ]
+  },
+  "Personal Finance for Freelancers": {
+    "desc": "Irregular income is a solvable problem, but only with a system. Separating business and personal money, buffers and runway, tax and contribution basics for Malaysian freelancers, and how to pay yourself a predictable salary from an unpredictable inbox.",
+    "outcomes": [
+      "Separate business and personal finances and keep clean records",
+      "Build a buffer and pay yourself a steady amount from lumpy income",
+      "Handle Malaysian tax, SOCSO and EPF basics as a self-employed person",
+      "Plan for equipment, insurance and quiet months before they arrive"
+    ]
+  },
+  "Planning & Scheduling - WBS, dependencies, critical path": {
+    "desc": "The planning craft, taught on real schedules rather than textbook examples. You break scope into a work breakdown structure, wire up dependencies, find the critical path, and learn where estimates usually go wrong - and what to do about it before the plan is signed off.",
+    "outcomes": [
+      "Decompose scope into a WBS that maps cleanly to deliverables, not activities",
+      "Model dependencies and calculate the critical path by hand and in a tool",
+      "Build estimates with ranges and buffers instead of single-point guesses",
+      "Re-baseline a slipping schedule without losing stakeholder trust"
+    ]
+  },
+  "Pricing Your Work": {
+    "desc": "The course most freelancers wish they had taken two years earlier. Hourly versus project versus value pricing, calculating your real floor rate, quoting and negotiating, and raising prices with existing clients without losing them.",
+    "outcomes": [
+      "Calculate a floor rate from your actual cost of doing business",
+      "Choose between hourly, project and value-based pricing per engagement",
+      "Present a quote with options instead of a single take-it-or-leave-it number",
+      "Raise your rates with existing clients using a defensible rationale"
+    ]
+  },
+  "Professional Writing for Modern Work": {
+    "desc": "Writing is how remote and freelance work gets done. Proposals, emails, updates and documentation - structured so the reader can act without a follow-up call, with the editing habits that make short writing fast rather than painful.",
+    "outcomes": [
+      "Structure a proposal or update so the ask is unmissable",
+      "Write async messages that do not generate three clarifying replies",
+      "Edit your own drafts down without losing the substance",
+      "Adapt tone across client, collaborator and public contexts"
+    ]
+  },
+  "React - building real UIs": {
+    "desc": "Component thinking, then the React that follows from it. Props and state, hooks, lists and forms, data fetching, routing and composition patterns - built up through one application rather than a series of disconnected demos.",
+    "outcomes": [
+      "Break a design into a sensible component tree with clear data flow",
+      "Use useState, useEffect and custom hooks without re-render surprises",
+      "Handle forms, validation and async data loading states",
+      "Structure a React app that a second developer can pick up"
+    ]
+  },
+  "React - x\u00e2y d\u1ef1ng giao di\u1ec7n th\u1ef1c": {
+    "desc": "T\u01b0 duy component tr\u01b0\u1edbc, React theo sau. Props v\u00e0 state, hooks, danh s\u00e1ch v\u00e0 bi\u1ec3u m\u1eabu, t\u1ea3i d\u1eef li\u1ec7u, \u0111\u1ecbnh tuy\u1ebfn v\u00e0 c\u00e1c m\u1eabu k\u1ebft h\u1ee3p, x\u00e2y d\u1ef1ng qua m\u1ed9t \u1ee9ng d\u1ee5ng xuy\u00ean su\u1ed1t.",
+    "outcomes": [
+      "Ph\u00e2n r\u00e3 thi\u1ebft k\u1ebf th\u00e0nh c\u00e2y component v\u1edbi lu\u1ed3ng d\u1eef li\u1ec7u r\u00f5 r\u00e0ng",
+      "D\u00f9ng useState, useEffect v\u00e0 custom hook kh\u00f4ng g\u00e2y render th\u1eeba",
+      "X\u1eed l\u00fd bi\u1ec3u m\u1eabu, ki\u1ec3m tra h\u1ee3p l\u1ec7 v\u00e0 tr\u1ea1ng th\u00e1i t\u1ea3i b\u1ea5t \u0111\u1ed3ng b\u1ed9",
+      "C\u1ea5u tr\u00fac \u1ee9ng d\u1ee5ng React \u0111\u1ec3 ng\u01b0\u1eddi kh\u00e1c ti\u1ebfp qu\u1ea3n \u0111\u01b0\u1ee3c"
+    ]
+  },
+  "SEO & Content That Ranks": {
+    "desc": "Search that earns traffic rather than chases it. Keyword and intent research, on-page and technical fundamentals, content structure that answers the query, and the link and authority basics - with realistic timelines about how long any of it takes.",
+    "outcomes": [
+      "Research keywords by intent and build a content plan around clusters",
+      "Fix on-page and technical issues that are capping your rankings",
+      "Write content that satisfies the query and earns dwell time",
+      "Track rankings, impressions and clicks - and tell them apart"
+    ]
+  },
+  "SEO & Pemasaran Mesin Pencari": {
+    "desc": "Mendatangkan trafik pencarian yang berkelanjutan. Riset kata kunci berbasis maksud pengguna, dasar on-page dan teknis, struktur konten yang menjawab pertanyaan, serta cara membaca laporan performa pencarian.",
+    "outcomes": [
+      "Melakukan riset kata kunci berdasarkan maksud pencarian",
+      "Memperbaiki masalah on-page dan teknis yang menghambat peringkat",
+      "Menulis konten yang menjawab kueri dan menahan pembaca",
+      "Membaca peringkat, impresi, dan klik secara terpisah dan tepat"
+    ]
+  },
+  "SQL cho m\u1ecdi ng\u01b0\u1eddi - truy v\u1ea5n d\u1eef li\u1ec7u th\u1ef1c": {
+    "desc": "H\u1ecdc SQL t\u1eeb \u0111\u1ea7u \u0111\u1ebfn m\u1ee9c th\u1ef1c s\u1ef1 h\u1eefu \u00edch tr\u00ean d\u1eef li\u1ec7u th\u1ef1c t\u1ebf. Select, filter, join, aggregate v\u00e0 window function, m\u1ed7i ph\u1ea7n g\u1eafn v\u1edbi m\u1ed9t c\u00e2u h\u1ecfi kinh doanh c\u1ee5 th\u1ec3.",
+    "outcomes": [
+      "Vi\u1ebft truy v\u1ea5n SELECT, WHERE, GROUP BY v\u00e0 HAVING tr\u1ea3 l\u1eddi c\u00e2u h\u1ecfi th\u1ef1c t\u1ebf",
+      "K\u1ebft n\u1ed1i nhi\u1ec1u b\u1ea3ng v\u00e0 hi\u1ec3u t\u00e1c \u0111\u1ed9ng c\u1ee7a t\u1eebng lo\u1ea1i join",
+      "D\u00f9ng window function cho t\u1ed5ng l\u0169y k\u1ebf, x\u1ebfp h\u1ea1ng v\u00e0 so s\u00e1nh theo k\u1ef3",
+      "Ki\u1ec3m tra t\u00ednh h\u1ee3p l\u00fd c\u1ee7a k\u1ebft qu\u1ea3 tr\u01b0\u1edbc khi ra quy\u1ebft \u0111\u1ecbnh"
+    ]
+  },
+  "SQL for everyone - querying real data": {
+    "desc": "SQL from zero to genuinely useful, on messy realistic tables. Select, filter, join, aggregate, window - each taught against a business question rather than an abstract exercise, so you finish able to answer your own questions instead of waiting on someone else's queue.",
+    "outcomes": [
+      "Write SELECT, WHERE, GROUP BY and HAVING queries that answer real questions",
+      "Join across multiple tables and reason about what each join type does to your row count",
+      "Use window functions for running totals, rankings and period-over-period comparisons",
+      "Sanity-check a query result before anyone builds a decision on it"
+    ]
+  },
+  "Skills Profiling - knowing what you sell": {
+    "desc": "Independent workers routinely undersell themselves because they cannot name what they do. This course audits your skills, maps them to what the market pays for, and turns the result into a positioning statement and a service list.",
+    "outcomes": [
+      "Audit your skills honestly, including the ones you undervalue",
+      "Map your skills to services the market is already buying",
+      "Write a positioning statement that filters out bad-fit enquiries",
+      "Turn your profile into a service list with clear deliverables"
+    ]
+  },
+  "Speak with Impact": {
+    "desc": "A focused course on being understood and taken seriously - in meetings, town halls and pitches. Message structure, delivery mechanics, handling questions under pressure, and the practice reps that turn all of it into a habit rather than a memory.",
+    "outcomes": [
+      "Structure any message so the point lands in the first thirty seconds",
+      "Use voice, pace and pause deliberately instead of accidentally",
+      "Handle hostile or off-script questions without losing the room",
+      "Build and rehearse a pitch with a repeatable preparation routine"
+    ]
+  },
+  "Spreadsheets that actually scale": {
+    "desc": "Most analysts inherit a spreadsheet held together by hope. This course rebuilds that habit: clean tabular structure, lookup and array formulas, pivot tables that survive new data, and the point at which a spreadsheet should become a database.",
+    "outcomes": [
+      "Structure raw data so formulas and pivots keep working when rows are added",
+      "Use lookup, index/match and dynamic array formulas with confidence",
+      "Build pivot tables and named ranges that update without manual patching",
+      "Recognise when a spreadsheet has outgrown itself and what to move to next"
+    ]
+  },
+  "Stakeholders, Risk & Budget": {
+    "desc": "The three things that sink projects long before the delivery team does. You will map and manage stakeholders, keep a risk register that people actually read, and build and defend a budget - including the awkward conversation when the numbers move.",
+    "outcomes": [
+      "Map stakeholders by influence and interest, then set a communication cadence for each",
+      "Run a risk register with owners, triggers and response plans - not a static spreadsheet",
+      "Build a bottom-up budget and track it with earned-value basics",
+      "Escalate scope, cost or schedule change without it becoming a blame conversation"
+    ]
+  },
+  "Statistics for analysts - the practical bits": {
+    "desc": "The statistics you will actually reach for, without the proofs. Distributions, variability, correlation versus causation, sampling error and significance - framed around the mistakes that make analysts lose credibility in a review meeting.",
+    "outcomes": [
+      "Describe a dataset with the right measures of centre and spread",
+      "Read a confidence interval and a p-value without over-claiming",
+      "Spot sampling bias, survivorship bias and spurious correlation in real reports",
+      "Size an A/B test and interpret its result honestly"
+    ]
+  },
+  "The Modern Admin Toolkit": {
+    "desc": "The digital operating system of a modern administrative professional. Shared drives and naming conventions, collaborative documents, task and workflow tools, and the automation basics that quietly remove hours from a week.",
+    "outcomes": [
+      "Set up a file and naming structure a whole team can navigate",
+      "Run collaborative documents and shared calendars without version chaos",
+      "Automate routine steps with forms, templates and simple no-code rules",
+      "Choose the right tool for a task instead of defaulting to email"
+    ]
+  },
+  "Th\u1ed1ng k\u00ea th\u1ef1c d\u1ee5ng cho nh\u00e0 ph\u00e2n t\u00edch": {
+    "desc": "Ph\u1ea7n th\u1ed1ng k\u00ea b\u1ea1n th\u1ef1c s\u1ef1 d\u00f9ng, kh\u00f4ng sa \u0111\u00e0 v\u00e0o ch\u1ee9ng minh. Ph\u00e2n ph\u1ed1i, \u0111\u1ed9 bi\u1ebfn thi\u00ean, t\u01b0\u01a1ng quan v\u00e0 nh\u00e2n qu\u1ea3, sai s\u1ed1 l\u1ea5y m\u1eabu v\u00e0 \u00fd ngh\u0129a th\u1ed1ng k\u00ea.",
+    "outcomes": [
+      "M\u00f4 t\u1ea3 t\u1eadp d\u1eef li\u1ec7u b\u1eb1ng c\u00e1c th\u01b0\u1edbc \u0111o trung t\u00e2m v\u00e0 ph\u00e2n t\u00e1n ph\u00f9 h\u1ee3p",
+      "\u0110\u1ecdc kho\u1ea3ng tin c\u1eady v\u00e0 gi\u00e1 tr\u1ecb p m\u00e0 kh\u00f4ng k\u1ebft lu\u1eadn qu\u00e1 \u0111\u00e0",
+      "Ph\u00e1t hi\u1ec7n thi\u00ean l\u1ec7ch l\u1ea5y m\u1eabu v\u00e0 t\u01b0\u01a1ng quan gi\u1ea3 trong b\u00e1o c\u00e1o",
+      "Thi\u1ebft k\u1ebf v\u00e0 di\u1ec5n gi\u1ea3i ki\u1ec3m \u0111\u1ecbnh A/B m\u1ed9t c\u00e1ch trung th\u1ef1c"
+    ]
+  },
+  "Vendor & Office Coordination": {
+    "desc": "The operational core of the role: sourcing and comparing vendors, purchase orders and invoicing, event and travel logistics, and the office systems that keep a workplace running without anyone noticing it is being run.",
+    "outcomes": [
+      "Source, compare and brief vendors against a clear requirement",
+      "Track purchase orders, invoices and budgets without leakage",
+      "Coordinate travel and events including contingency planning",
+      "Maintain office and facilities systems with a documented calendar"
+    ]
+  },
+  "Web Foundations - HTML, CSS, the DOM": {
+    "desc": "The layer everything else sits on. Semantic HTML, modern CSS layout with flexbox and grid, responsive behaviour, and a working mental model of the DOM - plus the accessibility basics that separate a page that works from a page that only looks like it works.",
+    "outcomes": [
+      "Write semantic, accessible HTML that screen readers can navigate",
+      "Build responsive layouts with flexbox and grid instead of fighting floats",
+      "Explain how the browser parses, renders and repaints a page",
+      "Debug layout and specificity problems using browser dev tools"
+    ]
+  }
+};
+
 const PROGRAMS_DB = {
   
   'sof-pm': {
@@ -10249,7 +10877,9 @@ function gotoProgram(progId) {
           '<div class="prog-step__meta">' + s.meta + '</div>' +
           mentorsHtml +
         '</div>' +
-        '<div class="prog-step__action">' + actionHtml + '</div>' +
+        '<div class="prog-step__action">' + actionHtml +
+          '<button type="button" class="prog-step__more" onclick="openCourseInfo(' + i + ', this)" aria-haspopup="dialog" aria-label="More info about this course">More Info</button>' +
+        '</div>' +
       '</div>';
     }).join('');
   }
@@ -15360,6 +15990,148 @@ window.handleCheckout = function() {
   else enhance();
   setTimeout(enhance, 300);
 })();
+
+/* ==== Learning path: course "More Info" popup ====================
+ * Opened from the per-step "More Info" button on the learning-path
+ * detail page. Copy comes from COURSE_INFO_DB (keyed on step title),
+ * or a step-level `info` object, falling back to a generated summary.
+ * ================================================================= */
+(function () {
+  var modal = document.getElementById('courseInfoModal');
+  if (!modal) return;
+  var closeBtn = document.getElementById('courseInfoClose');
+  var lastFocus = null;
+
+  function esc(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function closeCourseInfo() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} }
+    lastFocus = null;
+  }
+  window.closeCourseInfo = closeCourseInfo;
+
+  closeBtn.addEventListener('click', closeCourseInfo);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeCourseInfo(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeCourseInfo();
+  });
+
+  /* Copy for a step: explicit step.info > COURSE_INFO_DB > generated. */
+  function infoFor(s, p) {
+    if (s && s.info && s.info.desc) return s.info;
+    var db = (typeof COURSE_INFO_DB !== 'undefined') ? COURSE_INFO_DB : {};
+    if (s && db[s.title]) return db[s.title];
+    var mods = (s && s.meta || '').match(/(\d+)\s*(modules?|modul|m\u00f4-\u0111un)/i);
+    var generated = s.capstone
+      ? 'The capstone for ' + p.title + '. You apply everything from the earlier courses to a single '
+        + 'assessed piece of work, reviewed against the same rubric used for the certificate.'
+      : (s ? s.title : 'This course') + ' is one of the ' + (p.courses || p.steps.length)
+        + ' courses in the ' + p.title + ' learning path'
+        + (mods ? ', running across ' + mods[1] + ' modules' : '')
+        + '. Detailed course notes are being finalised - the outline below shows what it covers.';
+    return { desc: generated, outcomes: [] };
+  }
+
+  function statusFor(p, s, effectiveState) {
+    if (effectiveState === 'browse') return null;
+    if (effectiveState === 'completed') return 'done';
+    return s.status;
+  }
+
+  window.openCourseInfo = function (idx, triggerEl) {
+    var screen = document.getElementById('screen-program-detail');
+    if (!screen) return;
+    var p = PROGRAMS_DB[screen.dataset.progId] || PROGRAMS_DB['sof-pm'];
+    var s = p && p.steps && p.steps[idx];
+    if (!s) return;
+
+    lastFocus = triggerEl || document.activeElement;
+
+    var isGuest = document.body && document.body.classList.contains('is-logged-out');
+    var effectiveState = isGuest ? 'browse' : p.state;
+    var status = statusFor(p, s, effectiveState);
+    var info = infoFor(s, p);
+
+    /* Art strip reuses the same topic artwork as the step thumbnail. */
+    document.getElementById('courseInfoArt').setAttribute('data-topic', progStepTopic(s, p));
+
+    /* Pills: course position + state */
+    var pills = [];
+    pills.push('<span class="prog-step__pill is-required">' + (s.capstone ? 'Capstone' : 'Course ' + (idx + 1)) + '</span>');
+    if (status === 'done')        pills.push('<span class="prog-step__pill is-done">Completed</span>');
+    else if (status === 'active') pills.push('<span class="prog-step__pill is-required">In progress</span>');
+    else if (status === 'locked') pills.push('<span class="prog-step__pill is-locked">Locked</span>');
+    document.getElementById('courseInfoPills').innerHTML = pills.join('');
+
+    document.getElementById('courseInfoTitle').textContent = s.title;
+    document.getElementById('courseInfoMeta').textContent = s.meta;
+
+    /* Body */
+    var html = '<div class="ci-modal__section"><h4>About this course</h4>' +
+      '<p class="ci-modal__desc">' + esc(info.desc) + '</p></div>';
+
+    if (Array.isArray(info.outcomes) && info.outcomes.length) {
+      html += '<div class="ci-modal__section"><h4>What you\'ll learn</h4><ul class="ci-modal__list">' +
+        info.outcomes.map(function (o) {
+          return '<li><span class="material-symbols-outlined">check_circle</span><span>' + esc(o) + '</span></li>';
+        }).join('') + '</ul></div>';
+    }
+
+    var mentors = Array.isArray(s.mentors) && s.mentors.length ? s.mentors
+                : (Array.isArray(p.mentors) ? p.mentors.slice(0, 2) : []);
+    if (mentors.length) {
+      html += '<div class="ci-modal__section"><h4>Taught by</h4><div class="ci-modal__mentors">' +
+        mentors.map(function (m) {
+          var full = (Array.isArray(p.mentors) ? p.mentors : []).filter(function (x) { return x.name === m.name; })[0] || m;
+          return '<div class="ci-modal__mentor">' +
+            '<div class="avatar pgn__avatar" style="background:' + esc(m.tone || full.tone || 'var(--primary)') + '; color:#fff;">' +
+              esc(m.initials || full.initials || (m.name || '').slice(0, 2)) + '</div>' +
+            '<div><div class="ci-modal__mentor-name">' + esc(m.name) + '</div>' +
+            (full.role ? '<div class="ci-modal__mentor-role">' + esc(full.role) + '</div>' : '') + '</div></div>';
+        }).join('') + '</div></div>';
+    }
+
+    document.getElementById('courseInfoBody').innerHTML = html;
+
+    /* Footer CTA mirrors the action on the step row. */
+    var cta;
+    if (status === 'done') {
+      cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'course\');">Review course</button>';
+    } else if (status === 'active') {
+      cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'course\');">Continue course</button>';
+    } else if (status === 'locked') {
+      cta = '<button class="btn btn-outline-primary btn-sm" disabled style="opacity:0.5;">Locked</button>';
+    } else if (isGuest) {
+      cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'login\');">Login to enroll</button>';
+    } else {
+      var price = (p.price || '').trim().toLowerCase();
+      var isFree = !price || price === 'free' || price === '0' || price === 'rm 0';
+      if (effectiveState === 'browse' && isFree) {
+        cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); enrollFree(\'' +
+              esc((p.courseIds && p.courseIds[0]) || '') + '\');">Enroll - Free</button>';
+      } else if (effectiveState === 'browse') {
+        cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'checkout\');">Enroll · ' + esc(p.price) + '</button>';
+      } else {
+        cta = '<button class="btn btn-primary btn-sm" onclick="closeCourseInfo(); goto(\'course\');">Preview course</button>';
+      }
+    }
+    document.getElementById('courseInfoFoot').innerHTML =
+      '<span class="ci-modal__path">Part of <strong>' + esc(p.title) + '</strong></span>' +
+      '<button class="btn btn-outline-primary btn-sm" onclick="closeCourseInfo();">Close</button>' + cta;
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    modal.querySelector('.ci-modal__body').scrollTop = 0;
+    closeBtn.focus();
+  };
+})();
+
 </script>
 
 </body>

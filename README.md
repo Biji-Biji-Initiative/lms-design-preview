@@ -1,26 +1,11 @@
-# lms-design-preview
+# lms-design-preview — ARCHIVED
 
-Artifact-only repo containing the Mereka LMS Academy v2 design preview as a static SPA.
+This repo is archived and no longer deployed.
 
-Served at:
+`https://lms-prototype.mereka.dev` is now built and served directly from
+[`Biji-Biji-Initiative/mereka-lms-prototype`](https://github.com/Biji-Biji-Initiative/mereka-lms-prototype)
+(`deploy/lms-prototype/`), together with the Skill Our Future variant at
+`https://sof-lms-prototype.mereka.dev` (`deploy/sof-lms-prototype/`).
 
-- `https://lms-prototype.mereka.dev` (canonical, via Coolify on `deploy-apps-01`)
-
-Source of truth for the design content lives in `Biji-Biji-Initiative/mereka-lms-prototype`; this repo is the deployable extract.
-
-## Coolify configuration
-
-- Build pack: `static`
-- Publish directory: `/`
-- Port: `80`
-- Includes a minimal `nginx.conf` so the Coolify static buildpack's `COPY ./nginx.conf` step succeeds.
-
-## Updating
-
-1. Update `index.html` and assets in `mereka-lms-prototype`.
-2. Re-extract: `index.html` and `logo-horizontal-*-Mereka.svg` into this repo.
-3. Commit + push. Coolify rebuilds on push.
-
-## Governance
-
-Governed by `deploy.mereka.io` (Pattern A — static-from-public-git, per PDR-0012). Registry entry id `mereka-lms-static-prototype`.
+The mirror workflow that used to push `index.html` here has been removed.
+Make all changes in `mereka-lms-prototype`.

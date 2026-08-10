@@ -3770,41 +3770,33 @@ a:hover { text-decoration: underline; }
    the learning-path hero) are handled in applyLmsVersion().
    =========================================================== */
 body[data-lms-version="current"] .v-future-only,
-/* Track / SKU codes on cards and detail heroes */
+/* Track / SKU codes on cards, detail heroes and Studio rows */
 body[data-lms-version="current"] .course-card__track,
 body[data-lms-version="current"] .prog-card__track,
 body[data-lms-version="current"] .studio-course-card__code,
-body[data-lms-version="current"] .admin-prog-row__code,
-/* Commerce */
-body[data-lms-version="current"] .course-card__price,
-body[data-lms-version="current"] .prog-card__price,
-body[data-lms-version="current"] #enrollPrice,
+/* Discount framing - the plain price stays, was/now + "Save RM X" go */
+body[data-lms-version="current"] #enrollWas,
 body[data-lms-version="current"] #enrollSave,
+/* Scarcity countdown */
 body[data-lms-version="current"] .enroll-card__promo,
-body[data-lms-version="current"] .enroll-card__guarantee,
-body[data-lms-version="current"] #discSort option[value^="price-"],
-body[data-lms-version="current"] .demo-switcher__panel button[data-screen="checkout"],
-/* Private / invite-only + org-scoped catalogs */
-body[data-lms-version="current"] .visibility-chip,
-body[data-lms-version="current"] .disc__private-note,
-/* Enforced watch-time completion */
-body[data-lms-version="current"] .watch-gate,
-/* Studio surfaces with no backend today */
-body[data-lms-version="current"] .studio__nav li[data-studio-pane="analytics"],
-body[data-lms-version="current"] .studio__nav li[data-studio-pane="pricing"],
-body[data-lms-version="current"] .studio__nav li[data-studio-pane="visibility"],
-body[data-lms-version="current"] .js-prog-tab[data-prog-tab="pricing"]
+/* "Mereka Curated" ribbons */
+body[data-lms-version="current"] .prog-card__curated,
+/* Invented credential-ID format */
+body[data-lms-version="current"] #certCredId
 { display: none !important; }
 
-/* NOTE: learning paths, path rules & prerequisites, mentors and
-   certificates are deliberately present in BOTH readings - they are
-   committed roadmap, not speculation. Only capability with no backend
-   today is hidden. */
+/* NOTE: this is the LIGHT reading. Every screen and feature block stays
+   reachable in both versions - learning paths, mentors, checkout, Studio
+   analytics, deadlines, invite-only catalogs and the watch-gate all
+   remain. Current phase only drops surface metadata that isn't wired up:
+   track codes, ratings & reviews, the scarcity countdown, discount
+   framing, "Students also bought", curated ribbons and credential IDs. */
 
-/* Version switch control - sits above the demo switcher, bottom-right.
-   NOT product UI; it exists so reviewers can compare the two readings. */
+/* Version switch control - bottom-left, mirroring the demo switcher on the
+   bottom-right. NOT product UI; it exists so reviewers can compare the two
+   readings side by side. */
 .ver-switch {
-  position: fixed; bottom: 72px; right: 20px; z-index: 1000;
+  position: fixed; bottom: 20px; left: 20px; z-index: 1000;
   font-family: var(--font-display);
   display: inline-flex; align-items: center; gap: 4px;
   background: var(--off-black); border-radius: var(--r-pill);
@@ -3828,7 +3820,7 @@ body[data-lms-version="current"] .js-prog-tab[data-prog-tab="pricing"]
 .ver-switch__info:hover { color: #fff; }
 .ver-switch__info .material-symbols-outlined { font-size: 17px; }
 .ver-switch__pop {
-  position: absolute; bottom: calc(100% + 10px); right: 0;
+  position: absolute; bottom: calc(100% + 10px); left: 0;
   width: 320px; max-width: calc(100vw - 40px);
   background: var(--white); color: var(--off-black);
   border-radius: 14px; box-shadow: var(--shadow-lift);
@@ -3857,7 +3849,7 @@ body[data-lms-version="current"] .js-prog-tab[data-prog-tab="pricing"]
 body[data-lms-version="current"] .ver-ribbon { display: block; }
 body[data-lms-version="current"] { padding-top: 25px; }
 @media (max-width: 640px) {
-  .ver-switch { bottom: 66px; right: 12px; }
+  .ver-switch { bottom: 12px; left: 12px; }
   .ver-switch__btn { padding: 7px 10px; font-size: 11px; }
 }
 
@@ -4580,15 +4572,15 @@ body.is-logged-out .is-learner-only { display: none; }
     <h5>Hidden in Current phase</h5>
     <ul>
       <li>Course &amp; learning path ID codes</li>
-      <li>Pricing, checkout and bundle discounts</li>
-      <li>Reviews &amp; ratings</li>
-      <li>Enforced watch-time gating</li>
-      <li>Cross-course deadlines</li>
-      <li>Studio analytics drill-down</li>
-      <li>Invite-only and org-scoped catalogs</li>
+      <li>Star ratings and the reviews section</li>
+      <li>&ldquo;Cohort closes in&hellip;&rdquo; countdown</li>
+      <li>was/now pricing and &ldquo;Save RM 160&rdquo;</li>
+      <li>&ldquo;Students also bought&rdquo;</li>
+      <li>&ldquo;Mereka Curated&rdquo; ribbons</li>
+      <li>Credential ID format (MRK-2026-&hellip;)</li>
     </ul>
     <h5>In both readings</h5>
-    <p style="margin:0 0 10px;">Learning paths, path rules &amp; prerequisites, mentors and certificates - committed roadmap, not speculation.</p>
+    <p style="margin:0 0 10px;">Every screen and feature stays reachable - learning paths, mentors, checkout, Studio analytics, deadlines and the watch-gate all remain. Only surface metadata that isn&rsquo;t wired up is dropped.</p>
     <p style="margin:10px 0 0;">Shareable by link: <code>?v=current</code> or <code>?v=future</code>.</p>
   </div>
 </div>
@@ -4618,7 +4610,7 @@ body.is-logged-out .is-learner-only { display: none; }
     <button data-screen="certificate"><span class="material-symbols-outlined">workspace_premium</span> Certificate</button>
     <button data-screen="profile"><span class="material-symbols-outlined">person</span> Profile</button>
     <button data-screen="settings"><span class="material-symbols-outlined">settings</span> Settings</button>
-    <div class="demo-switcher__group-label v-future-only">Commerce flow</div>
+    <div class="demo-switcher__group-label">Commerce flow</div>
     <button data-screen="checkout"><span class="material-symbols-outlined">school</span> Enrollment</button>
     <button data-screen="enrollment-success"><span class="material-symbols-outlined">celebration</span> Enrollment success</button>
     <div class="demo-switcher__group-label">Instructor (Studio)</div>
@@ -5031,8 +5023,8 @@ body.is-logged-out .is-learner-only { display: none; }
         </div>
       </div>
       <div>
-        <div class="section-head v-future-only"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">All →</a></div>
-        <div class="card deadlines v-future-only">
+        <div class="section-head"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">All →</a></div>
+        <div class="card deadlines">
           <div class="deadline"><div class="deadline__dot is-warn"></div><div class="deadline__body"><div class="deadline__title">Quiz - Market sizing</div><div class="deadline__meta">Due Apr 23 · 15 min</div></div></div>
           <div class="deadline"><div class="deadline__dot"></div><div class="deadline__body"><div class="deadline__title">Reading - OKR principles</div><div class="deadline__meta">Due Apr 25 · 20 min</div></div></div>
           <div class="deadline"><div class="deadline__dot is-err"></div><div class="deadline__body"><div class="deadline__title">Peer review - case study</div><div class="deadline__meta">Due tomorrow</div></div></div>
@@ -6639,7 +6631,7 @@ body.is-logged-out .is-learner-only { display: none; }
           </div>
         </section>
 
-        <section class="course__section">
+        <section class="course__section v-future-only">
           <h2>Students also bought</h2>
           <div class="related-courses">
             <article class="card course-card" onclick="gotoCourse('e110')" style="cursor:pointer;">
@@ -7308,8 +7300,8 @@ body.is-logged-out .is-learner-only { display: none; }
     <div class="profile__grid">
       <div>
         <section class="profile__section">
-          <div class="section-head v-future-only"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">View all →</a></div>
-          <div class="card deadlines v-future-only">
+          <div class="section-head"><h3>Upcoming deadlines</h3><a href="#" onclick="goto('deadlines'); return false;">View all →</a></div>
+          <div class="card deadlines">
             <div class="deadline"><div class="deadline__dot is-warn"></div><div class="deadline__body"><div class="deadline__title">Quiz - Market sizing</div><div class="deadline__meta">Strategic thinking · Due Apr 23 · 15 min</div></div></div>
             <div class="deadline"><div class="deadline__dot"></div><div class="deadline__body"><div class="deadline__title">Reading - OKR principles</div><div class="deadline__meta">Strategic thinking · Due Apr 25 · 20 min</div></div></div>
             <div class="deadline"><div class="deadline__dot is-err"></div><div class="deadline__body"><div class="deadline__title">Peer review - case study</div><div class="deadline__meta">AI fluency · Due tomorrow</div></div></div>
@@ -9748,11 +9740,6 @@ body.is-logged-out .is-learner-only { display: none; }
 /* ---------- Demo switcher (preview only) ---------- */
 const buttons = document.querySelectorAll('.demo-switcher__panel button[data-screen]');
 function goto(name) {
-  // Current-phase build has no commerce: paid enrolment resolves straight
-  // to the success screen instead of routing through Stripe checkout.
-  if (name === 'checkout' && window.isFutureVersion && !window.isFutureVersion()) {
-    name = 'enrollment-success';
-  }
   // Track whether we came from an enrolled program - used to flip the course
   // enroll card into "Included with your program" state (no re-payment).
   const prevScreen = document.querySelector('.screen.is-active')?.id?.replace(/^screen-/, '');
@@ -10945,9 +10932,10 @@ function gotoProgram(progId) {
   const card = document.getElementById('progStatusCard');
   if (effectiveState === 'browse') {
     const ctaLabel = window.enrollCtaLabel ? window.enrollCtaLabel(p.price) : 'Enroll · ' + p.price;
+    // "Save 15% vs buying each course separately" is discount framing.
     const showPrice = !window.isFutureVersion || window.isFutureVersion();
     card.innerHTML = '<h3>' + (p.single ? 'Enroll in this course' : 'Enroll in this learning path') + '</h3>' +
-      '<div class="v-future-only" style="font-size:24px; font-family:var(--font-display); font-weight:700; color:var(--off-black); margin: 4px 0 6px;">' + p.price + '</div>' +
+      '<div style="font-size:24px; font-family:var(--font-display); font-weight:700; color:var(--off-black); margin: 4px 0 6px;">' + p.price + '</div>' +
       '<p class="prog-status-card__rule">' + (p.single ? 'One focused course with a verified completion certificate.' : (showPrice ? 'Save <strong>15%</strong> vs buying each course separately. Includes the learning path certificate.' : 'Complete every required course to earn the learning path certificate.')) + '</p>' +
       '<div class="prog-status-card__cta">' +
         (function() {
@@ -16331,8 +16319,10 @@ window.handleCheckout = function() {
 
   /* Strip or restore the price fragment in an "Enroll · RM 480" style
      label. Renderers call priceLabel() so they stay version-agnostic. */
+  /* Prices stay in both readings - only the discount framing differs -
+     so the CTA label is version-independent. Kept as a seam in case a
+     later phase needs to drop the price from the button. */
   window.enrollCtaLabel = function (price) {
-    if (!window.isFutureVersion()) return 'Enroll now';
     return 'Enroll \u00b7 ' + (price || '');
   };
 
@@ -16384,6 +16374,19 @@ window.handleCheckout = function() {
       if (v === 'future') { el.textContent = el.dataset.vFull; return; }
       el.textContent = el.dataset.vFull
         .replace(/^\s*[A-Z][A-Z0-9]*(?:[ -][A-Z0-9]+)*\s*·\s*/, '');
+    });
+
+    /* Credential IDs are an invented format, so they are stripped from the
+       prose that carries them (the standalone #certCredId line is hidden
+       by CSS instead, since removing its text would leave an empty row). */
+    document.querySelectorAll('#screen-profile p, #screen-my-certificates .cert-row__body p').forEach(function (el) {
+      if (el.children.length) return;
+      if (el.dataset.vCred === undefined) {
+        if (!/MRK-\d{4}-\d+/.test(el.textContent)) return;
+        el.dataset.vCred = el.textContent;
+      }
+      el.textContent = (v === 'future') ? el.dataset.vCred
+        : el.dataset.vCred.replace(/\s*·\s*(?:Credential\s+)?MRK-\d{4}-\d+/g, '').trim();
     });
 
     /* Close the course "More Info" popup - its footer CTA is priced. */
